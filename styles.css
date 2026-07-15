@@ -3021,7 +3021,7 @@ tbody td {
 .passage-box { background: var(--light-warm-white); border-left: 4px solid var(--nd-gold); padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; font-family: var(--font-display); font-size: 1.05rem; line-height: 1.65; color: var(--nd-blue); white-space: pre-wrap; }
 .passage-box .passage-label { font-family: var(--font-body); font-size: 0.6rem; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--dark-gold); margin-bottom: 0.5rem; display: block; }
 .question { margin-bottom: 1.5rem; padding-bottom: 1.25rem; border-bottom: 1px dashed var(--dark-sky-blue); scroll-margin-top: 110px; }
-.question:last-child { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
+.question:last-child { border-bottom: none; margin-bottom: 0; }
 .q-number { display: inline-block; background: var(--nd-blue); color: var(--nd-gold); font-size: 0.62rem; font-weight: 700; letter-spacing: 0.12em; padding: 0.2rem 0.55rem; margin-right: 0.6rem; vertical-align: 1px; font-variant-numeric: tabular-nums; }
 .q-points { display: inline-block; background: var(--light-warm-white); color: var(--nd-blue); font-size: 0.65rem; font-weight: 600; padding: 0.2rem 0.5rem; margin-right: 0.4rem; vertical-align: 1px; border: 1px solid var(--medium-blue); border-radius: 2px; }
 .blank-input { display: inline-block; border: none; border-bottom: 1.5px solid var(--medium-blue); background: transparent; font-family: var(--font-body); font-size: 1rem; padding: 0.15rem 0.4rem; min-width: 130px; color: var(--accent-red); font-weight: 500; transition: all 0.2s; }
