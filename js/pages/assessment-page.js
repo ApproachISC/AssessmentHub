@@ -216,8 +216,8 @@ startBtn.addEventListener('click', async () => {
   let resumeData = null;
   if (savedSession && savedName === name) {
     try {
-      const { data } = await db.from('assessment_submissions')
-        .select('*').eq('session_id', savedSession).eq('status', 'in_progress').maybeSingle();
+      const { data: rows } = await db.rpc('resume_assessment_submission', { p_session_id: savedSession });
+      const data = rows?.[0] || null;
       if (data && confirm('We found an unfinished attempt. Resume where you left off?')) {
         resumeData = data;
         state.submissionId = data.id;

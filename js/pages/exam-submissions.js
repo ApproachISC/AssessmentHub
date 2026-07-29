@@ -207,8 +207,9 @@ function renderTable() {
 async function deleteInProgress(id, studentName) {
   if (!confirm(`Delete the in-progress submission from ${studentName}? They will be able to start fresh.`)) return;
   try {
-    const { error } = await db.from('submissions').delete().eq('id', id);
+    const { data, error } = await db.from('submissions').delete().eq('id', id).select();
     if (error) throw error;
+    if (!data || data.length === 0) throw new Error('No submission was deleted (permission denied?)');
     allSubmissions = allSubmissions.filter(s => s.id !== id);
     updateStats();
     renderTable();

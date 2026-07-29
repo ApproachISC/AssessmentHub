@@ -342,10 +342,8 @@ startBtn.addEventListener('click', async () => {
 
   if (savedSessionId && savedName === name) {
     try {
-      const { data } = await db.from('submissions').select('*')
-        .eq('session_id', savedSessionId)
-        .eq('status', 'in_progress')
-        .maybeSingle();
+      const { data: rows } = await db.rpc('resume_exam_submission', { p_session_id: savedSessionId });
+      const data = rows?.[0] || null;
       if (data) {
         if (confirm('We found an unfinished exam from this session. Resume where you left off?')) {
           resumeData = data;
