@@ -371,8 +371,14 @@ startBtn.addEventListener('click', async () => {
   if (!resumeData) {
     state.sessionId = generateSessionId();
     state.startTime = Date.now();
+    const submissionId = crypto.randomUUID();
     try {
-      const { data, error } = await db.from('submissions').insert({
+      // Generate the id client-side and skip .select() after insert: RETURNING
+      // is filtered through the table's SELECT policy, which (by design) only
+      // allows the owning teacher/academic to read submissions back — an anon
+      // student's insert would otherwise fail RLS on the RETURNING step.
+      const { error } = await db.from('submissions').insert({
+        id: submissionId,
         exam_id: state.examRecord.id,
         exam_code: state.examCode,
         student_name: name,
@@ -385,9 +391,9 @@ startBtn.addEventListener('click', async () => {
           right_clicks_blocked: 0, devtools_attempts: 0, event_log: [],
         },
         user_agent: navigator.userAgent,
-      }).select().single();
+      });
       if (error) throw error;
-      state.submissionId = data.id;
+      state.submissionId = submissionId;
     } catch (err) {
       console.error('Failed to create submission:', err);
       alert(`Could not start the exam: ${err.message}\n\nPlease try again.`);

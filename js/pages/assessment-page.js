@@ -240,8 +240,14 @@ startBtn.addEventListener('click', async () => {
   if (!resumeData) {
     state.sessionId = generateSessionId();
     state.startTime = Date.now();
+    const submissionId = crypto.randomUUID();
     try {
-      const { data, error } = await db.from('assessment_submissions').insert({
+      // Generate the id client-side and skip .select() after insert: RETURNING
+      // is filtered through the table's SELECT policy, which (by design) only
+      // allows the owning teacher/academic to read submissions back — an anon
+      // student's insert would otherwise fail RLS on the RETURNING step.
+      const { error } = await db.from('assessment_submissions').insert({
+        id: submissionId,
         assessment_id: state.assessment.id,
         assessment_code: state.code,
         student_name: name,
@@ -250,9 +256,9 @@ startBtn.addEventListener('click', async () => {
         started_at: new Date().toISOString(),
         answers: {},
         user_agent: navigator.userAgent,
-      }).select().single();
+      });
       if (error) throw error;
-      state.submissionId = data.id;
+      state.submissionId = submissionId;
     } catch (err) {
       showToast('Could not start: ' + (err.message || 'error'), 'error');
       state.proctor.exitFullscreen();
