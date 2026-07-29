@@ -1,672 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QR Reader</title>
-
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet" />
-
-  <!-- Tabler Icons -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
-
-  <style>
-    :root {
-      --nd-blue: #0c2340;
-      --nd-gold: #ae9142;
-      --medium-blue: #143865;
-      --bright-blue: #1c4f8f;
-      --dark-sky-blue: #c1cddd;
-      --medium-sky-blue: #e1e8f2;
-      --light-sky-blue: #edf2f9;
-      --dark-gold: #8c7535;
-      --bright-gold: #d39f10;
-      --warm-white: #efe9d9;
-      --light-warm-white: #f8f4ec;
-      --accent-red: #ab100b;
-      --success-green: #3a6b3a;
-      --font-display: 'Cormorant Garamond', 'Times New Roman', serif;
-      --font-body: 'Montserrat', system-ui, sans-serif;
-    }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: var(--font-body);
-      background-color: var(--light-sky-blue);
-      color: var(--nd-blue);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* ── Header ── */
-    header {
-      background: var(--nd-blue);
-      border-bottom: 3px solid var(--nd-gold);
-      padding: 1rem 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-    header .logo-icon {
-      width: 40px; height: 40px;
-      background: var(--nd-gold);
-      border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      color: var(--nd-blue);
-      font-size: 20px;
-      flex-shrink: 0;
-    }
-    header h1 {
-      font-family: var(--font-display);
-      font-size: 1.6rem;
-      font-weight: 600;
-      color: var(--warm-white);
-      letter-spacing: 0.02em;
-    }
-    header p {
-      font-size: 0.7rem;
-      color: var(--dark-sky-blue);
-      font-weight: 300;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    /* ── Main Layout ── */
-    main {
-      flex: 1;
-      max-width: 560px;
-      width: 100%;
-      margin: 0 auto;
-      padding: 1.5rem 1rem 2rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    /* ── Card ── */
-    .card {
-      background: #fff;
-      border: 1px solid var(--dark-sky-blue);
-      border-radius: 12px;
-      overflow: hidden;
-    }
-    .card-header {
-      background: var(--medium-blue);
-      padding: 0.75rem 1.25rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .card-header span {
-      font-size: 0.7rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--dark-sky-blue);
-    }
-    .card-header i { color: var(--nd-gold); font-size: 16px; }
-    .card-body { padding: 1.25rem; }
-
-    /* ── Viewfinder ── */
-    #video-wrap {
-      position: relative;
-      background: var(--nd-blue);
-      border-radius: 8px;
-      overflow: hidden;
-      aspect-ratio: 4/3;
-    }
-    #video {
-      width: 100%; height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-    canvas { display: none; }
-
-    /* Scan corners */
-    .corner {
-      position: absolute;
-      width: 24px; height: 24px;
-      border-color: var(--nd-gold);
-      border-style: solid;
-    }
-    .corner-tl { top: 10%; left: 8%; border-width: 3px 0 0 3px; border-radius: 3px 0 0 0; }
-    .corner-tr { top: 10%; right: 8%; border-width: 3px 3px 0 0; border-radius: 0 3px 0 0; }
-    .corner-bl { bottom: 10%; left: 8%; border-width: 0 0 3px 3px; border-radius: 0 0 0 3px; }
-    .corner-br { bottom: 10%; right: 8%; border-width: 0 3px 3px 0; border-radius: 0 0 3px 0; }
-
-    #scan-line {
-      display: none;
-      position: absolute;
-      left: 8%; right: 8%;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--nd-gold), transparent);
-      top: 15%;
-      animation: scan 2.2s ease-in-out infinite;
-    }
-    @keyframes scan { 0%,100% { top: 15%; } 50% { top: 82%; } }
-
-    #overlay-msg {
-      position: absolute; inset: 0;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      gap: 0.6rem;
-      color: var(--dark-sky-blue);
-    }
-    #overlay-msg i { font-size: 44px; opacity: 0.5; }
-    #overlay-msg span { font-size: 0.8rem; font-weight: 300; letter-spacing: 0.06em; }
-
-    #flash {
-      position: absolute; inset: 0;
-      background: rgba(174,145,66,0.25);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.18s;
-      border-radius: 8px;
-    }
-    #flash.pop { opacity: 1; }
-
-    /* ── Buttons ── */
-    .btn-row {
-      display: flex;
-      gap: 0.6rem;
-      margin-top: 0.85rem;
-    }
-    .btn {
-      flex: 1;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.4rem;
-      padding: 0.55rem 1rem;
-      border-radius: 8px;
-      font-family: var(--font-body);
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      cursor: pointer;
-      border: none;
-      transition: background 0.18s, transform 0.1s;
-      text-decoration: none;
-    }
-    .btn:active { transform: scale(0.97); }
-    .btn-primary {
-      background: var(--medium-blue);
-      color: var(--warm-white);
-    }
-    .btn-primary:hover { background: var(--bright-blue); }
-    .btn-secondary {
-      background: var(--warm-white);
-      color: var(--nd-blue);
-      border: 1px solid var(--dark-sky-blue);
-    }
-    .btn-secondary:hover { background: var(--medium-sky-blue); }
-    .btn-upload { position: relative; overflow: hidden; }
-    .btn-upload input[type="file"] {
-      position: absolute; inset: 0;
-      opacity: 0; cursor: pointer;
-      font-size: 0;
-    }
-
-    /* ── Result box ── */
-    #result-box {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.75rem;
-      background: var(--light-sky-blue);
-      border: 1px solid var(--dark-sky-blue);
-      border-radius: 8px;
-      padding: 0.85rem 1rem;
-      min-height: 54px;
-    }
-    #result-box .icon-wrap {
-      width: 32px; height: 32px;
-      border-radius: 6px;
-      background: var(--medium-sky-blue);
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-      color: var(--medium-blue);
-      font-size: 18px;
-    }
-    #result-box.success { background: #f0f7f0; border-color: var(--success-green); }
-    #result-box.success .icon-wrap { background: #d6ead6; color: var(--success-green); }
-    #result-text {
-      flex: 1;
-      font-size: 0.82rem;
-      color: var(--medium-blue);
-      word-break: break-all;
-      line-height: 1.5;
-      padding-top: 0.1rem;
-    }
-    #result-text.placeholder { color: var(--dark-sky-blue); font-style: italic; }
-    #result-text.found { color: var(--nd-blue); font-weight: 500; }
-    .result-actions {
-      display: flex; flex-direction: column; gap: 0.3rem;
-      flex-shrink: 0;
-    }
-    .icon-btn {
-      width: 28px; height: 28px;
-      border-radius: 6px;
-      border: 1px solid var(--dark-sky-blue);
-      background: #fff;
-      color: var(--medium-blue);
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer;
-      font-size: 14px;
-      transition: background 0.15s;
-    }
-    .icon-btn:hover { background: var(--medium-sky-blue); }
-
-    /* ── Status badge ── */
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-      padding: 0.2rem 0.6rem;
-      border-radius: 999px;
-      font-size: 0.65rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-    .badge-idle { background: var(--medium-sky-blue); color: var(--medium-blue); }
-    .badge-scanning { background: #fef9e7; color: #7d5a10; border: 1px solid #e5c86b; }
-    .badge-found { background: #d6ead6; color: var(--success-green); }
-    .badge-error { background: #fde8e8; color: var(--accent-red); }
-    .badge i { font-size: 10px; }
-
-    /* ── History ── */
-    #history-section { display: none; }
-    .history-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 0.6rem;
-    }
-    .history-header span {
-      font-size: 0.65rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--medium-blue);
-      display: flex; align-items: center; gap: 0.4rem;
-    }
-    #history-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-    }
-    #history-list li {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      background: var(--light-warm-white);
-      border: 1px solid var(--warm-white);
-      border-radius: 8px;
-      padding: 0.55rem 0.75rem;
-      font-size: 0.78rem;
-      color: var(--nd-blue);
-      word-break: break-all;
-    }
-    #history-list li i { font-size: 14px; color: var(--nd-gold); flex-shrink: 0; }
-    #history-list li .hist-text { flex: 1; }
-    #history-list li .hist-time { font-size: 0.65rem; color: var(--dark-sky-blue); white-space: nowrap; }
-
-    /* ── Toast ── */
-    #toast {
-      position: fixed;
-      bottom: 1.5rem; left: 50%;
-      transform: translateX(-50%);
-      background: var(--nd-blue);
-      color: var(--warm-white);
-      padding: 0.5rem 1.1rem;
-      border-radius: 8px;
-      font-size: 0.75rem;
-      font-weight: 500;
-      letter-spacing: 0.04em;
-      opacity: 0;
-      transition: opacity 0.25s;
-      pointer-events: none;
-      display: flex; align-items: center; gap: 0.4rem;
-      border-left: 3px solid var(--nd-gold);
-      white-space: nowrap;
-    }
-
-    /* ── Footer ── */
-    footer {
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.65rem;
-      color: var(--dark-sky-blue);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-
-    @media (max-width: 400px) {
-      header h1 { font-size: 1.3rem; }
-      .btn { font-size: 0.68rem; padding: 0.5rem 0.6rem; }
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>QR Reader — Approach International Student Center</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
+<link rel="stylesheet" href="css/styles.css">
 </head>
-<body>
+<body class="qrread-page">
 
-  <!-- Header -->
-  <header>
-    <div class="logo-icon" aria-hidden="true">
-      <i class="ti ti-qrcode"></i>
+<header class="qrread-header">
+  <div class="logo-icon" aria-hidden="true"><i class="ti ti-qrcode"></i></div>
+  <div>
+    <h1>QR Reader</h1>
+    <p>Scan &amp; Decode</p>
+  </div>
+</header>
+
+<main class="qrread-main">
+
+  <!-- Camera Card -->
+  <div class="qrread-card">
+    <div class="qrread-card-header">
+      <i class="ti ti-camera" aria-hidden="true"></i>
+      <span>Viewfinder</span>
+      <span id="status-badge" class="qrread-badge idle" style="margin-left:auto"><i class="ti ti-circle" aria-hidden="true"></i> Idle</span>
     </div>
-    <div>
-      <h1>QR Reader</h1>
-      <p>Scan &amp; Decode</p>
-    </div>
-  </header>
-
-  <main>
-
-    <!-- Camera Card -->
-    <div class="card">
-      <div class="card-header">
-        <i class="ti ti-camera" aria-hidden="true"></i>
-        <span>Viewfinder</span>
-        <span id="status-badge" class="badge badge-idle" style="margin-left:auto">
-          <i class="ti ti-circle" aria-hidden="true"></i> Idle
-        </span>
-      </div>
-      <div class="card-body">
-        <div id="video-wrap" role="img" aria-label="Camera viewfinder">
-          <video id="video" autoplay muted playsinline></video>
-          <canvas id="canvas"></canvas>
-          <div class="corner corner-tl" aria-hidden="true"></div>
-          <div class="corner corner-tr" aria-hidden="true"></div>
-          <div class="corner corner-bl" aria-hidden="true"></div>
-          <div class="corner corner-br" aria-hidden="true"></div>
-          <div id="scan-line" aria-hidden="true"></div>
-          <div id="overlay-msg" aria-live="polite">
-            <i class="ti ti-camera-off" aria-hidden="true"></i>
-            <span>Camera not started</span>
-          </div>
-          <div id="flash" aria-hidden="true"></div>
+    <div class="qrread-card-body">
+      <div id="video-wrap" role="img" aria-label="Camera viewfinder">
+        <video id="video" autoplay muted playsinline></video>
+        <canvas id="canvas"></canvas>
+        <div class="corner corner-tl" aria-hidden="true"></div>
+        <div class="corner corner-tr" aria-hidden="true"></div>
+        <div class="corner corner-bl" aria-hidden="true"></div>
+        <div class="corner corner-br" aria-hidden="true"></div>
+        <div id="scan-line" aria-hidden="true"></div>
+        <div id="overlay-msg" aria-live="polite">
+          <i class="ti ti-camera-off" aria-hidden="true"></i>
+          <span>Camera not started</span>
         </div>
-
-        <div class="btn-row">
-          <button class="btn btn-primary" id="cam-btn" onclick="toggleCam()">
-            <i class="ti ti-video" aria-hidden="true"></i>
-            Start Camera
-          </button>
-          <button class="btn btn-secondary btn-upload" aria-label="Upload image with QR code">
-            <i class="ti ti-upload" aria-hidden="true"></i>
-            Upload Image
-            <input type="file" id="file-input" accept="image/*" onchange="handleFile(event)" aria-label="Choose image file">
-          </button>
-        </div>
+        <div id="flash" aria-hidden="true"></div>
       </div>
-    </div>
 
-    <!-- Result Card -->
-    <div class="card">
-      <div class="card-header">
-        <i class="ti ti-code" aria-hidden="true"></i>
-        <span>Result</span>
-      </div>
-      <div class="card-body">
-        <div id="result-box" aria-live="polite" aria-label="Scan result">
-          <div class="icon-wrap">
-            <i class="ti ti-qrcode" id="result-icon" aria-hidden="true"></i>
-          </div>
-          <span id="result-text" class="placeholder">Awaiting scan…</span>
-          <div class="result-actions">
-            <button class="icon-btn" id="copy-btn" onclick="copyResult()" style="display:none" title="Copy to clipboard" aria-label="Copy result">
-              <i class="ti ti-copy" aria-hidden="true"></i>
-            </button>
-            <button class="icon-btn" id="open-btn" onclick="openCurrentLink()" style="display:none" title="Open URL" aria-label="Open URL">
-              <i class="ti ti-external-link" aria-hidden="true"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- History Card -->
-    <div class="card" id="history-section">
-      <div class="card-header">
-        <i class="ti ti-history" aria-hidden="true"></i>
-        <span>Recent Scans</span>
-        <button class="icon-btn" onclick="clearHistory()" style="margin-left:auto" title="Clear history" aria-label="Clear scan history">
-          <i class="ti ti-trash" aria-hidden="true"></i>
+      <div class="qrread-btn-row">
+        <button class="qrread-btn primary" id="cam-btn">
+          <i class="ti ti-video" aria-hidden="true"></i> Start Camera
+        </button>
+        <button class="qrread-btn secondary qrread-btn-upload" aria-label="Upload image with QR code">
+          <i class="ti ti-upload" aria-hidden="true"></i> Upload Image
+          <input type="file" id="file-input" accept="image/*" aria-label="Choose image file">
         </button>
       </div>
-      <div class="card-body" style="padding-top:0.75rem">
-        <ul id="history-list" aria-label="Scan history"></ul>
-      </div>
     </div>
-
-  </main>
-
-  <footer>QR Reader &mdash; jsQR &amp; Tailwind CSS</footer>
-
-  <div id="toast" role="status" aria-live="polite">
-    <i class="ti ti-check" aria-hidden="true"></i>
-    <span id="toast-text">Copied!</span>
   </div>
 
-  <!-- jsQR -->
-  <script src="https://unpkg.com/jsqr@1.4.0/dist/jsQR.js"></script>
+  <!-- Result Card -->
+  <div class="qrread-card">
+    <div class="qrread-card-header"><i class="ti ti-code" aria-hidden="true"></i><span>Result</span></div>
+    <div class="qrread-card-body">
+      <div id="result-box" aria-live="polite" aria-label="Scan result">
+        <div class="icon-wrap"><i class="ti ti-qrcode" id="result-icon" aria-hidden="true"></i></div>
+        <span id="result-text" class="placeholder">Awaiting scan…</span>
+        <div class="result-actions">
+          <button class="qrread-icon-btn" id="copy-btn" style="display:none" title="Copy to clipboard" aria-label="Copy result"><i class="ti ti-copy" aria-hidden="true"></i></button>
+          <button class="qrread-icon-btn" id="open-btn" style="display:none" title="Open URL" aria-label="Open URL"><i class="ti ti-external-link" aria-hidden="true"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <script>
-    let stream = null, rafId = null, scanning = false;
-    let currentResult = '';
-    const history = [];
-    let jsqrReady = false;
+  <!-- History Card -->
+  <div class="qrread-card" id="history-section">
+    <div class="qrread-card-header">
+      <i class="ti ti-history" aria-hidden="true"></i>
+      <span>Recent Scans</span>
+      <button class="qrread-icon-btn" id="clear-history-btn" style="margin-left:auto" title="Clear history" aria-label="Clear scan history"><i class="ti ti-trash" aria-hidden="true"></i></button>
+    </div>
+    <div class="qrread-card-body" style="padding-top:0.75rem">
+      <ul id="history-list" aria-label="Scan history"></ul>
+    </div>
+  </div>
 
-    // Confirm jsQR loaded; if not, poll briefly
-    function ensureJsQR() {
-      return new Promise((resolve, reject) => {
-        if (typeof jsQR === 'function') { resolve(); return; }
-        let attempts = 0;
-        const iv = setInterval(() => {
-          if (typeof jsQR === 'function') { clearInterval(iv); resolve(); }
-          else if (++attempts > 40) { clearInterval(iv); reject(new Error('jsQR failed to load')); }
-        }, 100);
-      });
-    }
+</main>
 
-    const video     = document.getElementById('video');
-    const canvas    = document.getElementById('canvas');
-    const ctx       = canvas.getContext('2d', { willReadFrequently: true });
-    const scanLine  = document.getElementById('scan-line');
-    const overlayMsg= document.getElementById('overlay-msg');
-    const camBtn    = document.getElementById('cam-btn');
-    const copyBtn   = document.getElementById('copy-btn');
-    const openBtn   = document.getElementById('open-btn');
-    const flash     = document.getElementById('flash');
-    const resultBox = document.getElementById('result-box');
-    const resultText= document.getElementById('result-text');
-    const resultIcon= document.getElementById('result-icon');
-    const badge     = document.getElementById('status-badge');
+<footer class="qrread-footer">QR Reader — jsQR</footer>
 
-    function setbadge(state) {
-      const map = {
-        idle:     ['badge-idle',     'ti-circle',    'Idle'],
-        scanning: ['badge-scanning', 'ti-ripple',    'Scanning'],
-        found:    ['badge-found',    'ti-circle-check', 'Found'],
-        error:    ['badge-error',    'ti-alert-circle', 'Error'],
-      };
-      badge.className = 'badge ' + map[state][0];
-      badge.innerHTML = `<i class="ti ${map[state][1]}" aria-hidden="true"></i> ${map[state][2]}`;
-    }
+<div id="qrread-toast" role="status" aria-live="polite">
+  <i class="ti ti-check" aria-hidden="true"></i>
+  <span id="toast-text">Copied!</span>
+</div>
 
-    function toggleCam() {
-      stream ? stopCam() : startCam();
-    }
-
-    async function startCam() {
-      const constraints = [
-        { video: { facingMode: { exact: 'environment' } } },
-        { video: { facingMode: 'environment' } },
-        { video: true }
-      ];
-
-      let lastErr;
-      for (const c of constraints) {
-        try { stream = await navigator.mediaDevices.getUserMedia(c); break; }
-        catch(e) { lastErr = e; stream = null; }
-      }
-
-      if (!stream) {
-        overlayMsg.innerHTML = '<i class="ti ti-alert-circle" aria-hidden="true" style="font-size:44px;opacity:0.6;color:#c1415e"></i><span>Camera access denied</span>';
-        overlayMsg.style.display = 'flex';
-        setbadge('error');
-        return;
-      }
-
-      video.srcObject = stream;
-      video.onloadedmetadata = async () => {
-        try { await ensureJsQR(); } catch(e) {
-          overlayMsg.innerHTML = '<i class="ti ti-alert-circle" aria-hidden="true" style="font-size:44px;opacity:0.6;color:#c1415e"></i><span>jsQR library failed to load</span>';
-          overlayMsg.style.display = 'flex'; setbadge('error'); return;
-        }
-        scanning = true; tick();
-      };
-      camBtn.innerHTML = '<i class="ti ti-video-off" aria-hidden="true"></i> Stop Camera';
-      camBtn.style.background = 'var(--accent-red)';
-      overlayMsg.style.display = 'none';
-      scanLine.style.display = 'block';
-      setbadge('scanning');
-    }
-
-    function stopCam() {
-      scanning = false;
-      if (rafId) cancelAnimationFrame(rafId);
-      if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
-      video.srcObject = null;
-      camBtn.innerHTML = '<i class="ti ti-video" aria-hidden="true"></i> Start Camera';
-      camBtn.style.background = '';
-      overlayMsg.innerHTML = '<i class="ti ti-camera-off" aria-hidden="true"></i><span>Camera stopped</span>';
-      overlayMsg.style.display = 'flex';
-      scanLine.style.display = 'none';
-      setbadge('idle');
-    }
-
-    function tick() {
-      if (!scanning) return;
-      if (video.readyState === video.HAVE_ENOUGH_DATA) {
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        const img = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const code = jsQR(img.data, img.width, img.height, { inversionAttempts: 'dontInvert' });
-        if (code && code.data !== currentResult) onFound(code.data);
-      }
-      rafId = requestAnimationFrame(tick);
-    }
-
-    async function handleFile(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      try { await ensureJsQR(); } catch(err) { showToast('jsQR library not loaded yet'); return; }
-      const reader = new FileReader();
-      reader.onload = ev => {
-        const img = new Image();
-        img.onload = () => {
-          canvas.width = img.width;
-          canvas.height = img.height;
-          ctx.drawImage(img, 0, 0);
-          const imgData = ctx.getImageData(0, 0, img.width, img.height);
-          const code = jsQR(imgData.data, imgData.width, imgData.height);
-          if (code) { onFound(code.data); }
-          else { showResult('No QR code detected in this image.', false); setbadge('error'); }
-        };
-        img.src = ev.target.result;
-      };
-      reader.readAsDataURL(file);
-      e.target.value = '';
-    }
-
-    function onFound(data) {
-      currentResult = data;
-      flashEffect();
-      showResult(data, true);
-      addHistory(data);
-      setbadge('found');
-    }
-
-    function showResult(text, found) {
-      resultText.textContent = text;
-      resultText.className = found ? 'found' : '';
-      resultBox.className = found ? 'success' : '';
-      resultIcon.className = found ? 'ti ti-circle-check' : 'ti ti-alert-triangle';
-      copyBtn.style.display = found ? 'flex' : 'none';
-      const isUrl = found && /^https?:\/\//i.test(text);
-      openBtn.style.display = isUrl ? 'flex' : 'none';
-    }
-
-    function flashEffect() {
-      flash.classList.add('pop');
-      setTimeout(() => flash.classList.remove('pop'), 220);
-    }
-
-    function copyResult() {
-      navigator.clipboard.writeText(currentResult).then(() => showToast('Copied to clipboard'));
-    }
-
-    function openCurrentLink() {
-      window.open(currentResult, '_blank', 'noopener,noreferrer');
-    }
-
-    function showToast(msg) {
-      const toast = document.getElementById('toast');
-      document.getElementById('toast-text').textContent = msg;
-      toast.style.opacity = 1;
-      setTimeout(() => toast.style.opacity = 0, 2000);
-    }
-
-    function addHistory(data) {
-      if (history[0]?.data === data) return;
-      const now = new Date();
-      const ts = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      history.unshift({ data, ts });
-      if (history.length > 5) history.pop();
-      renderHistory();
-    }
-
-    function renderHistory() {
-      const section = document.getElementById('history-section');
-      const list = document.getElementById('history-list');
-      section.style.display = history.length ? 'block' : 'none';
-      list.innerHTML = history.map(({ data, ts }) => {
-        const isUrl = /^https?:\/\//i.test(data);
-        const icon = isUrl ? 'ti-link' : 'ti-text-size';
-        return `<li>
-          <i class="ti ${icon}" aria-hidden="true"></i>
-          <span class="hist-text">${escHtml(data)}</span>
-          <span class="hist-time">${ts}</span>
-          ${isUrl ? `<button class="icon-btn" onclick="window.open(${JSON.stringify(data)},'_blank','noopener,noreferrer')" title="Open" aria-label="Open link"><i class="ti ti-external-link" aria-hidden="true"></i></button>` : ''}
-        </li>`;
-      }).join('');
-    }
-
-    function escHtml(s) {
-      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-    }
-
-    function clearHistory() {
-      history.length = 0;
-      renderHistory();
-      currentResult = '';
-      resultText.textContent = 'Awaiting scan\u2026';
-      resultText.className = 'placeholder';
-      resultBox.className = '';
-      resultIcon.className = 'ti ti-qrcode';
-      copyBtn.style.display = 'none';
-      openBtn.style.display = 'none';
-      if (!stream) setbadge('idle');
-    }
-  </script>
+<script src="https://unpkg.com/jsqr@1.4.0/dist/jsQR.js"></script>
+<script type="module" src="js/pages/qr-reader.js"></script>
 </body>
 </html>

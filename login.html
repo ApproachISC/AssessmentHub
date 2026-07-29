@@ -4,10 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sign In — Approach International Student Center</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
@@ -18,16 +15,16 @@
   <div>Sign In</div>
 </div>
 
-<main class="page">
+<main class="centered">
   <div class="card login">
     <div class="institutional-mark">
       <img src="images/black-logo.png" alt="Approach International Student Center">
-      <div class="institutional-name">Approach<span style="color: var(--nd-gold);">USA</span></div>
+      <div class="institutional-name">Approach<em>USA</em></div>
       <div class="institutional-sub">International Student Center</div>
     </div>
 
     <h1 class="text-center">Sign <em>In</em></h1>
-    <p class="subtitle">Access the examination administration portal</p>
+    <p class="subtitle text-center">Access the examination administration portal</p>
 
     <div class="alert error" id="errorAlert"></div>
     <div class="alert success" id="successAlert"></div>
@@ -41,7 +38,7 @@
         <label for="password">Password</label>
         <input type="password" id="password" required autocomplete="current-password">
       </div>
-      <button type="submit" class="btn-primary w-100" id="signInBtn">Sign In</button>
+      <button type="submit" class="btn btn--primary w-100" id="signInBtn">Sign In</button>
     </form>
   </div>
 </main>
@@ -50,85 +47,6 @@
   Copyright © 2026 Approach International Student Center, Inc. — All rights reserved.
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  // ============================================
-  // CONFIGURE YOUR SUPABASE CREDENTIALS HERE
-  // ============================================
-  const SUPABASE_URL = 'https://okyauyzdensuvuoyphds.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9reWF1eXpkZW5zdXZ1b3lwaGRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1NTgwOTUsImV4cCI6MjA5MzEzNDA5NX0.NZUclCDHecS9bcZOLHj1ZXBFf5b5k9klRwTMfJrglfI';
-  // ============================================
-
-  const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-  const errorAlert = document.getElementById('errorAlert');
-  const successAlert = document.getElementById('successAlert');
-  const signInBtn = document.getElementById('signInBtn');
-
-  function showError(msg) {
-    errorAlert.textContent = msg;
-    errorAlert.classList.add('show');
-    successAlert.classList.remove('show');
-  }
-  function showSuccess(msg) {
-    successAlert.textContent = msg;
-    successAlert.classList.add('show');
-    errorAlert.classList.remove('show');
-  }
-
-  // Redirect to the right place based on role and setup status
-  async function redirectByRole(userId) {
-    const { data: profile, error } = await db.from('profiles')
-      .select('role, is_active, full_name, first_login_at').eq('id', userId).single();
-
-    if (error || !profile) {
-      showError('Could not load your profile. Contact the Academic team.');
-      await db.auth.signOut();
-      return;
-    }
-    if (!profile.is_active) {
-      showError('Your account has been deactivated. Contact the Academic team.');
-      await db.auth.signOut();
-      return;
-    }
-    // Incomplete setup — invitee hasn't set their name/password yet
-    if (!profile.full_name || !profile.first_login_at) {
-      window.location.href = 'setup-account.html';
-      return;
-    }
-    if (profile.role === 'academic') {
-      window.location.href = 'admin-dashboard.html';
-    } else {
-      window.location.href = 'dashboard.html';
-    }
-  }
-
-  // If already logged in, redirect immediately
-  (async () => {
-    const { data: { session } } = await db.auth.getSession();
-    if (session) await redirectByRole(session.user.id);
-  })();
-
-  document.getElementById('loginForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value;
-
-    signInBtn.disabled = true;
-    signInBtn.textContent = 'Signing in…';
-    errorAlert.classList.remove('show');
-
-    try {
-      const { data, error } = await db.auth.signInWithPassword({ email, password });
-      if (error) throw error;
-      await redirectByRole(data.user.id);
-    } catch (err) {
-      showError(err.message || 'Sign-in failed. Please check your credentials.');
-      signInBtn.disabled = false;
-      signInBtn.textContent = 'Sign In';
-    }
-  });
-</script>
-
+<script type="module" src="js/pages/login.js"></script>
 </body>
 </html>

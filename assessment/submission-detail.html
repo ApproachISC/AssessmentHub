@@ -4,47 +4,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Assessment Submission Review — Approach International Student Center</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../css/styles.css">
 </head>
 <body>
 
-<div class="brand-bar">
-  <div class="brand-bar-logo">
-    <img src="images/gold-logo.png" alt="Approach International Student Center" class="brand-logo">
-  </div>
-  <div class="brand-bar-right">
-    <a href="assessment-dashboard.html" class="nav-link">Assessments</a>
-    <a href="dashboard.html" class="nav-link">Exams</a>
-    <div class="user-menu">
-      <button class="user-menu-trigger" id="userMenuTrigger">
-        <span class="user-info">
-          <strong id="userName">—</strong>
-          <span id="userRole"></span>
-        </span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ae9142" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-icon lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-        <span style="font-size: 0.9em;">▼</span>
-      </button>
-      <div class="user-menu-dropdown" id="userMenuDropdown">
-        <a href="qr-generator.html" target="_blank">QR Code Generator ➚</a>
-        <a href="tasgac_session_log.html" target="_blank">TAs Session Log Report ➚</a>
-        <a href="admin-dashboard.html" id="adminLink" style="display:none;">Administration</a>
-        <a href="profile.html">Profile</a>
-        <button id="signoutBtn">Sign Out</button>
-      </div>
-    </div>
-  </div>
-</div>
+<div id="navbarContainer"></div>
 
-<div class="auth-loading" id="authLoading"><div class="spinner"></div><p style="font-family:var(--font-display);font-style:italic;">Loading submission…</p></div>
+<div class="auth-loading" id="authLoading"><div class="spinner"></div><p style="font-family:var(--serif);font-style:italic;">Loading submission…</p></div>
 
 <div id="content" style="display:none;">
-  <div class="breadcrumb">
-    <a href="#" id="bcBackBtn">Submissions</a> <span>›</span> <span id="bcStudent">—</span>
-  </div>
-  <div class="page">
+  <main class="page">
+    <div class="breadcrumb">
+      <a href="#" id="bcBackBtn">Submissions</a> <span>›</span> <span id="bcStudent">—</span>
+    </div>
+
     <div class="meta-bar">
       <div style="flex:1;">
         <div class="meta-info" id="metaInfo">
@@ -58,7 +31,7 @@
         </div>
       </div>
       <div class="meta-actions">
-        <a href="#" class="btn-secondary" id="backBtn">← All Submissions</a>
+        <a href="#" class="btn btn--secondary" id="backBtn">← All Submissions</a>
       </div>
     </div>
 
@@ -81,15 +54,15 @@
           <div class="panel-title">Score Summary</div>
           <div class="summary-row"><span class="label">Auto Score</span><span class="value" id="sumAuto">—</span></div>
           <div class="summary-row"><span class="label">Max Score</span><span class="value" id="sumMax">—</span></div>
-          <div class="summary-row" style="border-top:2px solid var(--nd-gold);padding-top:0.75rem;margin-top:0.25rem;">
-            <span class="label" style="font-weight:600;color:var(--nd-blue);">Total</span>
-            <span class="value" style="font-weight:700;color:var(--nd-blue);font-size:1.1rem;" id="sumTotal">—</span>
+          <div class="summary-row" style="border-top:2px solid var(--gold);padding-top:0.75rem;margin-top:0.25rem;">
+            <span class="label" style="font-weight:700;color:var(--navy);">Total</span>
+            <span class="value" style="font-weight:700;color:var(--navy);font-size:1.1rem;" id="sumTotal">—</span>
           </div>
         </div>
 
         <div class="panel">
           <div class="panel-title">Results Visibility</div>
-          <div id="visibilityInfo" style="font-family:var(--font-display);font-style:italic;font-size:0.9rem;color:var(--medium-blue);line-height:1.45;">—</div>
+          <div id="visibilityInfo" style="font-family:var(--serif);font-style:italic;font-size:0.9rem;color:var(--navy-l);line-height:1.45;">—</div>
         </div>
 
         <div class="panel">
@@ -99,417 +72,21 @@
             <span>Mark as reviewed</span>
           </label>
           <textarea class="reviewer-notes-input" id="reviewerNotes" placeholder="Internal notes about this submission…"></textarea>
-          <button class="btn-primary" id="saveGradeBtn" style="width:100%;margin-top:0.85rem;">Save Review</button>
+          <button class="btn btn--primary w-100" id="saveGradeBtn" style="margin-top:0.85rem;">Save Review</button>
         </div>
       </aside>
     </div>
-  </div>
+  </main>
 </div>
 
 <div class="error-screen" id="errorScreen" style="display:none;">
-  <div style="text-align:center;padding:4rem 2rem;">
-    <h2 style="font-family:var(--font-display);font-size:1.8rem;color:var(--accent-red);margin-bottom:0.5rem;" id="errorTitle">Error</h2>
-    <p style="font-family:var(--font-display);font-style:italic;color:var(--medium-blue);" id="errorMessage">—</p>
-    <a href="assessment-dashboard.html" class="btn-secondary" style="display:inline-block;margin-top:1.5rem;text-decoration:none;">Back to Assessments</a>
-  </div>
+  <h2 style="font-size:1.8rem;color:var(--red);margin-bottom:0.5rem;" id="errorTitle">Error</h2>
+  <p style="font-family:var(--serif);font-style:italic;color:var(--navy-l);" id="errorMessage">—</p>
+  <a href="dashboard.html" class="btn btn--secondary" style="margin-top:1.5rem;">Back to Assessments</a>
 </div>
 
-<div class="toast" id="toast"></div>
 <div class="copyright">Copyright © 2026 Approach International Student Center, Inc. — All rights reserved.</div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  const SUPABASE_URL = 'https://okyauyzdensuvuoyphds.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9reWF1eXpkZW5zdXZ1b3lwaGRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1NTgwOTUsImV4cCI6MjA5MzEzNDA5NX0.NZUclCDHecS9bcZOLHj1ZXBFf5b5k9klRwTMfJrglfI';
-  const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-  let submission = null;
-  let assessment = null;
-  let examDef = null;
-
-  const toast = document.getElementById('toast');
-  function showToast(m,t=''){toast.textContent=m;toast.className='toast show '+t;setTimeout(()=>toast.classList.remove('show'),4000);}
-  function escapeHtml(s){if(s==null)return'';return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-  function formatDate(iso){if(!iso)return'—';const d=new Date(iso);return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})+', '+d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});}
-  function formatDuration(s){if(s==null)return'—';return `${Math.floor(s/60)}m ${String(s%60).padStart(2,'0')}s`;}
-  function showError(title,msg){document.getElementById('authLoading').style.display='none';document.getElementById('errorTitle').textContent=title;document.getElementById('errorMessage').textContent=msg;document.getElementById('errorScreen').style.display='block';}
-
-  // ===== AUTH =====
-  async function checkAuth(){
-    const {data:{session}}=await db.auth.getSession();
-    if(!session){window.location.href='login.html';return false;}
-    const {data:p}=await db.from('profiles').select('*').eq('id',session.user.id).single();
-    if(!p||!p.is_active){await db.auth.signOut();window.location.href='login.html';return false;}
-    document.getElementById('userName').textContent=p.full_name||session.user.email;
-    if(p.role==='academic')document.getElementById('adminLink').style.display='inline-block';
-    return true;
-  }
-  document.getElementById('userMenuTrigger').addEventListener('click',()=>document.getElementById('userMenuDropdown').classList.toggle('show'));
-  document.addEventListener('click',e=>{const m=document.querySelector('.user-menu');if(m&&!m.contains(e.target))document.getElementById('userMenuDropdown').classList.remove('show');});
-  document.getElementById('signoutBtn').addEventListener('click',async()=>{await db.auth.signOut();window.location.href='login.html';});
-
-  // ===== LOAD =====
-  async function loadData(){
-    const params=new URLSearchParams(window.location.search);
-    const id=params.get('id');
-    if(!id){showError('No submission ID','No submission ID was provided in the URL.');return;}
-    try{
-      const subRes=await db.from('assessment_submissions').select('*').eq('id',id).single();
-      if(subRes.error)throw subRes.error;
-      submission=subRes.data;
-
-      const [aRes,clsRes]=await Promise.all([
-        db.from('assessments').select('*').eq('id',submission.assessment_id).single(),
-        db.from('classes').select('name').eq('id',(await db.from('assessments').select('class_id').eq('id',submission.assessment_id).single()).data?.class_id).maybeSingle()
-      ]);
-      if(aRes.error)throw aRes.error;
-      assessment=aRes.data;
-      examDef=assessment.assessment_definition;
-
-      document.getElementById('bcStudent').textContent=submission.student_name;
-
-      // Back link
-      document.getElementById('bcBackBtn').href=`assessment-submissions.html?id=${assessment.id}`;
-      document.getElementById('backBtn').href=`assessment-submissions.html?id=${assessment.id}`;
-
-      // Meta
-      document.getElementById('metaStudent').textContent=submission.student_name;
-      document.getElementById('metaAssessmentTitle').textContent=assessment.title||assessment.code;
-      document.getElementById('metaCode').textContent=submission.assessment_code;
-      document.getElementById('metaClass').textContent=clsRes.data?.name||'—';
-      document.getElementById('metaSubmitted').textContent=formatDate(submission.submitted_at);
-      document.getElementById('metaDuration').textContent=formatDuration(submission.time_taken_seconds);
-      document.getElementById('metaResultsShown').textContent=submission.results_shown?'Shown to student':'Not shown';
-
-      // Results visibility info
-      const visMap={none:'No results were shown to the student after submission.',score_only:'The student was shown their total score only.',full_breakdown:'The student was shown a full per-question breakdown.'};
-      document.getElementById('visibilityInfo').textContent=visMap[assessment.results_visibility]||'—';
-
-      // Review state
-      document.getElementById('reviewedCheckbox').checked=submission.reviewed||false;
-      document.getElementById('reviewerNotes').value=submission.reviewer_notes||'';
-
-      renderSections();
-      updateScoreSummary();
-
-      document.getElementById('authLoading').style.display='none';
-      document.getElementById('content').style.display='block';
-    }catch(err){showError('Could not load submission',err.message||'Unknown error');}
-  }
-
-  // ===== GRADING =====
-  // All 9 assessment question types are auto-graded.
-  // Returns {earned, max, allCorrect, allBlank}
-  function gradeQuestion(q){
-    const answers=submission.answers||{};
-    const max=Number(q.points)||0;
-
-    function blank(){return{earned:0,max,allCorrect:false,allBlank:true};}
-    function full(){return{earned:max,max,allCorrect:true,allBlank:false};}
-    function partial(earned){return{earned,max,allCorrect:false,allBlank:false};}
-    function wrong(){return{earned:0,max,allCorrect:false,allBlank:false};}
-
-    switch(q.type){
-      case 'multiple_choice':{
-        const v=answers[q.id];
-        if(!v)return blank();
-        return v===q.answer?full():wrong();
-      }
-      case 'multiple_select':{
-        const given=answers[q.id]||[];
-        if(!given.length)return blank();
-        const correct=q.correct_answers||[];
-        if(!correct.length)return blank();
-        const perItem=max/correct.length;
-        let earned=0;
-        correct.forEach(k=>{if(given.includes(k))earned+=perItem;});
-        const wrong2=given.filter(k=>!correct.includes(k));
-        earned=Math.max(0,Math.round((earned-wrong2.length*perItem)*100)/100);
-        return earned===max?full():earned>0?partial(earned):wrong();
-      }
-      case 'true_false':{
-        const v=answers[q.id];
-        if(!v)return blank();
-        return String(v).toUpperCase()===String(q.answer).toUpperCase()?full():wrong();
-      }
-      case 'fill_blank':{
-        const v=(answers[q.id]||'').trim().toLowerCase();
-        if(!v)return blank();
-        const cands=(q.accepted_answers?.length?q.accepted_answers:[q.answer]).filter(Boolean);
-        return cands.some(c=>c.trim().toLowerCase()===v)?full():wrong();
-      }
-      case 'fill_blank_multi':{
-        const blanks=q.blanks||[];
-        if(!blanks.length)return blank();
-        let earned=0,totalBlanks=0;
-        blanks.forEach(b=>{
-          totalBlanks++;
-          const v=(answers[b.id]||'').trim().toLowerCase();
-          const cands=(b.accepted_answers?.length?b.accepted_answers:[b.answer]).filter(Boolean);
-          const bPts=Number(b.points)||(max/blanks.length);
-          if(cands.some(c=>c.trim().toLowerCase()===v))earned+=bPts;
-        });
-        earned=Math.round(earned*100)/100;
-        const allBlank2=blanks.every(b=>!answers[b.id]);
-        return allBlank2?blank():earned>=max?full():earned>0?partial(earned):wrong();
-      }
-      case 'dropdown':{
-        const v=answers[q.id];
-        if(!v)return blank();
-        return v===q.answer?full():wrong();
-      }
-      case 'matching':{
-        const lefts=q.left_items||[];
-        if(!lefts.length)return blank();
-        const perItem=max/lefts.length;
-        let earned=0;
-        lefts.forEach(l=>{if(answers[`${q.id}__${l.id}`]===(q.answers||{})[l.id])earned+=perItem;});
-        earned=Math.round(earned*100)/100;
-        const anyAnswer=lefts.some(l=>answers[`${q.id}__${l.id}`]);
-        return !anyAnswer?blank():earned>=max?full():earned>0?partial(earned):wrong();
-      }
-      case 'drag_reorder':{
-        const v=(answers[q.id]||'').trim().toLowerCase();
-        if(!v)return blank();
-        return v===(q.expected||'').trim().toLowerCase()?full():wrong();
-      }
-      case 'drag_categorize':{
-        const items=q.items||[];
-        if(!items.length)return blank();
-        const perItem=max/items.length;
-        let earned=0;
-        items.forEach(it=>{if(answers[`${q.id}__${it}`]===(q.answers||{})[it])earned+=perItem;});
-        earned=Math.round(earned*100)/100;
-        const anyAnswer=items.some(it=>answers[`${q.id}__${it}`]);
-        return !anyAnswer?blank():earned>=max?full():earned>0?partial(earned):wrong();
-      }
-      default:return blank();
-    }
-  }
-
-  // ===== SCORE SUMMARY =====
-  function updateScoreSummary(){
-    if(!examDef)return;
-    let autoScore=0,maxScore=0;
-    (examDef.sections||[]).forEach(s=>(s.questions||[]).forEach(q=>{
-      const r=gradeQuestion(q);
-      autoScore+=r.earned; maxScore+=r.max;
-    }));
-    document.getElementById('sumAuto').textContent=`${Math.round(autoScore*100)/100}`;
-    document.getElementById('sumMax').textContent=maxScore;
-    document.getElementById('sumTotal').textContent=`${Math.round(autoScore*100)/100} / ${maxScore}`;
-  }
-
-  // ===== RENDER SECTIONS =====
-  function renderSections(){
-    const container=document.getElementById('sectionsContainer');
-    if(!examDef||!examDef.sections){container.innerHTML='<p style="color:var(--medium-blue);font-style:italic;">No assessment definition found.</p>';return;}
-    container.innerHTML='';
-    let displayCounter=0;
-    (examDef.sections||[]).forEach((section,sIdx)=>{
-      const sectionEl=document.createElement('div');
-      sectionEl.className='section-block';
-      let passageHtml='';
-      if(section.passage?.content)passageHtml=`<div class="section-passage" onclick="this.classList.toggle('expanded')">${escapeHtml(section.passage.content)}</div>`;
-      sectionEl.innerHTML=`
-        <div class="section-header">
-          <div class="section-label">Section ${sIdx+1} of ${examDef.sections.length}</div>
-          <div class="section-title-text">${escapeHtml(section.title||'Untitled section')}</div>
-          ${section.instructions?`<div style="font-style:italic;font-family:var(--font-display);color:var(--medium-blue);margin-top:0.3rem;font-size:0.95rem;">${escapeHtml(section.instructions)}</div>`:''}
-          ${passageHtml}
-        </div>
-        <div class="section-questions"></div>`;
-      container.appendChild(sectionEl);
-      const qContainer=sectionEl.querySelector('.section-questions');
-      (section.questions||[]).forEach(q=>{displayCounter++;qContainer.appendChild(renderQuestionResult(q,displayCounter));});
-    });
-  }
-
-  function renderQuestionResult(q,displayNumber){
-    const result=gradeQuestion(q);
-    const qEl=document.createElement('div');
-    qEl.className='question-block';
-    let chip;
-    if(result.allBlank)chip='<span class="q-grade-chip blank">Blank</span>';
-    else if(result.allCorrect){chip='<span class="q-grade-chip correct">Correct</span>';qEl.classList.add('correct');}
-    else if(result.earned>0){chip='<span class="q-grade-chip partial">Partial</span>';qEl.classList.add('partial');}
-    else{chip='<span class="q-grade-chip incorrect">Incorrect</span>';qEl.classList.add('incorrect');}
-
-    const earned=`${result.earned} / ${result.max}`;
-    qEl.innerHTML=`
-      <div class="q-header">
-        <span class="q-id">${escapeHtml(String(displayNumber))}</span>
-        <div class="q-prompt">${escapeHtml(q.prompt||'')}</div>
-        <div class="q-meta">
-          <span class="q-points-badge">${earned}</span>
-          ${chip}
-        </div>
-      </div>
-      <div class="q-body"></div>`;
-    renderQuestionBody(qEl.querySelector('.q-body'),q,result);
-    return qEl;
-  }
-
-  function renderQuestionBody(container,q,result){
-    const answers=submission.answers||{};
-    switch(q.type){
-      case 'multiple_choice': renderBodyMC(container,q,answers,result); break;
-      case 'multiple_select': renderBodyMS(container,q,answers,result); break;
-      case 'true_false':      renderBodyTF(container,q,answers,result); break;
-      case 'fill_blank':      renderBodyFB(container,q,answers,result); break;
-      case 'fill_blank_multi':renderBodyFBM(container,q,answers); break;
-      case 'dropdown':        renderBodyDD(container,q,answers,result); break;
-      case 'matching':        renderBodyMatching(container,q,answers); break;
-      case 'drag_reorder':    renderBodyDragReorder(container,q,answers,result); break;
-      case 'drag_categorize': renderBodyDragCategorize(container,q,answers); break;
-    }
-  }
-
-  // ----- Renderers -----
-  function mark(ok){return ok?'<span style="color:var(--success-green);font-weight:700;">✓</span>':'<span style="color:var(--accent-red);font-weight:700;">✗</span>';}
-  function studentVal(v,blank,ok){return `<span class="response-value ${blank?'blank':''} ${ok?'correct':'incorrect'}">${escapeHtml(v||'(blank)')}</span>`;}
-  function expectedVal(v){return `<span class="expected">${escapeHtml(v||'—')}</span>`;}
-
-  function renderBodyMC(c,q,a,r){
-    const given=a[q.id]; const correct=q.answer;
-    c.innerHTML=`<div class="response-section">
-      <div class="response-label">Student answer</div>
-      ${(q.options||[]).map(o=>{
-        const sel=o.key===given;const isCorrect=o.key===correct;
-        const style=sel&&isCorrect?'background:rgba(58,107,58,0.1);border-left:3px solid var(--success-green);':sel?'background:rgba(171,16,11,0.06);border-left:3px solid var(--accent-red);':isCorrect?'background:rgba(58,107,58,0.06);border-left:3px solid var(--success-green);opacity:0.7;':'';
-        return `<div style="padding:0.45rem 0.75rem;margin-bottom:0.25rem;${style}">
-          <strong style="margin-right:0.5rem;">${escapeHtml(o.key.toUpperCase())}</strong>${escapeHtml(o.text)}
-          ${sel?' <em style="opacity:0.7;">(student)</em>':''}${isCorrect&&!sel?' <em style="color:var(--success-green);">(correct)</em>':''}
-        </div>`;
-      }).join('')}
-    </div>`;}
-
-  function renderBodyMS(c,q,a,r){
-    const given=a[q.id]||[]; const correct=q.correct_answers||[];
-    c.innerHTML=`<div class="response-section">
-      <div class="response-label">Student selections</div>
-      ${(q.options||[]).map(o=>{
-        const sel=given.includes(o.key);const isCorrect=correct.includes(o.key);
-        const style=sel&&isCorrect?'background:rgba(58,107,58,0.1);border-left:3px solid var(--success-green);':sel?'background:rgba(171,16,11,0.06);border-left:3px solid var(--accent-red);':isCorrect&&!sel?'background:rgba(58,107,58,0.06);border-left:3px solid var(--success-green);opacity:0.7;':'';
-        return `<div style="padding:0.45rem 0.75rem;margin-bottom:0.25rem;${style}">
-          <strong style="margin-right:0.5rem;">${escapeHtml(o.key.toUpperCase())}</strong>${escapeHtml(o.text)}
-          ${sel?' <em style="opacity:0.7;">(selected)</em>':''}${isCorrect?' <em style="color:var(--success-green);">(correct)</em>':''}
-        </div>`;
-      }).join('')}
-    </div>`;}
-
-  function renderBodyTF(c,q,a,r){
-    const v=a[q.id]; const ok=String(v).toUpperCase()===String(q.answer).toUpperCase();
-    c.innerHTML=`<div class="response-section">
-      <div class="sub-row">
-        <span class="sub-label">Answer</span>
-        <div class="pair-grid">
-          <div>
-            ${studentVal(v?v==='T'?'True':'False':null,!v,ok)}
-            <span class="sub-mark ${ok?'correct':'incorrect'}">${ok?'✓':'✗'}</span>
-          </div>
-          <div><span class="response-value expected">${q.answer==='T'?'True':'False'}</span></div>
-        </div>
-      </div>
-    </div>`;}
-
-  function renderBodyFB(c,q,a,r){
-    const v=a[q.id]; const ok=r.allCorrect;
-    c.innerHTML=`<div class="response-section"><div class="sub-row"><span class="sub-label">Answer</span>${studentVal(v,!v,ok)}<span class="response-value expected">${escapeHtml(q.answer||'—')}</span><span class="sub-mark ${ok?'correct':'incorrect'}">${ok?'✓':'✗'}</span></div></div>`;}
-
-  function renderBodyFBM(c,q,a){
-    const blanks=q.blanks||[];
-    const rows=blanks.map(b=>{
-      const v=a[b.id]; const cands=(b.accepted_answers?.length?b.accepted_answers:[b.answer]).filter(Boolean);
-      const ok=v&&cands.some(ca=>ca.trim().toLowerCase()===(v||'').trim().toLowerCase());
-      return `<div class="sub-row"><span class="sub-label">${escapeHtml(b.id)}</span>${studentVal(v,!v,ok)}<span class="response-value expected">${escapeHtml(b.answer||'—')}</span><span class="sub-mark ${ok?'correct':'incorrect'}">${ok?'✓':'✗'}</span></div>`;
-    }).join('');
-    c.innerHTML=`<div class="response-section"><div class="response-label">Per-blank breakdown</div>${rows}</div>`;}
-
-  function renderBodyDD(c,q,a,r){
-    const v=a[q.id]; const ok=r.allCorrect;
-    c.innerHTML=`<div class="response-section"><div class="sub-row"><span class="sub-label">Selected</span>${studentVal(v,!v,ok)}<span class="response-value expected">${escapeHtml(q.answer||'—')}</span><span class="sub-mark ${ok?'correct':'incorrect'}">${ok?'✓':'✗'}</span></div></div>`;}
-
-  function renderBodyMatching(c,q,a){
-    const rows=(q.left_items||[]).map(l=>{
-      const given=a[`${q.id}__${l.id}`]; const expected=(q.answers||{})[l.id]; const ok=given===expected;
-      return `<div class="sub-row">
-        <span class="sub-label">${escapeHtml(l.id)}) ${escapeHtml(l.text)}</span>
-        <div class="pair-grid">
-          <div>
-            ${studentVal(given,!given,ok)}
-            <span class="sub-mark ${ok?'correct':'incorrect'}">${ok?'✓':'✗'}</span>
-          </div>
-          <div><span class="response-value expected">${escapeHtml(expected||'—')}</span></div>
-        </div>
-      </div>`;
-    }).join('');
-    c.innerHTML=`<div class="response-section"><div class="response-label">Matches</div>${rows}</div>`;}
-
-  function renderBodyDragReorder(c,q,a,r){
-    const v=a[q.id]; const ok=r.allCorrect;
-    c.innerHTML=`<div class="response-section">
-      <div class="sub-row">
-        <span class="sub-label">Order</span>
-        <div class="pair-grid">
-          <div>
-            ${studentVal(v,!v,ok)}
-            <span class="sub-mark ${ok?'correct':'incorrect'}">${ok?'✓':'✗'}</span>
-          </div>
-          <div>
-            <span class="response-value expected">${escapeHtml(q.expected||'—')}</span>
-          </div>
-        </div>
-      </div>
-    </div>`;}
-
-  function renderBodyDragCategorize(c,q,a){
-    const rows=(q.items||[]).map(it=>{
-      const given=a[`${q.id}__${it}`]; const expected=(q.answers||{})[it]; const ok=given===expected;
-      const catLabel=id=>(q.categories||[]).find(cat=>cat.id===id)?.label||id;
-      return `<div class="sub-row">
-        <span class="sub-label">${escapeHtml(it)}</span>
-        <div class="pair-grid">
-          <div>
-            ${studentVal(given?catLabel(given):null,!given,ok)}
-            <span class="sub-mark ${ok?'correct':'incorrect'}">${ok?'✓':'✗'}</span>
-          </div>
-          <div>
-            <span class="response-value expected">${escapeHtml(catLabel(expected||''))}</span>
-          </div>
-        </div>
-        </div>`;
-    }).join('');
-    c.innerHTML=`<div class="response-section"><div class="response-label">Categories</div>${rows}</div>`;}
-
-  // ===== SAVE REVIEW =====
-  document.getElementById('saveGradeBtn').addEventListener('click', async () => {
-    const btn=document.getElementById('saveGradeBtn');
-    btn.disabled=true; btn.textContent='Saving…';
-    const reviewed=document.getElementById('reviewedCheckbox').checked;
-    const notes=document.getElementById('reviewerNotes').value.trim()||null;
-
-    // Recompute auto score
-    let autoScore=0,maxScore=0;
-    (examDef.sections||[]).forEach(s=>(s.questions||[]).forEach(q=>{
-      const r=gradeQuestion(q); autoScore+=r.earned; maxScore+=r.max;
-    }));
-    autoScore=Math.round(autoScore*100)/100;
-
-    try{
-      const {error}=await db.from('assessment_submissions').update({
-        reviewed, reviewer_notes:notes,
-        reviewed_at:reviewed?new Date().toISOString():null,
-        auto_score:autoScore, total_score:autoScore, max_score:maxScore
-      }).eq('id',submission.id);
-      if(error)throw error;
-      showToast('Saved','success');
-    }catch(err){showToast('Failed: '+err.message,'error');}
-    finally{btn.disabled=false;btn.textContent='Save Review';}
-  });
-
-  // ===== INIT =====
-  (async()=>{if(!(await checkAuth()))return;await loadData();})();
-</script>
+<script type="module" src="../js/pages/assessment-submission-detail.js"></script>
 </body>
 </html>

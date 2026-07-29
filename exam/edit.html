@@ -4,125 +4,90 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Edit Exam — Approach International Student Center</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../css/styles.css">
 </head>
-<body class="page-editor">
+<body>
 
-<div class="brand-bar">
-  <div class="brand-bar-logo">
-    <img src="images/gold-logo.png" alt="Approach International Student Center" class="brand-logo">
-  </div>
-  <div class="brand-bar-right">
-    <!--<a href="assessment-dashboard.html" class="nav-link">Assessments</a>-->
-    <a href="dashboard.html" class="nav-link">Exams</a>
-    <div class="user-menu">
-      <button class="user-menu-trigger" id="userMenuTrigger">
-        <span class="user-info">
-          <strong id="userName">—</strong>
-          <span id="userRole"></span>
-        </span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ae9142" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-icon lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-        <span class="menu-caret">▼</span>
-      </button>
-      <div class="user-menu-dropdown" id="userMenuDropdown">
-        <a href="qr-generator.html" target="_blank">QR Code Generator ➚</a>
-        <a href="tasgac_session_log.html" target="_blank">TAs Session Log Report ➚</a>
-        <a href="admin-dashboard.html" id="adminLink" style="display:none;">Administration</a>
-        <a href="profile.html">Profile</a>
-        <button id="signoutBtn">Sign Out</button>
-      </div>
-    </div>
-  </div>
-</div>
+<div id="navbarContainer"></div>
 
 <div class="auth-loading" id="authLoading">
   <div class="spinner"></div>
-  <p>Loading exam…</p>
+  <p style="font-family:var(--serif);font-style:italic;">Loading exam…</p>
 </div>
 
-<div class="error-screen" id="errorScreen" style="display: none;">
-  <h2 id="errorTitle">—</h2>
-  <p id="errorMessage">—</p>
-  <a href="dashboard.html" class="btn-primary">Back to Exams</a>
+<div class="error-screen" id="errorScreen" style="display:none;">
+  <h2 style="font-size:1.8rem;color:var(--red);margin-bottom:0.5rem;" id="errorTitle">—</h2>
+  <p style="font-family:var(--serif);font-style:italic;color:var(--navy-l);" id="errorMessage">—</p>
+  <a href="dashboard.html" class="btn btn--secondary" style="margin-top:1.5rem;">Back to Exams</a>
 </div>
 
-<div id="content" style="display: none;">
-  <div class="breadcrumb">
-    <a href="dashboard.html">Exams</a> <span>›</span> <span>Edit Exam</span>
-  </div>
-
-  <div class="page">
+<div id="content" style="display:none;">
+  <main class="page">
+    <div class="breadcrumb">
+      <a href="dashboard.html">Exams</a> <span>›</span> <span>Edit Exam</span>
+    </div>
 
     <!-- ===== METADATA BAR ===== -->
     <div class="meta-bar">
-      <div class="meta-main">
-        <div class="badges" id="metaBadges"></div>
+      <div style="flex:1;">
+        <div class="badges" id="metaBadges" style="margin-bottom:0.5rem;"></div>
         <div class="meta-info">
-          <div class="meta-block">
-            <span class="meta-label">Code</span>
-            <span class="meta-value code" id="metaCode">—</span>
-          </div>
-          <div class="meta-block">
-            <span class="meta-label">Class</span>
-            <span class="meta-value" id="metaClass">—</span>
-          </div>
-          <div class="meta-block">
-            <span class="meta-label">Level</span>
-            <span class="meta-value" id="metaLevel">—</span>
-          </div>
-          <div class="meta-block">
-            <span class="meta-label">Type</span>
-            <span class="meta-value" id="metaType">—</span>
-          </div>
-          <div class="meta-block">
-            <span class="meta-label">Teacher</span>
-            <span class="meta-value" id="metaTeacher">—</span>
-          </div>
-          <div class="meta-block">
-            <span class="meta-label">Window</span>
-            <span id="metaWindow" class="meta-value meta-window">—</span>
-          </div>
+          <div class="meta-block"><span class="meta-label">Code</span><span class="meta-value code" id="metaCode">—</span></div>
+          <div class="meta-block"><span class="meta-label">Class</span><span class="meta-value" id="metaClass">—</span></div>
+          <div class="meta-block"><span class="meta-label">Level</span><span class="meta-value" id="metaLevel">—</span></div>
+          <div class="meta-block"><span class="meta-label">Type</span><span class="meta-value" id="metaType">—</span></div>
+          <div class="meta-block"><span class="meta-label">Teacher</span><span class="meta-value" id="metaTeacher">—</span></div>
+          <div class="meta-block"><span class="meta-label">Window</span><span class="meta-value" id="metaWindow">—</span></div>
         </div>
       </div>
       <div class="meta-actions">
-        <a href="#" class="btn-secondary" id="editMetadataBtn">Edit Metadata</a>
+        <button type="button" class="btn btn--secondary" id="editMetadataBtn">Edit Metadata</button>
       </div>
     </div>
 
     <div class="layout">
       <div class="main-col">
 
-        <!-- ===== JSON UPLOAD ===== -->
+        <!-- ===== EXAM CONTENT ===== -->
         <div class="card">
           <div class="card-header">
             <div>
               <div class="card-title">Exam Content</div>
-              <div class="card-subtitle">Upload the JSON generated by Claude from your exam document</div>
+              <div class="card-subtitle">Build questions from scratch, upload a JSON file, or import a spreadsheet</div>
             </div>
-            <div class="btn-row" id="jsonActions" style="display: none;">
-              <button class="btn-secondary" id="downloadJsonBtn">Download JSON</button>
-              <button class="btn-secondary" id="reuploadJsonBtn">Re-upload</button>
+            <div class="btn-row" id="jsonActions" style="display:none;gap:0.5rem;">
+              <button class="btn btn--secondary btn--sm" id="downloadJsonBtn">Download JSON</button>
+              <button class="btn btn--secondary btn--sm" id="reuploadJsonBtn">Re-upload JSON</button>
+              <button class="btn btn--secondary btn--sm" id="bulkImportBtn">Bulk Import</button>
+              <button class="btn btn--gold btn--sm" id="questionBankBtn">Question Bank</button>
             </div>
           </div>
 
-          <div id="uploadArea">
-            <label class="upload-zone" id="uploadZone">
-              <input type="file" id="jsonFileInput" accept="application/json,.json">
-              <div class="icon">⤓</div>
-              <p>Drop the JSON file here, or click to browse</p>
-              <span class="hint">.json files only</span>
-            </label>
-            <p class="upload-hint">
-              Don't have a JSON yet?
-              <button type="button" id="openPromptBtn" class="inline-link-btn">View the conversion prompt</button>
-              and use it with Claude to generate your JSON.
-            </p>
+          <!-- Shown only before any content exists -->
+          <div id="startOptions" class="start-options">
+            <div class="start-option-card">
+              <div class="start-option-title">Start from Scratch</div>
+              <p class="start-option-desc">Build sections and questions by hand using the question builder below.</p>
+              <button type="button" class="btn btn--primary" id="startScratchBtn">+ Start Building</button>
+            </div>
+
+            <div class="start-option-card">
+              <div class="start-option-title">Upload a JSON File</div>
+              <p class="start-option-desc">Already have a JSON generated from your exam content? Upload it here.</p>
+              <label class="upload-zone" id="uploadZone">
+                <input type="file" id="jsonFileInput" accept="application/json,.json">
+                <div class="icon">⤓</div>
+                <p>Drop the JSON file here, or click to browse</p>
+                <span class="hint">.json files only</span>
+              </label>
+              <p class="upload-hint">
+                Don't have a JSON yet? Generate it with Claude.
+                <button type="button" id="openPromptBtn" class="inline-link-btn">View the conversion prompt</button>
+              </p>
+            </div>
           </div>
 
-          <div id="contentArea" style="display: none;"></div>
+          <div id="contentArea" style="display:none;"></div>
         </div>
 
       </div>
@@ -131,41 +96,44 @@
       <aside class="sidebar">
         <div class="panel">
           <div class="panel-title">Summary</div>
-          <div class="summary-row">
-            <span class="label">Sections</span>
-            <span class="value" id="sumSections">—</span>
-          </div>
-          <div class="summary-row">
-            <span class="label">Questions</span>
-            <span class="value" id="sumQuestions">—</span>
-          </div>
-          <div class="summary-row">
-            <span class="label">Auto-graded</span>
-            <span class="value" id="sumAuto">—</span>
-          </div>
-          <div class="summary-row">
-            <span class="label">Manual-graded</span>
-            <span class="value" id="sumManual">—</span>
-          </div>
-          <div class="summary-row">
-            <span class="label">Total Points</span>
-            <span class="value" id="sumPoints">—</span>
-          </div>
-          <div class="summary-row">
-            <span class="label">Images Required</span>
-            <span class="value" id="sumImagesNeeded">—</span>
-          </div>
-          <div class="summary-row">
-            <span class="label">Images Uploaded</span>
-            <span class="value" id="sumImagesUploaded">—</span>
-          </div>
+          <div class="summary-row"><span class="label">Sections</span><span class="value" id="sumSections">—</span></div>
+          <div class="summary-row"><span class="label">Questions</span><span class="value" id="sumQuestions">—</span></div>
+          <div class="summary-row"><span class="label">Auto-graded</span><span class="value" id="sumAuto">—</span></div>
+          <div class="summary-row"><span class="label">Manual-graded</span><span class="value" id="sumManual">—</span></div>
+          <div class="summary-row"><span class="label">Total Points</span><span class="value" id="sumPoints">—</span></div>
+          <div class="summary-row"><span class="label">Images Required</span><span class="value" id="sumImagesNeeded">—</span></div>
+          <div class="summary-row"><span class="label">Images Uploaded</span><span class="value" id="sumImagesUploaded">—</span></div>
         </div>
 
         <div class="panel">
           <div class="panel-title">Validation</div>
           <ul class="validation-list" id="validationList">
-            <li class="ok">Awaiting JSON upload…</li>
+            <li class="ok">No content yet — build from scratch or upload a JSON.</li>
           </ul>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">Proctoring</div>
+          <div class="switch-row">
+            <div><div class="switch-row-label">Fullscreen lock</div><div class="switch-row-hint">Require fullscreen while taking</div></div>
+            <label class="switch"><input type="checkbox" id="proctorFullscreen"><span class="track"></span></label>
+          </div>
+          <div class="switch-row">
+            <div><div class="switch-row-label">Tab-switch tracking</div><div class="switch-row-hint">Log when the student leaves the tab</div></div>
+            <label class="switch"><input type="checkbox" id="proctorTabSwitch"><span class="track"></span></label>
+          </div>
+          <div class="switch-row">
+            <div><div class="switch-row-label">Window-blur tracking</div><div class="switch-row-hint">Log when the window loses focus</div></div>
+            <label class="switch"><input type="checkbox" id="proctorWindowBlur"><span class="track"></span></label>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">Sharing</div>
+          <div class="switch-row">
+            <div><div class="switch-row-label">Share with other teachers</div><div class="switch-row-hint">Lets any teacher browse and copy this to their own account</div></div>
+            <label class="switch"><input type="checkbox" id="sharedToggle"><span class="track"></span></label>
+          </div>
         </div>
 
         <div class="panel">
@@ -174,10 +142,10 @@
             <strong>Unsaved</strong> You have unsaved changes. Click Save Draft or Publish to keep them.
           </div>
           <div class="action-stack">
-            <button class="btn-tertiary" id="previewBtn" disabled>Preview</button>
-            <button class="btn-primary" id="saveDraftBtn" disabled>Save Draft</button>
-            <button class="btn-primary" id="publishBtn" disabled>Publish</button>
-            <button class="btn-secondary" id="archiveBtn" style="display: none;">Archive</button>
+            <button class="btn btn--secondary" id="previewBtn" disabled>Preview</button>
+            <button class="btn btn--primary" id="saveDraftBtn" disabled>Save Draft</button>
+            <button class="btn btn--gold" id="publishBtn" disabled>Publish</button>
+            <button class="btn btn--danger" id="archiveBtn" style="display:none;">Archive</button>
           </div>
           <p class="panel-hint">
             Drafts are saved but not visible to students. Publishing makes the exam available within its scheduled window.
@@ -186,171 +154,116 @@
       </aside>
 
     </div>
-  </div>
+  </main>
 </div>
 
 <!-- ===== EDIT QUESTION MODAL ===== -->
 <div class="modal-overlay" id="editQuestionModal">
-  <div class="modal">
-    <div class="modal-stamp">Edit Question</div>
+  <div class="modal-box">
+    <div class="page-stamp">Edit Question</div>
     <h2 id="editQTitle">—</h2>
     <p class="modal-sub" id="editQSub">—</p>
 
-    <div class="modal-field">
-      <label>Question Type</label>
-      <input type="text" id="editQType" disabled>
+    <div class="field"><label>Question Type</label><input type="text" id="editQType" disabled></div>
+
+    <div class="modal-grid">
+      <div class="field"><label>Grading</label>
+        <select id="editQGrading"><option value="auto">Auto</option><option value="manual">Manual</option></select>
+      </div>
+      <div class="field"><label>Points</label><input type="number" id="editQPoints" step="0.5" min="0"></div>
     </div>
 
-    <div class="modal-field-grid">
-      <div class="modal-field">
-        <label>Grading</label>
-        <select id="editQGrading">
-          <option value="auto">Auto</option>
-          <option value="manual">Manual</option>
-        </select>
-      </div>
-      <div class="modal-field">
-        <label>Points</label>
-        <input type="number" id="editQPoints" step="0.5" min="0">
-      </div>
-    </div>
-
-    <div class="modal-field">
-      <label>Prompt / Question Text</label>
-      <textarea id="editQPrompt"></textarea>
-    </div>
+    <div class="field"><label>Prompt / Question Text</label><textarea id="editQPrompt"></textarea></div>
 
     <div id="editQTypeSpecific"></div>
 
-    <div class="modal-field">
+    <div class="field">
       <div class="modal-field-header"><label>Raw JSON (advanced)</label>
         <button type="button" class="json-toggle" id="jsonToggleBtn">Show</button>
       </div>
-      <div class="json-viewer" id="editQJson" style="display: none;">—</div>
+      <div class="json-viewer" id="editQJson" style="display:none;">—</div>
     </div>
 
     <div class="modal-actions">
-      <button type="button" class="btn-secondary" onclick="closeQuestionModal()">Cancel</button>
-      <button type="button" class="btn-primary" id="saveQuestionBtn">Save Question</button>
+      <button type="button" class="btn btn--secondary" id="saveToBankBtn">Save to Bank</button>
+      <button type="button" class="btn btn--secondary" id="cancelQuestionBtn">Cancel</button>
+      <button type="button" class="btn btn--primary" id="saveQuestionBtn">Save Question</button>
     </div>
   </div>
 </div>
 
 <!-- ===== IMAGE UPLOAD MODAL ===== -->
 <div class="modal-overlay" id="imageUploadModal">
-  <div class="modal">
-    <div class="modal-stamp">Upload Image</div>
+  <div class="modal-box">
+    <div class="page-stamp">Upload Image</div>
     <h2 id="imageModalTitle">—</h2>
     <p class="modal-sub" id="imageModalSub">—</p>
 
-    <div class="modal-field">
-      <label>Choose Image File</label>
-      <input type="file" id="imageFileInput" accept="image/png,image/jpeg,image/webp">
-    </div>
+    <div class="field"><label>Choose Image File</label><input type="file" id="imageFileInput" accept="image/png,image/jpeg,image/webp"></div>
 
-    <div id="imagePreviewWrap" class="modal-preview-wrap" style="display: none;">
+    <div id="imagePreviewWrap" class="modal-preview-wrap" style="display:none;">
       <label class="modal-preview-label">Preview</label>
-      <div class="modal-preview-box">
-        <img id="imagePreview">
-      </div>
+      <div class="modal-preview-box"><img id="imagePreview"></div>
     </div>
 
-    <p class="upload-file-hint">Accepted: PNG, JPEG, WebP. Max 5 MB. The file will be saved to Supabase Storage.
-    </p>
+    <p class="upload-file-hint">Accepted: PNG, JPEG, WebP. Max 5 MB. The file will be saved to Supabase Storage.</p>
 
     <div class="modal-actions">
-      <button type="button" class="btn-secondary" onclick="closeImageModal()">Cancel</button>
-      <button type="button" class="btn-primary" id="uploadImageBtn" disabled>Upload</button>
+      <button type="button" class="btn btn--secondary" id="cancelImageBtn">Cancel</button>
+      <button type="button" class="btn btn--primary" id="uploadImageBtn" disabled>Upload</button>
     </div>
   </div>
 </div>
 
 <!-- ===== SECTION EDIT MODAL ===== -->
 <div class="modal-overlay" id="sectionModal">
-  <div class="modal modal--sm">
-    <div class="modal-stamp" id="sectionModalStamp">Edit Section</div>
+  <div class="modal-box">
+    <div class="page-stamp" id="sectionModalStamp">Edit Section</div>
     <h2 id="sectionModalTitle">Section</h2>
     <p class="modal-sub">Set the section title, instructions, and an optional reading passage.</p>
 
-    <div class="modal-field">
-      <label>Section Title</label>
-      <input type="text" id="secEditTitle" placeholder="e.g. Article 1: Coffee and tea">
-    </div>
-
-    <div class="modal-field">
-      <label>Instructions (optional)</label>
-      <input type="text" id="secEditInstructions" placeholder="e.g. Read the article and answer the questions">
-    </div>
-
-    <div class="modal-field">
-      <label>Reading Passage (optional)</label>
-      <textarea id="secEditPassage" placeholder="Paste the article or reading content here. Leave blank for sections without a passage." class="passage-textarea"></textarea>
-    </div>
+    <div class="field"><label>Section Title</label><input type="text" id="secEditTitle" placeholder="e.g. Article 1: Coffee and tea"></div>
+    <div class="field"><label>Instructions (optional)</label><input type="text" id="secEditInstructions" placeholder="e.g. Read the article and answer the questions"></div>
+    <div class="field"><label>Reading Passage (optional)</label><textarea id="secEditPassage" placeholder="Paste the article or reading content here. Leave blank for sections without a passage." class="passage-textarea"></textarea></div>
 
     <div class="modal-actions">
-      <button type="button" class="btn-secondary" onclick="closeSectionModal()">Cancel</button>
-      <button type="button" class="btn-primary" id="secEditSaveBtn">Save Section</button>
+      <button type="button" class="btn btn--secondary" id="cancelSectionBtn">Cancel</button>
+      <button type="button" class="btn btn--primary" id="secEditSaveBtn">Save Section</button>
     </div>
   </div>
 </div>
 
 <!-- ===== METADATA EDIT MODAL ===== -->
 <div class="modal-overlay" id="metadataModal">
-  <div class="modal modal--sm">
-    <div class="modal-stamp">Edit Metadata</div>
+  <div class="modal-box">
+    <div class="page-stamp">Edit Metadata</div>
     <h2 id="metadataModalTitle">—</h2>
     <p class="modal-sub" id="metadataModalCode">—</p>
 
-    <div class="locked-info">
-      <strong>Locked:</strong>
-      Year, Quarter, Type, and Code cannot be changed because they are part of the exam's access code. To change these, archive this exam and create a new one.
+    <div class="modal-notice">
+      <strong>Locked:</strong> Year, Quarter, Type, and Code cannot be changed because they are part of the exam's access code. To change these, archive this exam and create a new one.
     </div>
 
     <form id="metadataForm">
       <div class="modal-grid">
-        <div class="modal-field full">
-          <label>Class</label>
-          <select id="metaEditClassId" required></select>
-        </div>
-
-        <div class="modal-field">
-          <label>Level</label>
-          <select id="metaEditLevelId" required></select>
-        </div>
-
-        <div class="modal-field" id="metaEditTeacherField">
-          <label>Teacher</label>
-          <select id="metaEditTeacherId" required></select>
-        </div>
-
-        <div class="modal-field">
-          <label>Available From</label>
-          <input type="datetime-local" id="metaEditAvailableFrom" required>
-        </div>
-
-        <div class="modal-field">
-          <label>Available Until</label>
-          <input type="datetime-local" id="metaEditAvailableUntil" required>
-        </div>
-
-        <div class="modal-field full">
-          <label>Status</label>
+        <div class="field full"><label>Class</label><select id="metaEditClassId" required></select></div>
+        <div class="field"><label>Level</label><select id="metaEditLevelId" required></select></div>
+        <div class="field" id="metaEditTeacherField"><label>Teacher</label><select id="metaEditTeacherId" required></select></div>
+        <div class="field"><label>Available From</label><input type="datetime-local" id="metaEditAvailableFrom" required></div>
+        <div class="field"><label>Available Until</label><input type="datetime-local" id="metaEditAvailableUntil" required></div>
+        <div class="field full"><label>Status</label>
           <select id="metaEditStatus" required>
             <option value="active">Active</option>
             <option value="draft">Draft</option>
             <option value="archived">Archived</option>
           </select>
         </div>
-
-        <div class="modal-field full">
-          <label>Notes</label>
-          <textarea id="metaEditNotes"></textarea>
-        </div>
+        <div class="field full"><label>Notes</label><textarea id="metaEditNotes"></textarea></div>
       </div>
 
       <div class="modal-actions">
-        <button type="button" class="btn-secondary" onclick="closeMetadataModal()">Cancel</button>
-        <button type="submit" class="btn-primary" id="metaEditSaveBtn">Save Changes</button>
+        <button type="button" class="btn btn--secondary" id="cancelMetadataBtn">Cancel</button>
+        <button type="submit" class="btn btn--primary" id="metaEditSaveBtn">Save Changes</button>
       </div>
     </form>
   </div>
@@ -358,33 +271,18 @@
 
 <!-- ===== CONVERSION PROMPT MODAL ===== -->
 <div class="modal-overlay" id="promptModal">
-  <div class="modal modal--lg">
-    <div class="modal-stamp">Claude Conversion Prompt</div>
-    <h2>How to generate your <em class="gold-em">exam JSON</em></h2>
+  <div class="modal-box" style="max-width:760px;">
+    <div class="page-stamp">Claude Conversion Prompt</div>
+    <h2>How to generate your <em>exam JSON</em></h2>
     <p class="modal-sub">Follow these steps to convert your exam document into the format this platform expects.</p>
 
     <div class="prompt-steps-box">
       <ol class="step-list">
-        <li class="step-item">
-          <span class="step-num">01</span>
-          Open <a href="https://claude.ai" target="_blank" class="gold-link">claude.ai</a> in a new tab and start a fresh conversation.
-        </li>
-        <li class="step-item">
-          <span class="step-num">02</span>
-          <strong>Attach your exam document </strong> (PDF or DOCX) to the message. Include your answers either in a separate file or directly within the exam document (e.g., the correct option <mark>highlighted</mark> or in <strong>bold</strong>).
-        </li>
-        <li class="step-item">
-          <span class="step-num">03</span>
-          <strong>Copy the prompt below</strong> and paste it into the same message, then send.
-        </li>
-        <li class="step-item">
-          <span class="step-num">04</span>
-          Claude will reply with a JSON file. <strong>Download the file</strong> and save it on your computer.
-        </li>
-        <li class="step-item">
-          <span class="step-num">05</span>
-          Come back here and upload the <code class="inline-code">.json</code> file. Review the questions, upload any required images, then save.
-        </li>
+        <li class="step-item"><span class="step-num">01</span> Open <a href="https://claude.ai" target="_blank" class="gold-link">claude.ai</a> in a new tab and start a fresh conversation.</li>
+        <li class="step-item"><span class="step-num">02</span> <strong>Attach your exam document</strong> (PDF or DOCX). Include your answers either in a separate file or directly within the exam document (e.g., the correct option highlighted or in bold).</li>
+        <li class="step-item"><span class="step-num">03</span> <strong>Copy the prompt below</strong> and paste it into the same message, then send.</li>
+        <li class="step-item"><span class="step-num">04</span> Claude will reply with a JSON file. <strong>Download the file</strong> and save it on your computer.</li>
+        <li class="step-item"><span class="step-num">05</span> Come back here and upload the <code class="inline-code">.json</code> file. Review the questions, upload any required images, then save.</li>
       </ol>
     </div>
 
@@ -394,2359 +292,79 @@
         <span class="prompt-hint-text">Copy this entire block and paste it with your document.</span>
       </div>
       <div class="prompt-header-actions">
-        <button type="button" id="togglePromptBtn" class="btn-secondary btn--compact">Expand</button>
-        <button type="button" class="btn-primary" id="copyPromptBtn">Copy Prompt</button>
+        <button type="button" class="btn btn--secondary btn--sm" id="togglePromptBtn">Expand</button>
+        <button type="button" class="btn btn--primary btn--sm" id="copyPromptBtn">Copy Prompt</button>
       </div>
     </div>
 
     <pre id="promptBox" class="prompt-box">Loading prompt…</pre>
 
     <div class="modal-actions">
-      <button type="button" class="btn-secondary" onclick="closePromptModal()">Close</button>
+      <button type="button" class="btn btn--secondary" id="closePromptBtn">Close</button>
     </div>
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<!-- ===== BULK IMPORT MODAL ===== -->
+<div class="modal-overlay" id="bulkImportModal">
+  <div class="modal-box">
+    <div class="page-stamp">Bulk Import</div>
+    <h2>Import Questions from <em>CSV / XLSX</em></h2>
+    <p class="modal-sub">Import a spreadsheet of questions into a section. Supports <code class="inline-code">multiple_choice</code>, <code class="inline-code">true_false</code>, <code class="inline-code">fill_blank</code>, and <code class="inline-code">short_answer</code> only — use JSON upload or manual building for other question types.</p>
 
-<div class="copyright">
-  Copyright © 2026 Approach International Student Center, Inc. — All rights reserved.
+    <div class="modal-notice">
+      Expected columns (first row = header): <code class="inline-code">type, prompt, points, option_a, option_b, option_c, option_d, answer</code>.
+      For <code class="inline-code">true_false</code>, leave the option columns blank and put <code class="inline-code">T</code> or <code class="inline-code">F</code> in <code class="inline-code">answer</code>.
+      For <code class="inline-code">fill_blank</code>, leave the option columns blank, use <code class="inline-code">{blank}</code> in the prompt, and put the correct answer in <code class="inline-code">answer</code>.
+      For <code class="inline-code">multiple_choice</code>, <code class="inline-code">answer</code> should be the letter (a/b/c/d) of the correct option.
+      For <code class="inline-code">short_answer</code> (manually graded), leave the option columns blank and put a reference answer in <code class="inline-code">answer</code> (optional).
+    </div>
+
+    <div class="field">
+      <label>Target Section</label>
+      <select id="bulkImportSection"></select>
+    </div>
+
+    <div class="field">
+      <label>Choose CSV or XLSX File</label>
+      <input type="file" id="bulkImportFileInput" accept=".csv,.xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv">
+    </div>
+
+    <div id="bulkImportResults"></div>
+
+    <div class="modal-actions">
+      <button type="button" class="btn btn--secondary" id="cancelBulkImportBtn">Close</button>
+      <button type="button" class="btn btn--primary" id="runBulkImportBtn" disabled>Import Questions</button>
+    </div>
+  </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  // ============================================
-  // CONFIGURE YOUR SUPABASE CREDENTIALS HERE
-  // ============================================
-  const SUPABASE_URL = 'https://okyauyzdensuvuoyphds.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9reWF1eXpkZW5zdXZ1b3lwaGRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1NTgwOTUsImV4cCI6MjA5MzEzNDA5NX0.NZUclCDHecS9bcZOLHj1ZXBFf5b5k9klRwTMfJrglfI';
-  // ============================================
-
-  const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  const STORAGE_BUCKET = 'exam-images';
-
-  // ===== STATE =====
-  let currentUser = null;
-  let currentProfile = null;
-  let currentExam = null;
-  let allClasses = [];
-  let allLevels = [];
-  let allTeachers = [];
-  let examDef = null;          // The JSON exam definition
-  let pendingImageContext = null; // Which question/image we're uploading for
-  let editingQuestion = null;  // Reference to the question being edited
-
-  const VALID_TYPES = [
-    'multiple_choice', 'true_false', 'inline_choice', 'fill_blank',
-    'fill_blank_multi', 'matching', 'categorization', 'sentence_order',
-    'short_answer', 'writing_prompt', 'pool_writing', 'image_label', 'image_match'
-  ];
-
-  // Type metadata for the picker
-  const TYPE_INFO = {
-    multiple_choice:  { label: 'Multiple Choice',     desc: 'Pick one correct option from a list' },
-    true_false:       { label: 'True / False',        desc: 'A statement to mark T or F' },
-    inline_choice:    { label: 'Inline Choice',       desc: 'Choose between two words inside a sentence' },
-    fill_blank:       { label: 'Fill in the Blank',   desc: 'One blank in a sentence' },
-    fill_blank_multi: { label: 'Multi-Blank',         desc: 'Multiple blanks in one sentence' },
-    matching:         { label: 'Matching',            desc: 'Match left items with right items' },
-    categorization:   { label: 'Categorization',      desc: 'Sort items into categories' },
-    sentence_order:   { label: 'Sentence Order',      desc: 'Reorder scrambled words (manual)' },
-    short_answer:     { label: 'Short Answer',        desc: 'Brief written response (manual)' },
-    writing_prompt:   { label: 'Writing Prompt',      desc: 'Open-ended writing (manual)' },
-    pool_writing:     { label: 'Pool Writing',        desc: 'Pick N words and write a sentence with each (manual)' },
-    image_label:      { label: 'Image Label',         desc: 'Label parts of an image' },
-    image_match:      { label: 'Image Match',         desc: 'Match items to numbered regions of an image' }
-  };
-
-  // ===== DIRTY STATE =====
-  let isDirty = false;
-
-  function markDirty() {
-    isDirty = true;
-    document.getElementById('dirtyIndicator').classList.add('show');
-  }
-
-  function clearDirty() {
-    isDirty = false;
-    document.getElementById('dirtyIndicator').classList.remove('show');
-  }
-
-  // Warn before navigating away with unsaved changes
-  window.addEventListener('beforeunload', (e) => {
-    if (isDirty) {
-      e.preventDefault();
-      e.returnValue = '';
-    }
-  });
-
-  // ===== ID GENERATION =====
-  function generateQuestionId() {
-    if (!examDef) return 'q1';
-    let maxNum = 0;
-    let foundNumeric = false;
-    (examDef.sections || []).forEach(s => {
-      (s.questions || []).forEach(q => {
-        const m = String(q.id || '').match(/^q?(\d+)/i);
-        if (m) {
-          foundNumeric = true;
-          const n = parseInt(m[1], 10);
-          if (n > maxNum) maxNum = n;
-        }
-      });
-    });
-    if (foundNumeric) return `q${maxNum + 1}`;
-    // Fallback: count-based
-    const count = (examDef.sections || []).reduce((sum, s) => sum + (s.questions?.length || 0), 0);
-    return `q${count + 1}`;
-  }
-
-  function generateSectionId() {
-    if (!examDef) return 'section_1';
-    const count = (examDef.sections || []).length;
-    return `section_${count + 1}`;
-  }
-
-  // ===== QUESTION STUBS =====
-  function makeStub(type) {
-    const id = generateQuestionId();
-    const base = { id, type, prompt: '', points: 1 };
-
-    switch (type) {
-      case 'multiple_choice':
-        return { ...base, grading: 'auto',
-          options: [
-            { key: 'a', text: '' }, { key: 'b', text: '' },
-            { key: 'c', text: '' }, { key: 'd', text: '' }
-          ],
-          answer: '' };
-      case 'true_false':
-        return { ...base, grading: 'auto', answer: 'T' };
-      case 'inline_choice':
-        return { ...base, grading: 'auto',
-          prompt: 'The {choice} is the correct answer.',
-          options: ['', ''], answer: '' };
-      case 'fill_blank':
-        return { ...base, grading: 'auto',
-          prompt: 'I {blank} speak three languages.',
-          answer: '', accepted_answers: [], case_sensitive: false };
-      case 'fill_blank_multi':
-        return { ...base, grading: 'auto',
-          prompt: '{blank} you {blank} on the phone?',
-          blanks: [
-            { id: `${id}a`, answer: '', accepted_answers: [], points: 0.5 },
-            { id: `${id}b`, answer: '', accepted_answers: [], points: 0.5 }
-          ],
-          case_sensitive: false };
-      case 'matching':
-        return { ...base, grading: 'auto', points: 2,
-          left_items: [
-            { id: '1', text: '' }, { id: '2', text: '' }
-          ],
-          right_items: [
-            { key: 'A', text: '' }, { key: 'B', text: '' }
-          ],
-          answers: {} };
-      case 'categorization':
-        return { ...base, grading: 'auto', points: 4,
-          items: [],
-          categories: [
-            { id: 'cat1', label: 'Category 1' },
-            { id: 'cat2', label: 'Category 2' }
-          ],
-          answers: {} };
-      case 'sentence_order':
-        return { ...base, grading: 'manual', points: 2,
-          words: [], expected: '', rubric: '' };
-      case 'short_answer':
-        return { ...base, grading: 'manual', points: 2,
-          expected_answer: '', rubric: '' };
-      case 'writing_prompt':
-        return { ...base, grading: 'manual', points: 2, rubric: '' };
-      case 'pool_writing':
-        return { ...base, grading: 'manual', points: 10,
-          word_pool: [], required_count: 5, points_per_sentence: 2, rubric: '' };
-      case 'image_label':
-        return { ...base, grading: 'auto', points: 4,
-          image: { placeholder: `${id}_image.png`, alt: '', url: null },
-          labels: [
-            { id: 'l1', label: '', answer: '', accepted_answers: [] },
-            { id: 'l2', label: '', answer: '', accepted_answers: [] }
-          ],
-          case_sensitive: false };
-      case 'image_match':
-        return { ...base, grading: 'auto', points: 4,
-          image: { placeholder: `${id}_image.png`, alt: '', url: null },
-          items: [], image_regions: ['1', '2', '3', '4'],
-          answers: {} };
-      default:
-        return base;
-    }
-  }
-
-  function makeSectionStub() {
-    return {
-      id: generateSectionId(),
-      title: 'New Section',
-      instructions: null,
-      passage: null,
-      questions: []
-    };
-  }
-
-  // ===== CONVERSION PROMPT (paste with exam document into Claude) =====
-  const CONVERSION_PROMPT = `You are an exam-conversion assistant for the Approach International Student Center online examination platform. Your task is to read the attached exam document and convert it into a structured JSON file that follows our exact schema.
-
-# CRITICAL RULES
-
-1. Output ONLY a single valid JSON object. No commentary before, no commentary after, no markdown code fences, no explanations. The first character of your response must be \`{\` and the last must be \`}\`.
-2. Every question must have an \`id\`, \`type\`, \`grading\`, \`points\`, and \`prompt\`.
-3. If you cannot determine a correct answer for an auto-gradable question, set \`grading\` to \`"manual"\` and add a note in the \`rubric\` field.
-4. For images: NEVER attempt to extract or describe image data. Use placeholder filenames like \`q5_picture.png\` and set \`"url": null\`. The teacher will upload images separately through the platform.
-5. Preserve the exam's original section structure (Article 1, Article 2, Section A, Section B, etc.) using the \`sections\` array.
-6. If the document contains reading passages or articles, place the full text in the section's \`passage\` field as plain text (no markdown).
-
-# JSON SCHEMA
-
-The output must conform to this exact structure:
-
-{
-  "schema_version": "1.0",
-  "exam_metadata": {
-    "title": "<exam title from the document>",
-    "instructions": "<top-level instructions, or null>"
-  },
-  "sections": [
-    {
-      "id": "section_1",
-      "title": "<section title or null>",
-      "instructions": "<section instructions or null>",
-      "passage": { "type": "text", "content": "<reading content>" } | null,
-      "questions": [ /* questions */ ]
-    }
-  ]
-}
-
-# QUESTION TYPES (use the exact \`type\` string)
-
-## "multiple_choice" — auto, single correct answer from 2+ options
-{
-  "id": "q1", "type": "multiple_choice", "grading": "auto", "points": 1,
-  "prompt": "Question text",
-  "options": [{"key": "a", "text": "..."}, {"key": "b", "text": "..."}],
-  "answer": "b"
-}
-
-## "true_false" — auto, T or F
-{
-  "id": "q2", "type": "true_false", "grading": "auto", "points": 1,
-  "prompt": "Statement to evaluate",
-  "answer": "T"
-}
-
-## "inline_choice" — auto, choose one of two options inside a sentence
-Use {choice} where the choice appears in the sentence.
-{
-  "id": "q3", "type": "inline_choice", "grading": "auto", "points": 1,
-  "prompt": "The {choice} is where you eat.",
-  "options": ["arm", "mouth"],
-  "answer": "mouth"
-}
-
-## "fill_blank" — auto, one text blank in a sentence
-Use {blank} for the blank position.
-{
-  "id": "q4", "type": "fill_blank", "grading": "auto", "points": 1,
-  "prompt": "I {blank} speak three languages.",
-  "answer": "can",
-  "accepted_answers": ["can"],
-  "case_sensitive": false
-}
-
-## "fill_blank_multi" — auto, multiple blanks in one sentence
-Use {blank} for each position; provide one entry in \`blanks\` per blank.
-{
-  "id": "q5", "type": "fill_blank_multi", "grading": "auto", "points": 1,
-  "prompt": "{blank} you {blank} on the phone?",
-  "blanks": [
-    {"id": "5a", "answer": "Are", "accepted_answers": ["Are", "are"], "points": 0.5},
-    {"id": "5b", "answer": "talking", "accepted_answers": ["talking"], "points": 0.5}
-  ],
-  "case_sensitive": false
-}
-
-## "matching" — auto, match left items to right items
-{
-  "id": "q6", "type": "matching", "grading": "auto", "points": 8,
-  "prompt": "Match each phrase with the correct ending.",
-  "left_items": [{"id": "1", "text": "..."}, {"id": "2", "text": "..."}],
-  "right_items": [{"key": "A", "text": "..."}, {"key": "B", "text": "..."}],
-  "answers": {"1": "E", "2": "G"}
-}
-
-## "categorization" — auto, sort words into category buckets
-{
-  "id": "q7", "type": "categorization", "grading": "auto", "points": 20,
-  "prompt": "Put the words in the correct category.",
-  "items": ["word1", "word2"],
-  "categories": [{"id": "cat1", "label": "Category 1"}],
-  "answers": {"word1": "cat1", "word2": "cat1"}
-}
-
-## "sentence_order" — manual, scrambled words to reorder
-{
-  "id": "q8", "type": "sentence_order", "grading": "manual", "points": 2,
-  "prompt": "Put the words in order.",
-  "words": ["are", "these", "students"],
-  "expected": "These are students.",
-  "rubric": "Full marks for correct word order."
-}
-
-## "short_answer" — manual, brief open-ended response
-{
-  "id": "q9", "type": "short_answer", "grading": "manual", "points": 2,
-  "prompt": "What are the two drinks?",
-  "expected_answer": "Coffee and tea",
-  "rubric": "Full marks for identifying both drinks."
-}
-
-## "writing_prompt" — manual, longer open-ended writing
-{
-  "id": "q10", "type": "writing_prompt", "grading": "manual", "points": 2,
-  "prompt": "Write a sentence using Simple Present.",
-  "rubric": "Full marks for a grammatically correct sentence."
-}
-
-## "pool_writing" — manual, write N sentences from a pool of words
-{
-  "id": "q11", "type": "pool_writing", "grading": "manual", "points": 20,
-  "prompt": "Choose 10 of the words below and write sentences.",
-  "word_pool": ["word1", "word2"],
-  "required_count": 10,
-  "points_per_sentence": 2,
-  "rubric": "Each grammatically correct sentence earns full marks."
-}
-
-## "image_label" — auto, multiple text labels for parts of an image
-{
-  "id": "q12", "type": "image_label", "grading": "auto", "points": 7,
-  "prompt": "Write the verb for each action.",
-  "image": {"placeholder": "q12_image.png", "alt": "description", "url": null},
-  "labels": [
-    {"id": "label1", "label": "John", "answer": "eat",
-     "accepted_answers": ["eat", "eats", "eating"]}
-  ],
-  "case_sensitive": false
-}
-
-## "image_match" — auto, match items to numbered regions of an image
-{
-  "id": "q13", "type": "image_match", "grading": "auto", "points": 6,
-  "prompt": "Match the words with the pictures.",
-  "image": {"placeholder": "q13_image.png", "alt": "description", "url": null},
-  "items": ["item1", "item2"],
-  "image_regions": ["1", "2", "3", "4", "5", "6"],
-  "answers": {"item1": "1", "item2": "2"}
-}
-
-# RULES FOR DETERMINING POINTS
-
-1. If the source document specifies points (e.g. "(8 points)"), use that exact value on the question.
-2. For matching, categorization, and image_label questions where the document gives a total (e.g. "8 points" for 8 pairs), put that total in \`points\`. The platform will divide it among items automatically.
-3. For pool_writing where the document says "Each correct sentence 2 points", set \`points_per_sentence: 2\` and \`points\` to \`points_per_sentence × required_count\`.
-4. If no points are specified anywhere, default to 1 point per question.
-5. For multi-blank questions, distribute the question's total points evenly across blanks unless the document specifies otherwise.
-
-# RULES FOR DETERMINING ANSWERS
-
-1. If the document does not contain answer keys, set \`grading\` to \`"manual"\` for that question and leave \`answer\`/\`expected_answer\` empty or use your best guess based on the question content.
-2. If you can confidently determine an answer from the question content (e.g. a matching question's "definition" makes the pairing obvious), provide it.
-3. For \`accepted_answers\` on fill_blank questions, include common variations: contractions, capitalizations, alternate spellings.
-4. ALWAYS set \`case_sensitive: false\` unless the question explicitly tests capitalization (proper nouns, sentence-initial caps in writing).
-
-# RULES FOR IMAGES
-
-1. When the document has an image, generate a descriptive placeholder filename: \`q<question_number>_<short_descriptor>.png\`. Examples: \`q12_actions.png\`, \`q9_fruits.png\`.
-2. Always set \`url\` to null. Always include \`alt\` text describing what the image shows.
-3. If a single question has multiple images, use a question type that supports them or split into sub-questions.
-
-# IDs
-
-- Use \`q1\`, \`q2\`, \`q3\`, ... for question IDs in document order, regardless of how the document numbers them.
-- Use \`section_1\`, \`section_2\`, ... for section IDs.
-- Sub-IDs (in matching, fill_blank_multi, etc.) can be \`1a\`, \`1b\` or \`5a\`, \`5b\`, matching the structure of the question.
-
-# REMEMBER
-
-- Output a single valid JSON object only.
-- No markdown code fences (\`\`\`).
-- No explanatory text before or after.
-- Verify the JSON is syntactically valid before returning it.
-- If you are uncertain about a question's correct answer, mark it \`grading: "manual"\` rather than guessing.
-- Do not write the output in the chat, put it in a downloadable file.`;
-
-  // ===== DOM REFERENCES =====
-  const toast = document.getElementById('toast');
-
-  function showToast(msg, type = '') {
-    toast.textContent = msg;
-    toast.className = 'toast show ' + type;
-    setTimeout(() => toast.classList.remove('show'), 4000);
-  }
-
-  function escapeHtml(s) {
-    if (s == null) return '';
-    return String(s).replace(/[&<>"']/g, c => ({
-      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-    }[c]));
-  }
-
-  function showError(title, message) {
-    document.getElementById('authLoading').style.display = 'none';
-    document.getElementById('content').style.display = 'none';
-    document.getElementById('errorTitle').textContent = title;
-    document.getElementById('errorMessage').textContent = message;
-    document.getElementById('errorScreen').style.display = 'block';
-  }
-
-  // ===== AUTH GUARD =====
-  async function checkAuth() {
-    const { data: { session } } = await db.auth.getSession();
-    if (!session) { window.location.href = 'login.html'; return false; }
-    currentUser = session.user;
-    const { data: profile, error } = await db.from('profiles')
-      .select('*').eq('id', session.user.id).single();
-    if (error || !profile || !profile.is_active) {
-      await db.auth.signOut();
-      window.location.href = 'login.html';
-      return false;
-    }
-    currentProfile = profile;
-    document.getElementById('userName').textContent = profile.full_name || session.user.email;
-    document.getElementById('userRole').textContent = (profile.role === 'academic' ? 'Academic Team' : 'Teacher');
-    if (profile.role === 'academic') {
-      document.getElementById('adminLink').style.display = 'inline-block';
-    }
-    return true;
-  }
-
-  document.getElementById('userMenuTrigger').addEventListener('click', () => {
-    const dropdown = document.getElementById('userMenuDropdown');
-    dropdown.classList.toggle('show');
-  });
-
-  // Close dropdown when clicking outside
-  document.addEventListener('click', (e) => {
-    const userMenu = document.querySelector('.user-menu');
-    if (!userMenu.contains(e.target)) {
-      document.getElementById('userMenuDropdown').classList.remove('show');
-    }
-  });
-
-  document.getElementById('signoutBtn').addEventListener('click', async () => {
-    await db.auth.signOut();
-    window.location.href = 'login.html';
-  });
-
-  // ===== LOAD EXAM =====
-  async function loadExam() {
-    const params = new URLSearchParams(window.location.search);
-    const id = params.get('id');
-    const isNew = params.get('new') === 'true';
-
-    if (!id) {
-      showError('Missing exam ID', 'No exam ID was provided in the URL.');
-      return;
-    }
-
-    try {
-      const [examRes, classesRes, levelsRes, teachersRes] = await Promise.all([
-        db.from('exams').select('*').eq('id', id).single(),
-        db.from('classes').select('*').order('name'),
-        db.from('levels').select('*').order('display_order'),
-        db.from('profiles').select('id, full_name, email, role, is_active').order('full_name')
-      ]);
-
-      if (examRes.error) throw examRes.error;
-      if (classesRes.error) throw classesRes.error;
-      if (levelsRes.error) throw levelsRes.error;
-      // teachersRes may fail under RLS for teacher role, that's fine
-
-      currentExam = examRes.data;
-      allClasses = classesRes.data || [];
-      allLevels = levelsRes.data || [];
-      allTeachers = (teachersRes.data || []).filter(t => t.is_active);
-
-      // Derive display names from the loaded tables
-      const cls = allClasses.find(c => c.id === currentExam.class_id);
-      const lvl = allLevels.find(l => l.id === currentExam.level_id);
-      const tch = allTeachers.find(t => t.id === currentExam.teacher_id);
-      currentExam._class_name = cls?.name || '—';
-      currentExam._level_name = lvl?.name || '—';
-      currentExam._teacher_name = tch?.full_name || tch?.email || '—';
-
-      examDef = currentExam.exam_definition || null;
-      renderMetadata();
-      renderContent();
-      updateSidebar();
-
-      document.getElementById('authLoading').style.display = 'none';
-      document.getElementById('content').style.display = 'block';
-
-      if (isNew) {
-        showToast('Exam created. Now upload the JSON file with the questions.', 'success');
-      }
-    } catch (err) {
-      console.error(err);
-      showError('Could not load exam', err.message || 'Unknown error');
-    }
-  }
-
-  function renderMetadata() {
-    const e = currentExam;
-    document.getElementById('metaCode').textContent = e.code;
-    document.getElementById('metaClass').textContent = e._class_name;
-    document.getElementById('metaLevel').textContent = e._level_name;
-    document.getElementById('metaType').textContent = e.type;
-    document.getElementById('metaTeacher').textContent = e._teacher_name;
-
-    const from = new Date(e.available_from);
-    const until = new Date(e.available_until);
-    const fmt = d => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) +
-      ' ' + d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
-    document.getElementById('metaWindow').textContent = `${fmt(from)} → ${fmt(until)}`;
-
-    const badges = document.getElementById('metaBadges');
-    badges.innerHTML = `<span class="badge ${e.status}">${e.status}</span>`;
-
-    document.getElementById('archiveBtn').style.display =
-      (e.status === 'active' || e.status === 'draft') ? 'block' : 'none';
-  }
-
-  // ===== RENDER CONTENT (after JSON upload) =====
-  function renderContent() {
-    if (!examDef) {
-      document.getElementById('uploadArea').style.display = 'flex';
-      document.getElementById('uploadArea').style.flexDirection = 'column';
-      document.getElementById('contentArea').style.display = 'none';
-      document.getElementById('jsonActions').style.display = 'none';
-      return;
-    }
-
-    document.getElementById('uploadArea').style.display = 'none';
-    document.getElementById('contentArea').style.display = 'block';
-    document.getElementById('jsonActions').style.display = 'flex';
-
-    const container = document.getElementById('contentArea');
-    container.innerHTML = '';
-
-    if (examDef.exam_metadata?.title) {
-      const titleEl = document.createElement('div');
-      titleEl.style.marginBottom = '1.25rem';
-      titleEl.innerHTML = `
-        <div class="exam-def-stamp">Exam Title</div>
-        <div class="exam-def-title">${escapeHtml(examDef.exam_metadata.title)}</div>
-        ${examDef.exam_metadata.instructions ? `<div class="exam-def-instructions">${escapeHtml(examDef.exam_metadata.instructions)}</div>` : ''}
-      `;
-      container.appendChild(titleEl);
-    }
-
-    // Image inventory section first
-    const imageList = collectImagePlaceholders();
-    if (imageList.length > 0) {
-      const imgSection = document.createElement('div');
-      imgSection.className = 'section-block';
-      imgSection.innerHTML = `
-        <div class="section-header">
-          <div class="section-label">Images Inventory</div>
-          <div class="section-title-text">Required Images (${imageList.filter(i => i.url).length} / ${imageList.length} uploaded)</div>
-        </div>
-        <div id="imageList"></div>
-      `;
-      container.appendChild(imgSection);
-      const imgListEl = imgSection.querySelector('#imageList');
-      imageList.forEach(img => imgListEl.appendChild(renderImageItem(img)));
-    }
-
-    // Sections + questions
-    const sections = examDef.sections || [];
-    sections.forEach((section, sIdx) => {
-      const sectionEl = document.createElement('div');
-      sectionEl.className = 'section-block';
-
-      let passageHtml = '';
-      if (section.passage?.content) {
-        passageHtml = `
-          <div class="section-passage" data-passage="${sIdx}">
-            ${escapeHtml(section.passage.content)}
-            <span class="passage-toggle" onclick="togglePassage(${sIdx})">Show more</span>
-          </div>`;
-      }
-
-      const isFirstSection = sIdx === 0;
-      const isLastSection = sIdx === sections.length - 1;
-
-      sectionEl.innerHTML = `
-        <div class="section-header">
-          <div class="section-header-row">
-            <div class="flex-min">
-              <div class="section-label">Section ${sIdx + 1} of ${sections.length}</div>
-              <div class="section-title-text">${escapeHtml(section.title || 'Untitled section')}</div>
-              ${section.instructions ? `<div class="section-instructions">${escapeHtml(section.instructions)}</div>` : ''}
-            </div>
-            <div class="section-actions">
-              <button class="section-action-btn" title="Move section up" onclick="moveSection(${sIdx}, -1)" ${isFirstSection ? 'disabled' : ''}>↑</button>
-              <button class="section-action-btn" title="Move section down" onclick="moveSection(${sIdx}, 1)" ${isLastSection ? 'disabled' : ''}>↓</button>
-              <button class="section-action-btn" title="Edit section" onclick="openSectionEdit(${sIdx})">✎</button>
-              <button class="section-action-btn delete" title="Delete section" onclick="deleteSection(${sIdx})">⌫</button>
-            </div>
-          </div>
-          ${passageHtml}
-        </div>
-        <div class="section-questions"></div>
-      `;
-      container.appendChild(sectionEl);
-
-      const qContainer = sectionEl.querySelector('.section-questions');
-      const questions = section.questions || [];
-
-      // Insert bar at the start of each section
-      qContainer.appendChild(renderInsertBar(sIdx, 0));
-
-      questions.forEach((q, qIdx) => {
-        const isFirst = qIdx === 0;
-        const isLast = qIdx === questions.length - 1;
-        qContainer.appendChild(renderQuestionRow(q, sIdx, qIdx, isFirst, isLast));
-        // Insert bar after each question
-        qContainer.appendChild(renderInsertBar(sIdx, qIdx + 1));
-      });
-    });
-
-    // Add Section button at the bottom
-    const addSectionBtn = document.createElement('button');
-    addSectionBtn.className = 'add-section-bar';
-    addSectionBtn.textContent = '+ Add Section';
-    addSectionBtn.onclick = addSection;
-    container.appendChild(addSectionBtn);
-  }
-
-  // ===== INSERT BAR =====
-  function renderInsertBar(sectionIdx, position) {
-    const bar = document.createElement('div');
-    bar.className = 'insert-bar';
-    bar.dataset.section = sectionIdx;
-    bar.dataset.position = position;
-    bar.innerHTML = `<span class="insert-label">+ Add question here</span>`;
-    bar.addEventListener('click', () => expandInsertBar(bar, sectionIdx, position));
-    return bar;
-  }
-
-  function expandInsertBar(bar, sectionIdx, position) {
-    if (bar.classList.contains('expanded')) return;
-    bar.classList.add('expanded');
-
-    const picker = document.createElement('div');
-    picker.className = 'type-picker';
-    picker.innerHTML = `
-      <div class="type-picker-header">
-        <span class="type-picker-title">Choose a question type</span>
-        <button class="type-picker-close" title="Cancel">×</button>
+<!-- ===== QUESTION BANK MODAL ===== -->
+<div class="modal-overlay" id="questionBankModal">
+  <div class="modal-box" style="max-width:720px;">
+    <div class="page-stamp">Question Bank</div>
+    <h2>Insert from <em>Question Bank</em></h2>
+    <p class="modal-sub">Browse questions saved by any teacher and insert a copy into a section of this exam.</p>
+
+    <div class="modal-grid">
+      <div class="field full"><label>Search</label><input type="text" id="bankSearch" placeholder="Search prompt text…"></div>
+      <div class="field"><label>Type</label>
+        <select id="bankTypeFilter"><option value="">All types</option></select>
       </div>
-      <div class="type-grid">
-        ${VALID_TYPES.map(t => `
-          <button class="type-pill" data-type="${t}">
-            <span class="type-name">${escapeHtml(TYPE_INFO[t].label)}</span>
-            <span class="type-desc">${escapeHtml(TYPE_INFO[t].desc)}</span>
-          </button>
-        `).join('')}
-      </div>
-    `;
-    bar.innerHTML = '';
-    bar.appendChild(picker);
+      <div class="field"><label>Insert into Section</label><select id="bankTargetSection"></select></div>
+    </div>
 
-    picker.querySelector('.type-picker-close').addEventListener('click', () => {
-      bar.classList.remove('expanded');
-      bar.innerHTML = `<span class="insert-label">+ Add question here</span>`;
-    });
+    <div id="bankList" class="bank-list"></div>
 
-    picker.querySelectorAll('.type-pill').forEach(pill => {
-      pill.addEventListener('click', () => {
-        const type = pill.dataset.type;
-        insertQuestion(sectionIdx, position, type);
-      });
-    });
-  }
+    <div class="modal-actions">
+      <button type="button" class="btn btn--secondary" id="closeBankBtn">Close</button>
+    </div>
+  </div>
+</div>
 
-  // ===== INSERT QUESTION =====
-  function insertQuestion(sectionIdx, position, type) {
-    const stub = makeStub(type);
-    examDef.sections[sectionIdx].questions.splice(position, 0, stub);
-    markDirty();
-    renderContent();
-    updateSidebar();
-    // Open edit modal so the teacher fills in the new question right away
-    openQuestionEdit(sectionIdx, position);
-  }
-  window.insertQuestion = insertQuestion;
+<div class="copyright">Copyright © 2026 Approach International Student Center, Inc. — All rights reserved.</div>
 
-  // ===== DELETE QUESTION =====
-  function deleteQuestion(sectionIdx, questionIdx) {
-    const q = examDef.sections[sectionIdx].questions[questionIdx];
-    if (!confirm(`Delete question ${q.id}?\n\nThis cannot be undone (until you save, you can refresh the page to recover).`)) return;
-    examDef.sections[sectionIdx].questions.splice(questionIdx, 1);
-    markDirty();
-    renderContent();
-    updateSidebar();
-  }
-  window.deleteQuestion = deleteQuestion;
-
-  // ===== MOVE QUESTION =====
-  function moveQuestion(sectionIdx, questionIdx, direction) {
-    const questions = examDef.sections[sectionIdx].questions;
-    const newIdx = questionIdx + direction;
-    if (newIdx < 0 || newIdx >= questions.length) return;
-    const [removed] = questions.splice(questionIdx, 1);
-    questions.splice(newIdx, 0, removed);
-    markDirty();
-    renderContent();
-    updateSidebar();
-  }
-  window.moveQuestion = moveQuestion;
-
-  // ===== ADD SECTION =====
-  function addSection() {
-    const newSection = makeSectionStub();
-    examDef.sections = examDef.sections || [];
-    examDef.sections.push(newSection);
-    markDirty();
-    renderContent();
-    updateSidebar();
-    // Open edit modal so the teacher names it
-    openSectionEdit(examDef.sections.length - 1);
-  }
-
-  // ===== MOVE SECTION =====
-  function moveSection(sectionIdx, direction) {
-    const newIdx = sectionIdx + direction;
-    if (newIdx < 0 || newIdx >= examDef.sections.length) return;
-    const [removed] = examDef.sections.splice(sectionIdx, 1);
-    examDef.sections.splice(newIdx, 0, removed);
-    markDirty();
-    renderContent();
-    updateSidebar();
-  }
-  window.moveSection = moveSection;
-
-  // ===== DELETE SECTION =====
-  function deleteSection(sectionIdx) {
-    const section = examDef.sections[sectionIdx];
-    const qCount = (section.questions || []).length;
-    let msg = `Delete section "${section.title || 'Untitled'}"?`;
-    if (qCount > 0) {
-      msg += `\n\nThis will also delete ${qCount} question${qCount === 1 ? '' : 's'} in this section. This cannot be undone (until you save, you can refresh the page to recover).`;
-    }
-    if (!confirm(msg)) return;
-    examDef.sections.splice(sectionIdx, 1);
-    markDirty();
-    renderContent();
-    updateSidebar();
-  }
-  window.deleteSection = deleteSection;
-
-  function collectImagePlaceholders() {
-    const list = [];
-    (examDef.sections || []).forEach((section, sIdx) => {
-      (section.questions || []).forEach((q, qIdx) => {
-        if (q.image && q.image.placeholder) {
-          list.push({
-            section: sIdx,
-            question: qIdx,
-            qId: q.id,
-            placeholder: q.image.placeholder,
-            alt: q.image.alt || '',
-            url: q.image.url || null,
-            ref: q.image
-          });
-        }
-      });
-    });
-    return list;
-  }
-
-  function renderImageItem(img) {
-    const div = document.createElement('div');
-    div.className = 'image-item ' + (img.url ? 'uploaded' : 'missing');
-
-    const thumbHtml = img.url
-      ? `<img src="${escapeHtml(img.url)}" alt="${escapeHtml(img.alt)}">`
-      : `<span class="placeholder">⊞</span>`;
-
-    div.innerHTML = `
-      <div class="image-item-thumb">${thumbHtml}</div>
-      <div class="image-item-info">
-        <div class="image-item-name">${escapeHtml(img.placeholder)}</div>
-        <div class="image-item-meta">
-          ${img.url ? '✓ Uploaded' : '✗ Not uploaded'} · Question ${img.qId} · ${escapeHtml(img.alt || 'No description')}
-        </div>
-      </div>
-      <div class="image-item-actions">
-        <button class="q-btn" onclick="openImageUpload('${img.qId}')">${img.url ? 'Replace' : 'Upload'}</button>
-        ${img.url ? `<button class="q-btn delete" onclick="removeImage('${img.qId}')">Remove</button>` : ''}
-      </div>
-    `;
-    return div;
-  }
-
-  window.togglePassage = function(idx) {
-    const el = document.querySelector(`[data-passage="${idx}"]`);
-    if (!el) return;
-    el.classList.toggle('expanded');
-    el.querySelector('.passage-toggle').textContent =
-      el.classList.contains('expanded') ? 'Show less' : 'Show more';
-  };
-
-  function renderQuestionRow(q, sIdx, qIdx, isFirst = false, isLast = false) {
-    const issues = validateQuestion(q);
-    const div = document.createElement('div');
-    div.className = 'question-row';
-    if (issues.errors.length) div.classList.add('has-error');
-    else if (issues.warnings.length) div.classList.add('has-warning');
-
-    const promptPreview = (q.prompt || q.expected_answer || '(no prompt)').slice(0, 200);
-    const gradingClass = q.grading === 'auto' ? 'auto' : 'manual';
-
-    let warningHtml = '';
-    if (issues.errors.length) {
-      warningHtml = `<div class="q-warnings">${issues.errors.map(e => `<span>✗ ${escapeHtml(e)}</span>`).join('')}</div>`;
-    } else if (issues.warnings.length) {
-      warningHtml = `<div class="q-warnings"><span class="warn-icon">⚠ ${escapeHtml(issues.warnings[0])}</span></div>`;
-    }
-
-    div.innerHTML = `
-      <span class="q-num-badge">${escapeHtml(q.id)}</span>
-      <div class="q-info">
-        <div class="q-prompt-preview">${escapeHtml(promptPreview)}</div>
-        <div class="q-meta">
-          <span class="type-badge">${escapeHtml(q.type || 'unknown')}</span>
-          <span class="${gradingClass}">${q.grading || '?'}</span>
-          <span class="points">${q.points ?? '?'} pt${q.points === 1 ? '' : 's'}</span>
-          ${q.image ? `<span class="text-medium-blue">📷 image</span>` : ''}
-        </div>
-      </div>
-      ${warningHtml}
-      <div class="q-actions">
-        <button class="q-btn" onclick="openQuestionEdit(${sIdx}, ${qIdx})">Edit</button>
-      </div>
-      <div class="q-hover-actions">
-        <button class="q-hover-btn" title="Move up" onclick="moveQuestion(${sIdx}, ${qIdx}, -1)" ${isFirst ? 'disabled' : ''}>↑</button>
-        <button class="q-hover-btn" title="Move down" onclick="moveQuestion(${sIdx}, ${qIdx}, 1)" ${isLast ? 'disabled' : ''}>↓</button>
-        <button class="q-hover-btn delete" title="Delete question" onclick="deleteQuestion(${sIdx}, ${qIdx})">⌫</button>
-      </div>
-    `;
-    return div;
-  }
-
-  // ===== VALIDATION =====
-  function validateQuestion(q) {
-    const errors = [];
-    const warnings = [];
-
-    if (!q.id) errors.push('Missing ID');
-    if (!q.type || !VALID_TYPES.includes(q.type)) errors.push('Invalid question type');
-    if (q.points == null || q.points < 0) errors.push('Invalid points');
-    if (!q.prompt || !q.prompt.trim()) errors.push('Missing prompt');
-    if (!['auto', 'manual'].includes(q.grading)) errors.push('Invalid grading mode');
-
-    if (q.grading === 'auto') {
-      switch (q.type) {
-        case 'multiple_choice':
-          if (!q.options?.length) errors.push('No options');
-          if (!q.answer) warnings.push('No correct answer set');
-          else if (!q.options?.find(o => o.key === q.answer)) errors.push('Answer does not match any option');
-          break;
-        case 'true_false':
-          if (!q.answer || !['T', 'F', 'true', 'false'].includes(q.answer)) warnings.push('Answer should be T or F');
-          break;
-        case 'inline_choice':
-          if (!q.options?.length) errors.push('No options');
-          if (!q.answer) warnings.push('No correct answer set');
-          break;
-        case 'fill_blank':
-          if (!q.answer) warnings.push('No correct answer set');
-          break;
-        case 'fill_blank_multi':
-          if (!q.blanks?.length) errors.push('No blanks defined');
-          else if (q.blanks.some(b => !b.answer)) warnings.push('Some blanks missing answers');
-          break;
-        case 'matching':
-          if (!q.left_items?.length || !q.right_items?.length) errors.push('Matching items incomplete');
-          if (!q.answers || !Object.keys(q.answers).length) warnings.push('No answer key set');
-          break;
-        case 'categorization':
-          if (!q.items?.length || !q.categories?.length) errors.push('Items or categories missing');
-          if (!q.answers) warnings.push('No category mapping set');
-          break;
-        case 'image_label':
-          if (!q.labels?.length) errors.push('No labels defined');
-          if (!q.image?.url) warnings.push('Image not yet uploaded');
-          break;
-        case 'image_match':
-          if (!q.items?.length || !q.image_regions?.length) errors.push('Items or regions missing');
-          if (!q.image?.url) warnings.push('Image not yet uploaded');
-          break;
-      }
-    }
-
-    if (q.image && !q.image.url) warnings.push('Image not yet uploaded');
-
-    return { errors, warnings };
-  }
-
-  // ===== SIDEBAR =====
-  function updateSidebar() {
-    if (!examDef) {
-      document.getElementById('sumSections').textContent = '—';
-      document.getElementById('sumQuestions').textContent = '—';
-      document.getElementById('sumAuto').textContent = '—';
-      document.getElementById('sumManual').textContent = '—';
-      document.getElementById('sumPoints').textContent = '—';
-      document.getElementById('sumImagesNeeded').textContent = '—';
-      document.getElementById('sumImagesUploaded').textContent = '—';
-      renderValidation([{ ok: false, text: 'No exam content uploaded yet.' }]);
-      document.getElementById('previewBtn').disabled = true;
-      document.getElementById('saveDraftBtn').disabled = true;
-      document.getElementById('publishBtn').disabled = true;
-      return;
-    }
-
-    const sections = examDef.sections || [];
-    let totalQ = 0, autoQ = 0, manualQ = 0, totalPoints = 0;
-    sections.forEach(s => {
-      (s.questions || []).forEach(q => {
-        totalQ++;
-        if (q.grading === 'auto') autoQ++;
-        else manualQ++;
-        totalPoints += Number(q.points) || 0;
-      });
-    });
-
-    const images = collectImagePlaceholders();
-    const imagesUploaded = images.filter(i => i.url).length;
-
-    document.getElementById('sumSections').textContent = sections.length;
-    document.getElementById('sumQuestions').textContent = totalQ;
-    document.getElementById('sumAuto').textContent = autoQ;
-    document.getElementById('sumManual').textContent = manualQ;
-    document.getElementById('sumPoints').textContent = totalPoints;
-    document.getElementById('sumImagesNeeded').textContent = images.length;
-    document.getElementById('sumImagesUploaded').textContent = imagesUploaded;
-
-    // Validation
-    const checks = [];
-    checks.push({ ok: sections.length > 0, text: `${sections.length} section${sections.length === 1 ? '' : 's'}` });
-    checks.push({ ok: totalQ > 0, text: `${totalQ} question${totalQ === 1 ? '' : 's'}` });
-
-    let issuesCount = 0;
-    sections.forEach(s => {
-      (s.questions || []).forEach(q => {
-        const v = validateQuestion(q);
-        if (v.errors.length) issuesCount++;
-      });
-    });
-    if (issuesCount > 0) {
-      checks.push({ ok: false, text: `${issuesCount} question${issuesCount === 1 ? '' : 's'} with errors` });
-    } else {
-      checks.push({ ok: true, text: 'All questions are valid' });
-    }
-
-    if (images.length > 0) {
-      const allUploaded = imagesUploaded === images.length;
-      checks.push({
-        ok: allUploaded,
-        text: allUploaded
-          ? `All ${images.length} image${images.length === 1 ? '' : 's'} uploaded`
-          : `${images.length - imagesUploaded} image${images.length - imagesUploaded === 1 ? '' : 's'} not yet uploaded`
-      });
-    }
-
-    renderValidation(checks);
-
-    const allValid = issuesCount === 0 && imagesUploaded === images.length && totalQ > 0;
-    document.getElementById('previewBtn').disabled = false;
-    document.getElementById('saveDraftBtn').disabled = false;
-    document.getElementById('publishBtn').disabled = !allValid;
-  }
-
-  function renderValidation(checks) {
-    const list = document.getElementById('validationList');
-    list.innerHTML = checks.map(c =>
-      `<li class="${c.ok ? 'ok' : 'fail'}">${escapeHtml(c.text)}</li>`
-    ).join('');
-  }
-
-  // ===== JSON UPLOAD =====
-  function setupJsonUpload() {
-    const zone = document.getElementById('uploadZone');
-    const input = document.getElementById('jsonFileInput');
-
-    input.addEventListener('change', e => {
-      if (e.target.files[0]) handleJsonFile(e.target.files[0]);
-    });
-
-    ['dragover', 'dragenter'].forEach(evt => zone.addEventListener(evt, e => {
-      e.preventDefault();
-      zone.classList.add('dragover');
-    }));
-    ['dragleave', 'drop'].forEach(evt => zone.addEventListener(evt, e => {
-      e.preventDefault();
-      zone.classList.remove('dragover');
-    }));
-    zone.addEventListener('drop', e => {
-      e.preventDefault();
-      if (e.dataTransfer.files[0]) handleJsonFile(e.dataTransfer.files[0]);
-    });
-
-    document.getElementById('reuploadJsonBtn').addEventListener('click', () => {
-      if (!confirm('Replace the current exam content? Image uploads will be preserved if filenames match.')) return;
-      examDef = null;
-      renderContent();
-      updateSidebar();
-    });
-
-    document.getElementById('downloadJsonBtn').addEventListener('click', () => {
-      const blob = new Blob([JSON.stringify(examDef, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${currentExam.code}.json`;
-      a.click();
-      URL.revokeObjectURL(url);
-    });
-  }
-
-  function handleJsonFile(file) {
-    if (!file.name.endsWith('.json') && file.type !== 'application/json') {
-      showToast('Please upload a .json file', 'error');
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = e => {
-      try {
-        const parsed = JSON.parse(e.target.result);
-        if (!parsed.schema_version || !parsed.sections) {
-          throw new Error('Invalid schema — missing schema_version or sections');
-        }
-        // If we already had image URLs, try to preserve them when filenames match
-        if (examDef) {
-          const existingImages = collectImagePlaceholders();
-          const merge = (q) => {
-            if (q.image?.placeholder) {
-              const match = existingImages.find(i => i.placeholder === q.image.placeholder && i.url);
-              if (match) q.image.url = match.url;
-            }
-          };
-          (parsed.sections || []).forEach(s =>
-            (s.questions || []).forEach(merge)
-          );
-        }
-        examDef = parsed;
-        markDirty();
-        renderContent();
-        updateSidebar();
-        showToast('JSON loaded successfully', 'success');
-      } catch (err) {
-        showToast('Could not parse JSON: ' + err.message, 'error');
-      }
-    };
-    reader.readAsText(file);
-  }
-
-  // ===== IMAGE UPLOAD =====
-  function openImageUpload(qId) {
-    const ctx = collectImagePlaceholders().find(i => i.qId === qId);
-    if (!ctx) return;
-    pendingImageContext = ctx;
-    document.getElementById('imageModalTitle').textContent = `Question ${qId}`;
-    document.getElementById('imageModalSub').textContent =
-      `Filename: ${ctx.placeholder} · ${ctx.alt}`;
-    document.getElementById('imageFileInput').value = '';
-    document.getElementById('imagePreviewWrap').style.display = 'none';
-    document.getElementById('uploadImageBtn').disabled = true;
-    document.getElementById('imageUploadModal').classList.add('active');
-  }
-  window.openImageUpload = openImageUpload;
-
-  function closeImageModal() {
-    document.getElementById('imageUploadModal').classList.remove('active');
-    pendingImageContext = null;
-  }
-  window.closeImageModal = closeImageModal;
-
-  document.getElementById('imageFileInput').addEventListener('change', e => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    if (!['image/png', 'image/jpeg', 'image/webp'].includes(file.type)) {
-      showToast('Only PNG, JPEG, and WebP files are accepted', 'error');
-      e.target.value = '';
-      return;
-    }
-    if (file.size > 5 * 1024 * 1024) {
-      showToast('File is larger than 5 MB', 'error');
-      e.target.value = '';
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = ev => {
-      document.getElementById('imagePreview').src = ev.target.result;
-      document.getElementById('imagePreviewWrap').style.display = 'block';
-      document.getElementById('uploadImageBtn').disabled = false;
-    };
-    reader.readAsDataURL(file);
-  });
-
-  document.getElementById('uploadImageBtn').addEventListener('click', async () => {
-    const file = document.getElementById('imageFileInput').files[0];
-    if (!file || !pendingImageContext) return;
-
-    const btn = document.getElementById('uploadImageBtn');
-    btn.disabled = true;
-    btn.textContent = 'Uploading…';
-
-    try {
-      const ext = file.name.split('.').pop().toLowerCase();
-      const path = `${currentExam.code}/${pendingImageContext.placeholder.replace(/\.[^.]+$/, '')}.${ext}`;
-
-      const { error: upErr } = await db.storage.from(STORAGE_BUCKET)
-        .upload(path, file, { upsert: true, contentType: file.type });
-      if (upErr) throw upErr;
-
-      const { data: urlData } = db.storage.from(STORAGE_BUCKET).getPublicUrl(path);
-      const publicUrl = urlData.publicUrl + `?v=${Date.now()}`; // cache-bust
-
-      // Update the JSON in-place
-      const sIdx = pendingImageContext.section;
-      const qIdx = pendingImageContext.question;
-      examDef.sections[sIdx].questions[qIdx].image.url = publicUrl;
-      markDirty();
-
-      closeImageModal();
-      renderContent();
-      updateSidebar();
-      showToast('Image uploaded', 'success');
-    } catch (err) {
-      console.error(err);
-      showToast('Upload failed: ' + err.message, 'error');
-      btn.disabled = false;
-      btn.textContent = 'Upload';
-    }
-  });
-
-  async function removeImage(qId) {
-    if (!confirm('Remove this image? The file will be deleted from storage.')) return;
-    const img = collectImagePlaceholders().find(i => i.qId === qId);
-    if (!img || !img.url) return;
-
-    try {
-      // Extract path from URL (everything after the bucket name)
-      const urlParts = img.url.split(`/${STORAGE_BUCKET}/`);
-      if (urlParts.length === 2) {
-        const path = urlParts[1].split('?')[0];
-        await db.storage.from(STORAGE_BUCKET).remove([path]);
-      }
-
-      const sIdx = img.section, qIdx = img.question;
-      examDef.sections[sIdx].questions[qIdx].image.url = null;
-      markDirty();
-
-      renderContent();
-      updateSidebar();
-      showToast('Image removed', 'success');
-    } catch (err) {
-      console.error(err);
-      showToast('Could not remove image: ' + err.message, 'error');
-    }
-  }
-  window.removeImage = removeImage;
-
-  // ===== EDIT QUESTION MODAL =====
-  function openQuestionEdit(sIdx, qIdx) {
-    const q = examDef.sections[sIdx].questions[qIdx];
-    editingQuestion = { sIdx, qIdx, q };
-
-    document.getElementById('editQTitle').textContent = `Question ${q.id}`;
-    document.getElementById('editQSub').textContent = `Type: ${q.type}`;
-    document.getElementById('editQType').value = q.type;
-    document.getElementById('editQGrading').value = q.grading || 'auto';
-    document.getElementById('editQPoints').value = q.points ?? 1;
-    document.getElementById('editQPrompt').value = q.prompt || '';
-
-    refreshJsonViewer(q);
-
-    // Reset JSON viewer collapsed state
-    document.getElementById('editQJson').style.display = 'none';
-    document.getElementById('jsonToggleBtn').textContent = 'Show';
-
-    // Render type-specific editor
-    const specific = document.getElementById('editQTypeSpecific');
-    specific.innerHTML = '';
-    renderTypeEditor(q, specific);
-
-    document.getElementById('editQuestionModal').classList.add('active');
-  }
-  window.openQuestionEdit = openQuestionEdit;
-
-  function refreshJsonViewer(q) {
-    document.getElementById('editQJson').textContent = JSON.stringify(q, null, 2);
-  }
-
-  function closeQuestionModal() {
-    document.getElementById('editQuestionModal').classList.remove('active');
-    editingQuestion = null;
-  }
-  window.closeQuestionModal = closeQuestionModal;
-
-  // Show/hide raw JSON
-  document.getElementById('jsonToggleBtn').addEventListener('click', () => {
-    const viewer = document.getElementById('editQJson');
-    const btn = document.getElementById('jsonToggleBtn');
-    if (viewer.style.display === 'none') {
-      viewer.style.display = 'block';
-      btn.textContent = 'Hide';
-    } else {
-      viewer.style.display = 'none';
-      btn.textContent = 'Show';
-    }
-  });
-
-  // ===== TYPE-SPECIFIC EDITORS =====
-  // Each type's editor uses data attributes/inputs that collectTypeData() reads back.
-  // Many editors use "live mutation" — when you add or remove a sub-row, we update q
-  // immediately and re-render the editor section. This keeps the UI in sync with the
-  // underlying answer key (so deleting an option auto-clears stale answer references).
-
-  function renderTypeEditor(q, container) {
-    switch (q.type) {
-      case 'multiple_choice':  renderMultipleChoiceEditor(q, container); break;
-      case 'true_false':       renderTrueFalseEditor(q, container); break;
-      case 'inline_choice':    renderInlineChoiceEditor(q, container); break;
-      case 'fill_blank':       renderFillBlankEditor(q, container); break;
-      case 'fill_blank_multi': renderFillBlankMultiEditor(q, container); break;
-      case 'matching':         renderMatchingEditor(q, container); break;
-      case 'categorization':   renderCategorizationEditor(q, container); break;
-      case 'sentence_order':   renderSentenceOrderEditor(q, container); break;
-      case 'short_answer':     renderShortAnswerEditor(q, container); break;
-      case 'writing_prompt':   renderWritingPromptEditor(q, container); break;
-      case 'pool_writing':     renderPoolWritingEditor(q, container); break;
-      case 'image_label':      renderImageLabelEditor(q, container); break;
-      case 'image_match':      renderImageMatchEditor(q, container); break;
-    }
-  }
-
-  // Helper: re-render the type editor (used when sub-rows are added/removed)
-  function rerenderTypeEditor() {
-    if (!editingQuestion) return;
-    const container = document.getElementById('editQTypeSpecific');
-    container.innerHTML = '';
-    renderTypeEditor(editingQuestion.q, container);
-    refreshJsonViewer(editingQuestion.q);
-  }
-
-  // ----- Multiple Choice -----
-  function renderMultipleChoiceEditor(q, container) {
-    q.options = q.options || [];
-    const html = `
-      <div class="editor-section">
-        <div class="editor-section-label">Options</div>
-        <div class="editor-section-hint">Click the circle next to an option to mark it as the correct answer.</div>
-        <div id="optsList">
-          ${q.options.map((opt, i) => `
-            <div class="sub-row opt-row">
-              <span class="sub-key">${escapeHtml(opt.key || '')}</span>
-              <input type="text" data-mc-text="${i}" value="${escapeHtml(opt.text || '')}" placeholder="Option text">
-              <label class="sub-radio">
-                <input type="radio" name="mc-answer" data-mc-answer="${escapeHtml(opt.key)}" ${q.answer === opt.key ? 'checked' : ''}>
-                Correct
-              </label>
-              <button class="sub-delete-btn" data-mc-delete="${i}" title="Remove option">⌫</button>
-            </div>
-          `).join('')}
-        </div>
-        <button class="add-row-btn" id="addOptBtn">+ Add Option</button>
-      </div>
-    `;
-    container.innerHTML = html;
-
-    container.querySelectorAll('[data-mc-text]').forEach(input => {
-      input.addEventListener('input', () => {
-        const i = parseInt(input.dataset.mcText, 10);
-        q.options[i].text = input.value;
-        refreshJsonViewer(q);
-      });
-    });
-    container.querySelectorAll('[data-mc-answer]').forEach(radio => {
-      radio.addEventListener('change', () => {
-        if (radio.checked) {
-          q.answer = radio.dataset.mcAnswer;
-          refreshJsonViewer(q);
-        }
-      });
-    });
-    container.querySelectorAll('[data-mc-delete]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const i = parseInt(btn.dataset.mcDelete, 10);
-        const removedKey = q.options[i].key;
-        q.options.splice(i, 1);
-        // Re-key options to keep them sequential a, b, c, d, …
-        q.options.forEach((o, idx) => o.key = String.fromCharCode(97 + idx));
-        // If the removed option was the answer, clear it
-        if (q.answer === removedKey) q.answer = '';
-        // If answer is no longer in the new key set, clear it
-        if (q.answer && !q.options.find(o => o.key === q.answer)) q.answer = '';
-        rerenderTypeEditor();
-      });
-    });
-    document.getElementById('addOptBtn').addEventListener('click', () => {
-      const nextKey = String.fromCharCode(97 + q.options.length);
-      q.options.push({ key: nextKey, text: '' });
-      rerenderTypeEditor();
-    });
-  }
-
-  // ----- True / False -----
-  function renderTrueFalseEditor(q, container) {
-    container.innerHTML = `
-      <div class="editor-section">
-        <div class="editor-section-label">Correct Answer</div>
-        <div class="tf-btn-group">
-          <label class="sub-radio sub-radio--btn">
-            <input type="radio" name="tf-answer" value="T" ${q.answer === 'T' ? 'checked' : ''}>
-            True
-          </label>
-          <label class="sub-radio sub-radio--btn">
-            <input type="radio" name="tf-answer" value="F" ${q.answer === 'F' ? 'checked' : ''}>
-            False
-          </label>
-        </div>
-      </div>
-    `;
-    container.querySelectorAll('[name="tf-answer"]').forEach(r => {
-      r.addEventListener('change', () => {
-        if (r.checked) { q.answer = r.value; refreshJsonViewer(q); }
-      });
-    });
-  }
-
-  // ----- Inline Choice -----
-  function renderInlineChoiceEditor(q, container) {
-    q.options = q.options || ['', ''];
-    container.innerHTML = `
-      <div class="editor-section">
-        <div class="editor-section-label">Two Options (inside the sentence)</div>
-        <div class="editor-section-hint">Use <code class="inline-code">{choice}</code> in the prompt to mark where the choice appears. Click the circle to mark the correct one.</div>
-        ${q.options.map((opt, i) => `
-          <div class="sub-row opt-row">
-            <input type="text" data-ic-text="${i}" value="${escapeHtml(opt || '')}" placeholder="Option ${i+1}">
-            <label class="sub-radio">
-              <input type="radio" name="ic-answer" data-ic-answer="${escapeHtml(opt || '')}" ${q.answer === opt && opt ? 'checked' : ''}>
-              Correct
-            </label>
-          </div>
-        `).join('')}
-      </div>
-    `;
-    container.querySelectorAll('[data-ic-text]').forEach(input => {
-      input.addEventListener('input', () => {
-        const i = parseInt(input.dataset.icText, 10);
-        // If the previous text was the answer, update the answer to match the new text
-        if (q.options[i] === q.answer) q.answer = input.value;
-        q.options[i] = input.value;
-        refreshJsonViewer(q);
-      });
-    });
-    container.querySelectorAll('[name="ic-answer"]').forEach(r => {
-      r.addEventListener('change', () => {
-        if (r.checked) { q.answer = r.dataset.icAnswer; refreshJsonViewer(q); }
-      });
-    });
-  }
-
-  // ----- Fill Blank -----
-  function renderFillBlankEditor(q, container) {
-    q.accepted_answers = q.accepted_answers || [];
-    container.innerHTML = `
-      <div class="editor-section">
-        <div class="editor-section-label">Answer</div>
-        <div class="editor-section-hint">Use <code class="inline-code">{blank}</code> in the prompt to mark where the blank goes.</div>
-        <div class="modal-field">
-          <label>Correct Answer</label>
-          <input type="text" id="fb-answer" value="${escapeHtml(q.answer || '')}">
-        </div>
-        <div class="modal-field">
-          <label>Accepted Variants (comma separated)</label>
-          <input type="text" id="fb-accepted" value="${escapeHtml(q.accepted_answers.join(', '))}" placeholder="e.g. cannot, can not, can't">
-        </div>
-        <label class="sub-radio sub-radio--mt">
-          <input type="checkbox" id="fb-case" ${q.case_sensitive ? 'checked' : ''}>
-          Case sensitive
-        </label>
-      </div>
-    `;
-    document.getElementById('fb-answer').addEventListener('input', e => {
-      q.answer = e.target.value; refreshJsonViewer(q);
-    });
-    document.getElementById('fb-accepted').addEventListener('input', e => {
-      q.accepted_answers = e.target.value.split(',').map(s => s.trim()).filter(Boolean);
-      refreshJsonViewer(q);
-    });
-    document.getElementById('fb-case').addEventListener('change', e => {
-      q.case_sensitive = e.target.checked; refreshJsonViewer(q);
-    });
-  }
-
-  // ----- Fill Blank Multi -----
-  function renderFillBlankMultiEditor(q, container) {
-    q.blanks = q.blanks || [];
-    container.innerHTML = `
-      <div class="editor-section">
-        <div class="editor-section-label">
-          <span>Blanks (in order)</span>
-          <span class="q-meta-mono">${q.blanks.length} blank${q.blanks.length === 1 ? '' : 's'}</span>
-        </div>
-        <div class="editor-section-hint">Each <code class="inline-code">{blank}</code> in the prompt corresponds to one row below, in order.</div>
-        <div class="blank-row-header">
-          <span>ID</span>
-          <span>Answer</span>
-          <span>Accepted</span>
-          <span>Points</span>
-          <span></span>
-        </div>
-        <div id="blanksList">
-          ${q.blanks.map((b, i) => `
-            <div class="sub-row blank-row">
-              <span class="sub-key">${escapeHtml(b.id || '')}</span>
-              <input type="text" data-fbm-answer="${i}" value="${escapeHtml(b.answer || '')}" placeholder="Answer">
-              <input type="text" data-fbm-accepted="${i}" value="${escapeHtml((b.accepted_answers || []).join(', '))}" placeholder="Variants">
-              <input type="number" data-fbm-points="${i}" value="${b.points ?? 0.5}" step="0.1" min="0">
-              <button class="sub-delete-btn" data-fbm-delete="${i}" title="Remove blank">⌫</button>
-            </div>
-          `).join('')}
-        </div>
-        <button class="add-row-btn" id="addBlankBtn">+ Add Blank</button>
-        <label class="sub-radio sub-radio--mt">
-          <input type="checkbox" id="fbm-case" ${q.case_sensitive ? 'checked' : ''}>
-          Case sensitive
-        </label>
-      </div>
-    `;
-    container.querySelectorAll('[data-fbm-answer]').forEach(input => {
-      input.addEventListener('input', () => {
-        const i = parseInt(input.dataset.fbmAnswer, 10);
-        q.blanks[i].answer = input.value;
-        refreshJsonViewer(q);
-      });
-    });
-    container.querySelectorAll('[data-fbm-accepted]').forEach(input => {
-      input.addEventListener('input', () => {
-        const i = parseInt(input.dataset.fbmAccepted, 10);
-        q.blanks[i].accepted_answers = input.value.split(',').map(s => s.trim()).filter(Boolean);
-        refreshJsonViewer(q);
-      });
-    });
-    container.querySelectorAll('[data-fbm-points]').forEach(input => {
-      input.addEventListener('input', () => {
-        const i = parseInt(input.dataset.fbmPoints, 10);
-        q.blanks[i].points = parseFloat(input.value) || 0;
-        refreshJsonViewer(q);
-      });
-    });
-    container.querySelectorAll('[data-fbm-delete]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const i = parseInt(btn.dataset.fbmDelete, 10);
-        q.blanks.splice(i, 1);
-        rerenderTypeEditor();
-      });
-    });
-    document.getElementById('addBlankBtn').addEventListener('click', () => {
-      const next = q.blanks.length + 1;
-      const newId = `${q.id}${String.fromCharCode(96 + next)}`;
-      q.blanks.push({ id: newId, answer: '', accepted_answers: [], points: 0.5 });
-      rerenderTypeEditor();
-    });
-    document.getElementById('fbm-case').addEventListener('change', e => {
-      q.case_sensitive = e.target.checked; refreshJsonViewer(q);
-    });
-  }
-
-  // ----- Matching -----
-  function renderMatchingEditor(q, container) {
-    q.left_items = q.left_items || [];
-    q.right_items = q.right_items || [];
-    q.answers = q.answers || {};
-
-    const rightOptionsHtml = q.right_items.map(r =>
-      `<option value="${escapeHtml(r.key)}">${escapeHtml(r.key)}) ${escapeHtml(r.text || '(empty)')}</option>`
-    ).join('');
-
-    container.innerHTML = `
-      <div class="editor-section">
-        <div class="editor-section-label">Left Items (numbered)</div>
-        <div id="leftItemsList">
-          ${q.left_items.map((it, i) => `
-            <div class="sub-row left-item-row">
-              <span class="sub-key">${escapeHtml(it.id || '')}</span>
-              <input type="text" data-mt-left="${i}" value="${escapeHtml(it.text || '')}" placeholder="Item text">
-              <button class="sub-delete-btn" data-mt-left-delete="${i}" title="Remove">⌫</button>
-            </div>
-          `).join('')}
-        </div>
-        <button class="add-row-btn" id="addLeftBtn">+ Add Left Item</button>
-      </div>
-
-      <div class="editor-section">
-        <div class="editor-section-label">Right Items (lettered)</div>
-        <div id="rightItemsList">
-          ${q.right_items.map((it, i) => `
-            <div class="sub-row right-item-row">
-              <span class="sub-key">${escapeHtml(it.key || '')}</span>
-              <input type="text" data-mt-right="${i}" value="${escapeHtml(it.text || '')}" placeholder="Item text">
-              <button class="sub-delete-btn" data-mt-right-delete="${i}" title="Remove">⌫</button>
-            </div>
-          `).join('')}
-        </div>
-        <button class="add-row-btn" id="addRightBtn">+ Add Right Item</button>
-      </div>
-
-      <div class="editor-section">
-        <div class="editor-section-label">Answer Key</div>
-        <div class="editor-section-hint">For each left item, choose the matching right item.</div>
-        <div class="answers-grid">
-          ${q.left_items.map(l => `
-            <div>
-              <span class="answer-label">${escapeHtml(l.id)}) ${escapeHtml(l.text || '(empty)')}</span>
-              <select data-mt-answer="${escapeHtml(l.id)}">
-                <option value="">— pick —</option>
-                ${rightOptionsHtml.replace(new RegExp(`value="${q.answers[l.id]}"`), `value="${q.answers[l.id]}" selected`)}
-              </select>
-            </div>
-          `).join('')}
-        </div>
-      </div>
-    `;
-    container.querySelectorAll('[data-mt-left]').forEach(input => {
-      input.addEventListener('input', () => {
-        const i = parseInt(input.dataset.mtLeft, 10);
-        q.left_items[i].text = input.value;
-        refreshJsonViewer(q);
-      });
-    });
-    container.querySelectorAll('[data-mt-right]').forEach(input => {
-      input.addEventListener('input', () => {
-        const i = parseInt(input.dataset.mtRight, 10);
-        q.right_items[i].text = input.value;
-        refreshJsonViewer(q);
-      });
-    });
-    container.querySelectorAll('[data-mt-left-delete]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const i = parseInt(btn.dataset.mtLeftDelete, 10);
-        const removedId = q.left_items[i].id;
-        q.left_items.splice(i, 1);
-        delete q.answers[removedId];
-        // Renumber left items
-        q.left_items.forEach((it, idx) => {
-          const newId = String(idx + 1);
-          if (q.answers[it.id] != null && newId !== it.id) {
-            q.answers[newId] = q.answers[it.id];
-            delete q.answers[it.id];
-          }
-          it.id = newId;
-        });
-        rerenderTypeEditor();
-      });
-    });
-    container.querySelectorAll('[data-mt-right-delete]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const i = parseInt(btn.dataset.mtRightDelete, 10);
-        const removedKey = q.right_items[i].key;
-        q.right_items.splice(i, 1);
-        // Re-key right items
-        q.right_items.forEach((it, idx) => {
-          const newKey = String.fromCharCode(65 + idx);
-          if (newKey !== it.key) {
-            // Update any answer references that pointed to old key
-            Object.keys(q.answers).forEach(leftId => {
-              if (q.answers[leftId] === it.key) q.answers[leftId] = newKey;
-            });
-            it.key = newKey;
-          }
-        });
-        // Drop answers that pointed to the now-removed key
-        Object.keys(q.answers).forEach(k => {
-          if (q.answers[k] === removedKey) delete q.answers[k];
-          if (q.answers[k] && !q.right_items.find(r => r.key === q.answers[k])) {
-            delete q.answers[k];
-          }
-        });
-        rerenderTypeEditor();
-      });
-    });
-    container.querySelectorAll('[data-mt-answer]').forEach(sel => {
-      sel.addEventListener('change', () => {
-        const leftId = sel.dataset.mtAnswer;
-        if (sel.value) q.answers[leftId] = sel.value;
-        else delete q.answers[leftId];
-        refreshJsonViewer(q);
-      });
-    });
-    document.getElementById('addLeftBtn').addEventListener('click', () => {
-      const nextId = String(q.left_items.length + 1);
-      q.left_items.push({ id: nextId, text: '' });
-      rerenderTypeEditor();
-    });
-    document.getElementById('addRightBtn').addEventListener('click', () => {
-      const nextKey = String.fromCharCode(65 + q.right_items.length);
-      q.right_items.push({ key: nextKey, text: '' });
-      rerenderTypeEditor();
-    });
-  }
-
-  // ----- Categorization -----
-  function renderCategorizationEditor(q, container) {
-    q.items = q.items || [];
-    q.categories = q.categories || [];
-    q.answers = q.answers || {};
-
-    const catOptsHtml = q.categories.map(c =>
-      `<option value="${escapeHtml(c.id)}">${escapeHtml(c.label)}</option>`
-    ).join('');
-
-    container.innerHTML = `
-      <div class="editor-section">
-        <div class="editor-section-label">Categories</div>
-        <div id="catsList">
-          ${q.categories.map((c, i) => `
-            <div class="sub-row categ-cat-row">
-              <span class="sub-key">${escapeHtml(c.id || '')}</span>
-              <input type="text" data-cat-label="${i}" value="${escapeHtml(c.label || '')}" placeholder="Category name">
-              <button class="sub-delete-btn" data-cat-delete="${i}" title="Remove category">⌫</button>
-            </div>
-          `).join('')}
-        </div>
-        <button class="add-row-btn" id="addCatBtn">+ Add Category</button>
-      </div>
-
-      <div class="editor-section">
-        <div class="editor-section-label">Items (with correct category)</div>
-        <div class="editor-section-hint">For each item, choose the correct category from the dropdown.</div>
-        <div id="itemsList">
-          ${q.items.map((it, i) => `
-            <div class="sub-row categ-item-row">
-              <input type="text" data-item-text="${i}" value="${escapeHtml(it || '')}" placeholder="Item text">
-              <select data-item-cat="${i}">
-                <option value="">— pick category —</option>
-                ${q.categories.map(c =>
-                  `<option value="${escapeHtml(c.id)}" ${q.answers[it] === c.id ? 'selected' : ''}>${escapeHtml(c.label)}</option>`
-                ).join('')}
-              </select>
-              <button class="sub-delete-btn" data-item-delete="${i}" title="Remove item">⌫</button>
-            </div>
-          `).join('')}
-        </div>
-        <button class="add-row-btn" id="addItemBtn">+ Add Item</button>
-      </div>
-    `;
-
-    container.querySelectorAll('[data-cat-label]').forEach(input => {
-      input.addEventListener('input', () => {
-        const i = parseInt(input.dataset.catLabel, 10);
-        q.categories[i].label = input.value;
-        refreshJsonViewer(q);
-      });
-    });
-    container.querySelectorAll('[data-cat-delete]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const i = parseInt(btn.dataset.catDelete, 10);
-        const removedId = q.categories[i].id;
-        q.categories.splice(i, 1);
-        // Drop answers that pointed to the removed category
-        Object.keys(q.answers).forEach(k => {
-          if (q.answers[k] === removedId) delete q.answers[k];
-        });
-        rerenderTypeEditor();
-      });
-    });
-    container.querySelectorAll('[data-item-text]').forEach(input => {
-      input.addEventListener('input', () => {
-        const i = parseInt(input.dataset.itemText, 10);
-        const oldText = q.items[i];
-        q.items[i] = input.value;
-        // Move answer key from old text to new
-        if (oldText !== input.value && q.answers[oldText] != null) {
-          q.answers[input.value] = q.answers[oldText];
-          delete q.answers[oldText];
-        }
-        refreshJsonViewer(q);
-      });
-    });
-    container.querySelectorAll('[data-item-cat]').forEach(sel => {
-      sel.addEventListener('change', () => {
-        const i = parseInt(sel.dataset.itemCat, 10);
-        const itemText = q.items[i];
-        if (sel.value) q.answers[itemText] = sel.value;
-        else delete q.answers[itemText];
-        refreshJsonViewer(q);
-      });
-    });
-    container.querySelectorAll('[data-item-delete]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const i = parseInt(btn.dataset.itemDelete, 10);
-        const removedItem = q.items[i];
-        q.items.splice(i, 1);
-        delete q.answers[removedItem];
-        rerenderTypeEditor();
-      });
-    });
-    document.getElementById('addCatBtn').addEventListener('click', () => {
-      const nextN = q.categories.length + 1;
-      q.categories.push({ id: `cat${nextN}`, label: `Category ${nextN}` });
-      rerenderTypeEditor();
-    });
-    document.getElementById('addItemBtn').addEventListener('click', () => {
-      q.items.push('');
-      rerenderTypeEditor();
-    });
-  }
-
-  // ----- Sentence Order -----
-  function renderSentenceOrderEditor(q, container) {
-    q.words = q.words || [];
-    container.innerHTML = `
-      <div class="editor-section">
-        <div class="editor-section-label">Sentence Order</div>
-        <div class="modal-field">
-          <label>Scrambled Words (comma separated)</label>
-          <input type="text" id="so-words" value="${escapeHtml(q.words.join(', '))}" placeholder="e.g. are, these, hard, working, students">
-        </div>
-        <div class="modal-field">
-          <label>Expected Order (full sentence)</label>
-          <input type="text" id="so-expected" value="${escapeHtml(q.expected || '')}" placeholder="e.g. These students are working hard.">
-        </div>
-        <div class="modal-field">
-          <label>Grading Rubric</label>
-          <textarea id="so-rubric">${escapeHtml(q.rubric || '')}</textarea>
-        </div>
-      </div>
-    `;
-    document.getElementById('so-words').addEventListener('input', e => {
-      q.words = e.target.value.split(',').map(s => s.trim()).filter(Boolean);
-      refreshJsonViewer(q);
-    });
-    document.getElementById('so-expected').addEventListener('input', e => {
-      q.expected = e.target.value; refreshJsonViewer(q);
-    });
-    document.getElementById('so-rubric').addEventListener('input', e => {
-      q.rubric = e.target.value; refreshJsonViewer(q);
-    });
-  }
-
-  // ----- Short Answer -----
-  function renderShortAnswerEditor(q, container) {
-    container.innerHTML = `
-      <div class="editor-section">
-        <div class="editor-section-label">Short Answer (Manual)</div>
-        <div class="modal-field">
-          <label>Expected Answer (for grading reference)</label>
-          <input type="text" id="sa-expected" value="${escapeHtml(q.expected_answer || '')}" placeholder="What you'd consider a correct answer">
-        </div>
-        <div class="modal-field">
-          <label>Grading Rubric</label>
-          <textarea id="sa-rubric" placeholder="Notes for the grader (e.g. partial credit guidelines)">${escapeHtml(q.rubric || '')}</textarea>
-        </div>
-      </div>
-    `;
-    document.getElementById('sa-expected').addEventListener('input', e => {
-      q.expected_answer = e.target.value; refreshJsonViewer(q);
-    });
-    document.getElementById('sa-rubric').addEventListener('input', e => {
-      q.rubric = e.target.value; refreshJsonViewer(q);
-    });
-  }
-
-  // ----- Writing Prompt -----
-  function renderWritingPromptEditor(q, container) {
-    container.innerHTML = `
-      <div class="editor-section">
-        <div class="editor-section-label">Writing Prompt (Manual)</div>
-        <div class="modal-field">
-          <label>Grading Rubric</label>
-          <textarea id="wp-rubric" placeholder="Notes for the grader (e.g. grammar focus, length expectations)">${escapeHtml(q.rubric || '')}</textarea>
-        </div>
-      </div>
-    `;
-    document.getElementById('wp-rubric').addEventListener('input', e => {
-      q.rubric = e.target.value; refreshJsonViewer(q);
-    });
-  }
-
-  // ----- Pool Writing -----
-  function renderPoolWritingEditor(q, container) {
-    q.word_pool = q.word_pool || [];
-    container.innerHTML = `
-      <div class="editor-section">
-        <div class="editor-section-label">Pool Writing (Manual)</div>
-        <div class="modal-field">
-          <label>Word Pool (comma separated)</label>
-          <input type="text" id="pw-pool" value="${escapeHtml(q.word_pool.join(', '))}" placeholder="e.g. spring, snow, flower, people, garden">
-        </div>
-        <div class="grid-2col">
-          <div class="modal-field">
-            <label>Required Sentences</label>
-            <input type="number" id="pw-required" value="${q.required_count ?? 5}" min="1">
-          </div>
-          <div class="modal-field">
-            <label>Points per Sentence</label>
-            <input type="number" id="pw-pps" value="${q.points_per_sentence ?? 2}" step="0.5" min="0">
-          </div>
-        </div>
-        <div class="modal-field">
-          <label>Grading Rubric</label>
-          <textarea id="pw-rubric">${escapeHtml(q.rubric || '')}</textarea>
-        </div>
-      </div>
-    `;
-    document.getElementById('pw-pool').addEventListener('input', e => {
-      q.word_pool = e.target.value.split(',').map(s => s.trim()).filter(Boolean);
-      refreshJsonViewer(q);
-    });
-    document.getElementById('pw-required').addEventListener('input', e => {
-      q.required_count = parseInt(e.target.value, 10) || 1;
-      refreshJsonViewer(q);
-    });
-    document.getElementById('pw-pps').addEventListener('input', e => {
-      q.points_per_sentence = parseFloat(e.target.value) || 0;
-      refreshJsonViewer(q);
-    });
-    document.getElementById('pw-rubric').addEventListener('input', e => {
-      q.rubric = e.target.value; refreshJsonViewer(q);
-    });
-  }
-
-  // ----- Image Label -----
-  function renderImageLabelEditor(q, container) {
-    q.image = q.image || { placeholder: '', alt: '', url: null };
-    q.labels = q.labels || [];
-    container.innerHTML = `
-      <div class="editor-section">
-        <div class="editor-section-label">Image</div>
-        <div class="image-info-row">
-          <div>
-            <label>Placeholder filename</label>
-            <input type="text" id="il-placeholder" value="${escapeHtml(q.image.placeholder || '')}" placeholder="${q.id}_image.png">
-          </div>
-          <div>
-            <label>Alt text (description)</label>
-            <input type="text" id="il-alt" value="${escapeHtml(q.image.alt || '')}" placeholder="What does the image show?">
-          </div>
-        </div>
-        <div class="editor-note">
-          ${q.image.url ? '✓ Image uploaded' : 'Image not yet uploaded — use the image inventory section above to upload.'}
-        </div>
-      </div>
-
-      <div class="editor-section">
-        <div class="editor-section-label">Labels</div>
-        <div class="editor-section-hint">Each label is a part of the image the student must identify.</div>
-        <div class="label-row-header">
-          <span>Label name</span>
-          <span>Correct answer</span>
-          <span>Accepted variants</span>
-          <span></span>
-        </div>
-        <div id="labelsList">
-          ${q.labels.map((l, i) => `
-            <div class="sub-row label-row">
-              <input type="text" data-il-label="${i}" value="${escapeHtml(l.label || '')}" placeholder="e.g. John">
-              <input type="text" data-il-answer="${i}" value="${escapeHtml(l.answer || '')}" placeholder="e.g. eat">
-              <input type="text" data-il-accepted="${i}" value="${escapeHtml((l.accepted_answers || []).join(', '))}" placeholder="eats, eating">
-              <button class="sub-delete-btn" data-il-delete="${i}" title="Remove">⌫</button>
-            </div>
-          `).join('')}
-        </div>
-        <button class="add-row-btn" id="addLabelBtn">+ Add Label</button>
-        <label class="sub-radio sub-radio--mt">
-          <input type="checkbox" id="il-case" ${q.case_sensitive ? 'checked' : ''}>
-          Case sensitive
-        </label>
-      </div>
-    `;
-
-    document.getElementById('il-placeholder').addEventListener('input', e => {
-      q.image.placeholder = e.target.value; refreshJsonViewer(q);
-    });
-    document.getElementById('il-alt').addEventListener('input', e => {
-      q.image.alt = e.target.value; refreshJsonViewer(q);
-    });
-    document.getElementById('il-case').addEventListener('change', e => {
-      q.case_sensitive = e.target.checked; refreshJsonViewer(q);
-    });
-
-    container.querySelectorAll('[data-il-label]').forEach(input => {
-      input.addEventListener('input', () => {
-        q.labels[parseInt(input.dataset.ilLabel, 10)].label = input.value;
-        refreshJsonViewer(q);
-      });
-    });
-    container.querySelectorAll('[data-il-answer]').forEach(input => {
-      input.addEventListener('input', () => {
-        q.labels[parseInt(input.dataset.ilAnswer, 10)].answer = input.value;
-        refreshJsonViewer(q);
-      });
-    });
-    container.querySelectorAll('[data-il-accepted]').forEach(input => {
-      input.addEventListener('input', () => {
-        const i = parseInt(input.dataset.ilAccepted, 10);
-        q.labels[i].accepted_answers = input.value.split(',').map(s => s.trim()).filter(Boolean);
-        refreshJsonViewer(q);
-      });
-    });
-    container.querySelectorAll('[data-il-delete]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const i = parseInt(btn.dataset.ilDelete, 10);
-        q.labels.splice(i, 1);
-        rerenderTypeEditor();
-      });
-    });
-    document.getElementById('addLabelBtn').addEventListener('click', () => {
-      const nextN = q.labels.length + 1;
-      q.labels.push({ id: `l${nextN}`, label: '', answer: '', accepted_answers: [] });
-      rerenderTypeEditor();
-    });
-  }
-
-  // ----- Image Match -----
-  function renderImageMatchEditor(q, container) {
-    q.image = q.image || { placeholder: '', alt: '', url: null };
-    q.items = q.items || [];
-    q.image_regions = q.image_regions || [];
-    q.answers = q.answers || {};
-
-    const regionOptsHtml = q.image_regions.map(r =>
-      `<option value="${escapeHtml(r)}">${escapeHtml(r)}</option>`
-    ).join('');
-
-    container.innerHTML = `
-      <div class="editor-section">
-        <div class="editor-section-label">Image</div>
-        <div class="image-info-row">
-          <div>
-            <label>Placeholder filename</label>
-            <input type="text" id="im-placeholder" value="${escapeHtml(q.image.placeholder || '')}" placeholder="${q.id}_image.png">
-          </div>
-          <div>
-            <label>Alt text (description)</label>
-            <input type="text" id="im-alt" value="${escapeHtml(q.image.alt || '')}" placeholder="What does the image show?">
-          </div>
-        </div>
-        <div class="editor-note">
-          ${q.image.url ? '✓ Image uploaded' : 'Image not yet uploaded — use the image inventory section above to upload.'}
-        </div>
-      </div>
-
-      <div class="editor-section">
-        <div class="editor-section-label">Image Regions</div>
-        <div class="editor-section-hint">Numbered regions visible on the image (the student picks one for each item).</div>
-        <div class="modal-field">
-          <input type="text" id="im-regions" value="${escapeHtml(q.image_regions.join(', '))}" placeholder="1, 2, 3, 4, 5, 6">
-        </div>
-      </div>
-
-      <div class="editor-section">
-        <div class="editor-section-label">Items (with correct region)</div>
-        <div id="imItemsList">
-          ${q.items.map((it, i) => `
-            <div class="sub-row sub-row--3col">
-              <input type="text" data-im-item="${i}" value="${escapeHtml(it || '')}" placeholder="Item text">
-              <select data-im-answer="${i}">
-                <option value="">— pick region —</option>
-                ${q.image_regions.map(r =>
-                  `<option value="${escapeHtml(r)}" ${q.answers[it] === r ? 'selected' : ''}>${escapeHtml(r)}</option>`
-                ).join('')}
-              </select>
-              <button class="sub-delete-btn" data-im-item-delete="${i}" title="Remove">⌫</button>
-            </div>
-          `).join('')}
-        </div>
-        <button class="add-row-btn" id="addImItemBtn">+ Add Item</button>
-      </div>
-    `;
-
-    document.getElementById('im-placeholder').addEventListener('input', e => {
-      q.image.placeholder = e.target.value; refreshJsonViewer(q);
-    });
-    document.getElementById('im-alt').addEventListener('input', e => {
-      q.image.alt = e.target.value; refreshJsonViewer(q);
-    });
-    document.getElementById('im-regions').addEventListener('input', e => {
-      const oldRegions = q.image_regions;
-      q.image_regions = e.target.value.split(',').map(s => s.trim()).filter(Boolean);
-      // Drop answers that point to removed regions
-      Object.keys(q.answers).forEach(k => {
-        if (!q.image_regions.includes(q.answers[k])) delete q.answers[k];
-      });
-      rerenderTypeEditor();
-    });
-    container.querySelectorAll('[data-im-item]').forEach(input => {
-      input.addEventListener('input', () => {
-        const i = parseInt(input.dataset.imItem, 10);
-        const oldText = q.items[i];
-        q.items[i] = input.value;
-        if (oldText !== input.value && q.answers[oldText] != null) {
-          q.answers[input.value] = q.answers[oldText];
-          delete q.answers[oldText];
-        }
-        refreshJsonViewer(q);
-      });
-    });
-    container.querySelectorAll('[data-im-answer]').forEach(sel => {
-      sel.addEventListener('change', () => {
-        const i = parseInt(sel.dataset.imAnswer, 10);
-        const itemText = q.items[i];
-        if (sel.value) q.answers[itemText] = sel.value;
-        else delete q.answers[itemText];
-        refreshJsonViewer(q);
-      });
-    });
-    container.querySelectorAll('[data-im-item-delete]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const i = parseInt(btn.dataset.imItemDelete, 10);
-        const removedItem = q.items[i];
-        q.items.splice(i, 1);
-        delete q.answers[removedItem];
-        rerenderTypeEditor();
-      });
-    });
-    document.getElementById('addImItemBtn').addEventListener('click', () => {
-      q.items.push('');
-      rerenderTypeEditor();
-    });
-  }
-
-  // ===== SAVE QUESTION =====
-  // Type-specific data is updated live as the teacher edits, so save just
-  // captures the standard fields (grading, points, prompt) and persists.
-  document.getElementById('saveQuestionBtn').addEventListener('click', () => {
-    if (!editingQuestion) return;
-    const { sIdx, qIdx, q } = editingQuestion;
-
-    q.grading = document.getElementById('editQGrading').value;
-    q.points = parseFloat(document.getElementById('editQPoints').value) || 0;
-    q.prompt = document.getElementById('editQPrompt').value;
-
-    examDef.sections[sIdx].questions[qIdx] = q;
-    markDirty();
-    closeQuestionModal();
-    renderContent();
-    updateSidebar();
-    showToast('Question updated. Don\'t forget to save your changes.', 'success');
-  });
-
-  // ===== SAVE / PUBLISH =====
-  async function saveExam(newStatus = null) {
-    const updates = { exam_definition: examDef };
-    if (newStatus) updates.status = newStatus;
-
-    const { data, error } = await db.from('exams')
-      .update(updates).eq('id', currentExam.id).select().single();
-    if (error) throw error;
-    currentExam = { ...currentExam, ...data };
-    clearDirty();
-    renderMetadata();
-  }
-
-  document.getElementById('saveDraftBtn').addEventListener('click', async () => {
-    const btn = document.getElementById('saveDraftBtn');
-    btn.disabled = true;
-    btn.textContent = 'Saving…';
-    try {
-      await saveExam(currentExam.status === 'archived' ? null : 'draft');
-      showToast('Draft saved', 'success');
-    } catch (err) {
-      showToast('Save failed: ' + err.message, 'error');
-    } finally {
-      btn.disabled = false;
-      btn.textContent = 'Save Draft';
-      updateSidebar();
-    }
-  });
-
-  document.getElementById('publishBtn').addEventListener('click', async () => {
-    if (!confirm('Publish this exam? Once published, it will be available to students within its scheduled window.')) return;
-    const btn = document.getElementById('publishBtn');
-    btn.disabled = true;
-    btn.textContent = 'Publishing…';
-    try {
-      await saveExam('active');
-      showToast('Exam published', 'success');
-    } catch (err) {
-      showToast('Publish failed: ' + err.message, 'error');
-    } finally {
-      btn.textContent = 'Publish';
-      updateSidebar();
-    }
-  });
-
-  document.getElementById('archiveBtn').addEventListener('click', async () => {
-    if (!confirm('Archive this exam? It will no longer be available to students.')) return;
-    try {
-      await saveExam('archived');
-      showToast('Exam archived', 'success');
-    } catch (err) {
-      showToast('Archive failed: ' + err.message, 'error');
-    }
-  });
-
-  document.getElementById('previewBtn').addEventListener('click', () => {
-    if (!currentExam) return;
-    if (!examDef || !examDef.sections) {
-      showToast('Upload exam content first to preview it', 'error');
-      return;
-    }
-    if (isDirty) {
-      if (!confirm('You have unsaved changes. The preview will show the last saved version. Save first?')) {
-        return;
-      }
-    }
-    window.open(`exam-branded-page.html?preview=true&id=${currentExam.id}`, '_blank');
-  });
-
-  // ===== METADATA EDIT MODAL =====
-  function formatDateForInput(iso) {
-    const d = new Date(iso);
-    const pad = n => String(n).padStart(2, '0');
-    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
-  }
-
-  function openMetadataModal() {
-    const e = currentExam;
-    document.getElementById('metadataModalTitle').textContent = e._class_name;
-    document.getElementById('metadataModalCode').textContent = `${e.code} · ${e.type} · ${e.quarter} ${e.year}`;
-
-    // Class dropdown — include the current class even if inactive, so selection persists
-    document.getElementById('metaEditClassId').innerHTML =
-      '<option value="">— select class —</option>' +
-      allClasses.filter(c => c.is_active || c.id === e.class_id).map(c =>
-        `<option value="${c.id}" ${c.id === e.class_id ? 'selected' : ''}>${escapeHtml(c.name)}</option>`).join('');
-
-    document.getElementById('metaEditLevelId').innerHTML =
-      '<option value="">— select level —</option>' +
-      allLevels.filter(l => l.is_active || l.id === e.level_id).map(l =>
-        `<option value="${l.id}" ${l.id === e.level_id ? 'selected' : ''}>${escapeHtml(l.name)}</option>`).join('');
-
-    // Teacher dropdown — academic can change, teachers see locked
-    const teacherFieldEl = document.getElementById('metaEditTeacherField');
-    const teacherSelect = document.getElementById('metaEditTeacherId');
-    if (currentProfile.role === 'academic') {
-      teacherFieldEl.style.display = 'flex';
-      teacherSelect.disabled = false;
-      teacherSelect.innerHTML = '<option value="">— select teacher —</option>' +
-        allTeachers.map(t =>
-          `<option value="${t.id}" ${t.id === e.teacher_id ? 'selected' : ''}>${escapeHtml(t.full_name || t.email)}${t.role === 'academic' ? ' (Academic)' : ''}</option>`).join('');
-    } else {
-      // Teachers can view but not change the teacher field
-      teacherFieldEl.style.display = 'flex';
-      teacherSelect.disabled = true;
-      const currentTeacher = allTeachers.find(t => t.id === e.teacher_id);
-      teacherSelect.innerHTML = `<option value="${e.teacher_id}" selected>${escapeHtml(currentTeacher?.full_name || currentTeacher?.email || 'Unknown')}${currentTeacher?.role === 'academic' ? ' (Academic)' : ''}</option>`;
-    }
-
-    document.getElementById('metaEditAvailableFrom').value = formatDateForInput(e.available_from);
-    document.getElementById('metaEditAvailableUntil').value = formatDateForInput(e.available_until);
-    document.getElementById('metaEditStatus').value = e.status;
-    document.getElementById('metaEditNotes').value = e.notes || '';
-
-    document.getElementById('metadataModal').classList.add('active');
-  }
-
-  function closeMetadataModal() {
-    document.getElementById('metadataModal').classList.remove('active');
-  }
-  window.closeMetadataModal = closeMetadataModal;
-
-  document.getElementById('metadataModal').addEventListener('click', (e) => {
-    if (e.target.id === 'metadataModal') closeMetadataModal();
-  });
-
-  document.getElementById('metadataForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const saveBtn = document.getElementById('metaEditSaveBtn');
-
-    const from = new Date(document.getElementById('metaEditAvailableFrom').value);
-    const until = new Date(document.getElementById('metaEditAvailableUntil').value);
-
-    if (until <= from) {
-      showToast('"Available Until" must be after "Available From".', 'error');
-      return;
-    }
-
-    saveBtn.disabled = true;
-    saveBtn.textContent = 'Saving…';
-
-    const updates = {
-      class_id: document.getElementById('metaEditClassId').value,
-      level_id: document.getElementById('metaEditLevelId').value,
-      available_from: from.toISOString(),
-      available_until: until.toISOString(),
-      status: document.getElementById('metaEditStatus').value,
-      notes: document.getElementById('metaEditNotes').value.trim() || null
-    };
-
-    // Only academic can change teacher; safety net even if HTML was tampered with
-    if (currentProfile.role === 'academic') {
-      updates.teacher_id = document.getElementById('metaEditTeacherId').value;
-    }
-
-    try {
-      const { data, error } = await db.from('exams').update(updates).eq('id', currentExam.id).select().single();
-      if (error) throw error;
-
-      // Update in-memory state with new values + names
-      const cls = allClasses.find(c => c.id === data.class_id);
-      const lvl = allLevels.find(l => l.id === data.level_id);
-      const tch = allTeachers.find(t => t.id === data.teacher_id);
-      currentExam = {
-        ...currentExam, ...data,
-        _class_name: cls?.name || '—',
-        _level_name: lvl?.name || '—',
-        _teacher_name: tch?.full_name || tch?.email || '—'
-      };
-
-      renderMetadata();
-      closeMetadataModal();
-      showToast('Metadata updated', 'success');
-    } catch (err) {
-      console.error(err);
-      showToast(`Failed to save: ${err.message}`, 'error');
-    } finally {
-      saveBtn.disabled = false;
-      saveBtn.textContent = 'Save Changes';
-    }
-  });
-
-  document.getElementById('editMetadataBtn').addEventListener('click', (e) => {
-    e.preventDefault();
-    openMetadataModal();
-  });
-
-  // ===== SECTION EDIT MODAL =====
-  let editingSectionIdx = null;
-
-  function openSectionEdit(sIdx) {
-    const section = examDef.sections[sIdx];
-    if (!section) return;
-    editingSectionIdx = sIdx;
-
-    document.getElementById('sectionModalStamp').textContent = `Section ${sIdx + 1}`;
-    document.getElementById('sectionModalTitle').textContent = section.title || 'Untitled Section';
-    document.getElementById('secEditTitle').value = section.title || '';
-    document.getElementById('secEditInstructions').value = section.instructions || '';
-    document.getElementById('secEditPassage').value = section.passage?.content || '';
-
-    document.getElementById('sectionModal').classList.add('active');
-  }
-  window.openSectionEdit = openSectionEdit;
-
-  function closeSectionModal() {
-    document.getElementById('sectionModal').classList.remove('active');
-    editingSectionIdx = null;
-  }
-  window.closeSectionModal = closeSectionModal;
-
-  document.getElementById('sectionModal').addEventListener('click', (e) => {
-    if (e.target.id === 'sectionModal') closeSectionModal();
-  });
-
-  document.getElementById('secEditSaveBtn').addEventListener('click', () => {
-    if (editingSectionIdx == null) return;
-    const section = examDef.sections[editingSectionIdx];
-
-    const title = document.getElementById('secEditTitle').value.trim();
-    const instructions = document.getElementById('secEditInstructions').value.trim();
-    const passage = document.getElementById('secEditPassage').value.trim();
-
-    section.title = title || 'Untitled Section';
-    section.instructions = instructions || null;
-    section.passage = passage ? { type: 'text', content: passage } : null;
-
-    markDirty();
-    closeSectionModal();
-    renderContent();
-    updateSidebar();
-    showToast('Section updated. Don\'t forget to save your changes.', 'success');
-  });
-
-  // ===== PROMPT MODAL =====
-  function openPromptModal() {
-    document.getElementById('promptBox').textContent = CONVERSION_PROMPT;
-    document.getElementById('promptBox').style.maxHeight = '240px';
-    document.getElementById('togglePromptBtn').textContent = 'Expand';
-    document.getElementById('promptModal').classList.add('active');
-  }
-
-  function closePromptModal() {
-    document.getElementById('promptModal').classList.remove('active');
-  }
-  window.closePromptModal = closePromptModal;
-
-  document.getElementById('openPromptBtn').addEventListener('click', openPromptModal);
-
-  document.getElementById('togglePromptBtn').addEventListener('click', () => {
-    const box = document.getElementById('promptBox');
-    const btn = document.getElementById('togglePromptBtn');
-    if (box.style.maxHeight === '240px' || box.style.maxHeight === '') {
-      box.style.maxHeight = 'calc(80vh - 200px)';
-      btn.textContent = 'Collapse';
-    } else {
-      box.style.maxHeight = '240px';
-      btn.textContent = 'Expand';
-    }
-  });
-
-  document.getElementById('copyPromptBtn').addEventListener('click', async () => {
-    const btn = document.getElementById('copyPromptBtn');
-    try {
-      await navigator.clipboard.writeText(CONVERSION_PROMPT);
-      const original = btn.textContent;
-      btn.textContent = 'Copied ✓';
-      btn.style.background = 'var(--success-green)';
-      btn.style.color = '#fff';
-      setTimeout(() => {
-        btn.textContent = original;
-        btn.style.background = '';
-        btn.style.color = '';
-      }, 2000);
-    } catch (err) {
-      showToast('Could not copy. Select the text manually and copy.', 'error');
-    }
-  });
-
-  // Close prompt modal on backdrop click
-  document.getElementById('promptModal').addEventListener('click', (e) => {
-    if (e.target.id === 'promptModal') closePromptModal();
-  });
-
-  // ===== INIT =====
-  (async () => {
-    if (!(await checkAuth())) return;
-    await loadExam();
-    setupJsonUpload();
-  })();
-</script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script type="module" src="../js/pages/exam-edit.js"></script>
 </body>
 </html>
-
-
-
-

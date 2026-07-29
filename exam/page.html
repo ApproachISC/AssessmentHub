@@ -5,106 +5,93 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="google" content="notranslate">
 <title>Exam — Approach International Student Center</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../css/styles.css">
 </head>
-<body class="page-exam-runner">
+<body>
 
 <!-- ===== START SCREEN ===== -->
-<div class="start-screen" id="startScreen">
-  <div class="start-card">
+<div class="assess-start-screen" id="startScreen">
+  <div class="assess-start-card">
     <div class="institutional-mark">
-      <img src="images/black-logo.png" alt="Approach International Student Center">
-      <div class="institutional-name">Approach<span class="gold-em">USA</span></div>
+      <img src="../images/black-logo.png" alt="Approach International Student Center">
+      <div class="institutional-name">Approach<em>USA</em></div>
       <div class="institutional-sub">International Student Center</div>
     </div>
 
-    <div class="stamp" id="examStamp">Exam · Loading…</div>
-    <h1 id="examTitle">Exam</h1>
-    <p class="subtitle" id="examSubtitle">Online proctored exam</p>
+    <div class="assess-stamp" id="examStamp">Exam · Loading…</div>
+    <h1 class="assess-start-title" id="examTitle">Exam</h1>
+    <p class="assess-start-subtitle" id="examSubtitle">Online proctored exam</p>
 
-    <div id="loadingPanel" class="loading-panel">
-      <div class="spinner spinner-large"></div>
-      <p class="upload-hint">Verifying your exam…
-      </p>
+    <div class="assess-loading" id="loadingPanel">
+      <div class="spinner"></div>
+      <p>Verifying your exam…</p>
     </div>
 
-    <div id="blockedPanel" style="display: none;">
-      <div class="blocked-card" id="blockedCard">
-        <div class="blocked-icon" id="blockedIcon">⚠</div>
-        <h2 id="blockedTitle">—</h2>
-        <p id="blockedMessage">—</p>
+    <div id="blockedPanel" style="display:none;">
+      <div class="status-panel active error">
+        <div class="status-label">Access Blocked</div>
+        <div class="status-title" id="blockedTitle">—</div>
+        <div class="status-message" id="blockedMessage">—</div>
       </div>
-      <a href="enter-code.html" class="start-btn">Return to Code Entry</a>
+      <a href="enter-code.html" class="btn btn--primary assess-start-btn" style="margin-top:1.25rem;text-decoration:none;">Return to Code Entry</a>
     </div>
 
-    <div id="startForm" style="display: none;">
-      <div class="exam-info-card">
-        <div class="info-row"><span class="info-label">Class</span><span class="info-value" id="infoClass">—</span></div>
-        <div class="info-row"><span class="info-label">Teacher</span><span class="info-value" id="infoTeacher">—</span></div>
-        <div class="info-row"><span class="info-label">Code</span><span class="info-value" id="infoCode" class="code-val">—</span></div>
+    <div id="startForm" style="display:none;">
+      <div class="assess-info-card">
+        <div class="assess-info-row"><span class="assess-info-label">Class</span><span class="assess-info-value" id="infoClass">—</span></div>
+        <div class="assess-info-row"><span class="assess-info-label">Teacher</span><span class="assess-info-value" id="infoTeacher">—</span></div>
+        <div class="assess-info-row"><span class="assess-info-label">Code</span><span class="assess-info-value code" id="infoCode">—</span></div>
       </div>
 
-      <div class="name-fields">
-        <label>Full Name
-          <input type="text" id="studentName" required placeholder="Type your full name" autocomplete="off" autocorrect="off" autocapitalize="words" spellcheck="false">
-          <span class="help-text">Your name will be saved in uppercase.</span>
-        </label>
+      <div class="assess-name-field">
+        <label for="studentName">Full Name</label>
+        <input type="text" id="studentName" required placeholder="Type your full name"
+               autocomplete="off" autocorrect="off" autocapitalize="words" spellcheck="false">
+        <div class="field-help">Your name will be saved in uppercase.</div>
       </div>
 
-      <div class="rules">
-        <h2>Before you begin</h2>
-        <ol id="rulesList">
-          <li id="ruleFullscreen1">The exam will open in fullscreen mode.</li>
-          <li id="ruleFullscreen2">Leaving fullscreen will pause the exam and lock the questions.</li>
-          <li>Switching tabs or windows is recorded and reported.</li>
-          <li>Your progress is auto-saved. You may resume if disconnected.</li>
-          <li>Once submitted, you cannot retake this exam.</li>
-        </ol>
-        <div id="appleMobileNotice" class="apple-mobile-notice" style="display: none;">
+      <div class="proctor-rules" id="proctorRules" style="display:none;">
+        <h3>Before you begin</h3>
+        <ol id="rulesList"></ol>
+        <div id="appleMobileNotice" class="apple-mobile-notice" style="display:none;">
           <strong class="apple-mobile-notice__heading">Note for iPhone &amp; iPad users</strong>
           Fullscreen mode is not available on Apple mobile devices. The exam will work normally, but switching to other apps will still be recorded and reported.
         </div>
       </div>
 
-      <label class="acknowledge">
+      <label class="acknowledge-row" id="acknowledgeRow" style="display:none;">
         <input type="checkbox" id="acknowledgeBox">
         <span>I have read the rules and understand that any irregularity will be recorded and reported to my teacher.</span>
       </label>
 
-      <button class="start-btn" id="startBtn" disabled>Begin Exam</button>
+      <button class="btn btn--primary assess-start-btn" id="startBtn" disabled>Begin Exam</button>
     </div>
   </div>
 </div>
 
-<!-- ===== EXAM SCREEN ===== -->
-<div class="exam-screen" id="examScreen">
-  <header class="exam-header">
-    <div class="exam-title">
+<!-- ===== EXAM SCREEN (continuous scroll — the whole exam renders at once) ===== -->
+<div class="assess-screen" id="examScreen" style="display:none;">
+  <header class="assess-header">
+    <div class="assess-title">
       <span id="headerExamTitle">Exam</span>
       <small id="studentLabel">—</small>
     </div>
-    <div class="monitor">
-      <div class="monitor-item">
-        <span class="monitor-label">Auto-save</span>
-        <div class="save-indicator saved" id="saveIndicator">
-          <span class="save-dot"></span>
-          <span id="saveText">Saved</span>
-        </div>
+    <div class="assess-monitor">
+      <div class="assess-monitor-item">
+        <span class="assess-monitor-label">Auto-save</span>
+        <span class="assess-monitor-value saved" id="saveIndicator">Saved</span>
       </div>
-      <div class="monitor-item">
-        <span class="monitor-label">Tab Switches</span>
-        <span class="monitor-value" id="switchCount">0</span>
+      <div class="assess-monitor-item" id="monitorTabSwitches" style="display:none;">
+        <span class="assess-monitor-label">Tab Switches</span>
+        <span class="assess-monitor-value" id="switchCount">0</span>
       </div>
-      <div class="monitor-item">
-        <span class="monitor-label">Status</span>
-        <span class="monitor-value" id="statusValue">Active</span>
+      <div class="assess-monitor-item" id="monitorFullscreen" style="display:none;">
+        <span class="assess-monitor-label">Status</span>
+        <span class="assess-monitor-value" id="statusValue">Active</span>
       </div>
-      <div class="monitor-item">
-        <span class="monitor-label">Time</span>
-        <span class="monitor-value" id="timer">00:00</span>
+      <div class="assess-monitor-item">
+        <span class="assess-monitor-label">Time</span>
+        <span class="assess-monitor-value" id="timer">00:00</span>
       </div>
     </div>
   </header>
@@ -120,1232 +107,56 @@
   </main>
 </div>
 
-<!-- ===== LOCKOUT ===== -->
+<!-- ===== LOCKOUT (fullscreen proctoring only) ===== -->
 <div class="lockout" id="lockout">
   <div class="lockout-card">
     <h2>Exam Paused</h2>
     <p>You exited fullscreen mode. Re-enter fullscreen to continue. This event has been recorded.</p>
-    <button id="resumeBtn">Resume Exam</button>
+    <button class="btn btn--primary" id="resumeBtn">Resume Exam</button>
   </div>
 </div>
 
 <!-- ===== SUBMIT CONFIRMATION MODAL ===== -->
 <div class="modal-overlay" id="submitModal">
-  <div class="modal">
-    <h2>Submit your <em class="gold-em">exam</em>?</h2>
-    <p class="modal-sub">Once submitted, you cannot change your answers.
-    </p>
+  <div class="modal-box">
+    <h2>Submit your <em>exam</em>?</h2>
+    <p class="modal-sub">Once submitted, you cannot change your answers.</p>
 
     <div class="modal-summary" id="submitSummary">—</div>
 
-    <div class="blanks-list" id="blanksList" style="display: none;">
+    <div class="blanks-list" id="blanksList" style="display:none;">
       <div class="blanks-label">Unanswered Questions</div>
-      <p class="editor-note">Click any number to jump back to it.
-      </p>
+      <p class="editor-note">Click any number to jump back to it.</p>
       <div class="blanks-chips" id="blanksChips"></div>
     </div>
 
     <div class="modal-actions">
-      <button class="btn-secondary" id="reviewBtn">Go Back &amp; Review</button>
-      <button class="submit-btn" id="confirmSubmitBtn">Submit Anyway</button>
+      <button class="btn btn--secondary" id="reviewBtn">Go Back &amp; Review</button>
+      <button class="btn btn--gold" id="confirmSubmitBtn">Submit Anyway</button>
     </div>
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<!-- ===== RESULTS SCREEN (no auto-score — exam grading is manual/teacher-reviewed) ===== -->
+<div class="assess-results-screen" id="resultsScreen" style="display:none;">
+  <div class="assess-results-header">
+    <div class="assess-results-title" id="resultsTitle">Exam Submitted</div>
+    <div class="assess-results-sub" id="resultsSubtitle">—</div>
+  </div>
+  <div class="assess-results-body">
+    <div class="assess-submitted-card">
+      <div class="headline">Exam Submitted</div>
+      <p id="resultsMessage">Your responses have been recorded.</p>
+    </div>
+    <div id="resultsRows"></div>
+    <p class="results-footer-note">You may now close this window.</p>
+  </div>
+</div>
 
 <div class="copyright">
   Copyright © 2026 Approach International Student Center, Inc. — All rights reserved.
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  // ============================================
-  // CONFIGURE YOUR SUPABASE CREDENTIALS HERE
-  // ============================================
-  const SUPABASE_URL = 'https://okyauyzdensuvuoyphds.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9reWF1eXpkZW5zdXZ1b3lwaGRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1NTgwOTUsImV4cCI6MjA5MzEzNDA5NX0.NZUclCDHecS9bcZOLHj1ZXBFf5b5k9klRwTMfJrglfI';
-  // ============================================
-
-  const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-  // ===== STATE =====
-  const state = {
-    examRecord: null,
-    examDef: null,
-    examCode: null,
-    submissionId: null,
-    sessionId: null,
-    student: '',
-    teacherName: '',
-    classLabel: '',
-    switches: 0,
-    blurEvents: 0,
-    fullscreenExits: 0,
-    rightClicksBlocked: 0,
-    devtoolsAttempts: 0,
-    startTime: null,
-    examActive: false,
-    log: [],
-    previewMode: false
-  };
-
-  // ===== DOM REFERENCES =====
-  const startScreen = document.getElementById('startScreen');
-  const examScreen = document.getElementById('examScreen');
-  const examBody = document.getElementById('examBody');
-  const lockout = document.getElementById('lockout');
-  const toast = document.getElementById('toast');
-  const switchCountEl = document.getElementById('switchCount');
-  const statusValueEl = document.getElementById('statusValue');
-  const timerEl = document.getElementById('timer');
-  const studentLabel = document.getElementById('studentLabel');
-  const saveIndicator = document.getElementById('saveIndicator');
-  const saveText = document.getElementById('saveText');
-
-  const loadingPanel = document.getElementById('loadingPanel');
-  const blockedPanel = document.getElementById('blockedPanel');
-  const startForm = document.getElementById('startForm');
-  const acknowledgeBox = document.getElementById('acknowledgeBox');
-  const startBtn = document.getElementById('startBtn');
-  const studentNameEl = document.getElementById('studentName');
-
-  // ===== HELPERS =====
-  function escapeHtml(s) {
-    if (s == null) return '';
-    return String(s).replace(/[&<>"']/g, c => ({
-      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-    }[c]));
-  }
-
-  function showToast(msg) {
-    toast.textContent = msg;
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 3000);
-  }
-
-  function logEvent(type, detail = '') {
-    const ts = new Date().toISOString();
-    state.log.push({ ts, type, detail });
-  }
-
-  function updateSwitchDisplay() {
-    switchCountEl.textContent = state.switches;
-    if (state.switches >= 3) {
-      switchCountEl.classList.add('alert');
-      switchCountEl.classList.remove('warning');
-    } else if (state.switches >= 1) {
-      switchCountEl.classList.add('warning');
-    }
-  }
-
-  function setSaveStatus(stateName, text) {
-    saveIndicator.className = 'save-indicator ' + stateName;
-    saveText.textContent = text;
-  }
-
-  function showBlocked(title, message, isWarning = false) {
-    loadingPanel.style.display = 'none';
-    startForm.style.display = 'none';
-    blockedPanel.style.display = 'block';
-    document.getElementById('blockedTitle').textContent = title;
-    document.getElementById('blockedMessage').textContent = message;
-    const card = document.getElementById('blockedCard');
-    card.classList.toggle('warning', isWarning);
-    document.getElementById('blockedIcon').textContent = isWarning ? '⏱' : '⚠';
-  }
-
-  function generateSessionId() {
-    return `sess_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
-  }
-
-  // Detect iOS / iPadOS devices, where the Fullscreen API is unavailable.
-  // We check the user agent for iPhone/iPad/iPod, plus a fallback for modern
-  // iPads that report as "MacIntel" but are really iPads (touchscreen Mac is
-  // an iPad). We deliberately do NOT match on macOS desktop browsers — Macs
-  // support fullscreen normally and should keep using the lock.
-  function isAppleMobile() {
-    const ua = navigator.userAgent || '';
-    if (/iPad|iPhone|iPod/.test(ua)) return true;
-    // iPad on iPadOS 13+ identifies as Mac. Distinguish via touch support.
-    if (navigator.platform === 'MacIntel' && (navigator.maxTouchPoints || 0) > 1) return true;
-    return false;
-  }
-
-  function formatDateTime(iso) {
-    const d = new Date(iso);
-    return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) +
-      ' at ' + d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
-  }
-
-  function lsKey(suffix) { return `exam_${state.examCode}_${suffix}`; }
-  function submittedFlagKey(code, name) {
-    return `submitted_${code}_${name.toUpperCase().trim()}`;
-  }
-
-  // Strip leading "q" from a question id for display
-  function displayId(id) {
-    return String(id).replace(/^q/i, '');
-  }
-
-  // Word counter
-  function countWords(text) {
-    if (!text || !text.trim()) return 0;
-    return text.trim().split(/\s+/).length;
-  }
-
-  // ===== SCROLL TO TOP ON LOAD =====
-  window.scrollTo(0, 0);
-  if ('scrollRestoration' in history) {
-    history.scrollRestoration = 'manual';
-  }
-
-  // ===== INIT =====
-  async function init() {
-    const params = new URLSearchParams(window.location.search);
-
-    // Preview mode: teachers loading the exam from edit-exam.html
-    // No proctoring, no auto-save, no submission record, no fullscreen.
-    if (params.get('preview') === 'true') {
-      state.previewMode = true;
-      return initPreview(params.get('id'));
-    }
-
-    state.examCode = params.get('code');
-
-    if (!state.examCode) {
-      showBlocked('No code provided', 'This exam page must be opened through the exam entry portal.');
-      return;
-    }
-
-    try {
-      const { data, error } = await db.from('exams')
-        .select('*').eq('code', state.examCode).maybeSingle();
-
-      if (error) throw error;
-      if (!data) {
-        showBlocked('Code not recognized', 'The exam code is not valid. Please return to the entry page.');
-        return;
-      }
-
-      const now = new Date();
-      const from = new Date(data.available_from);
-      const until = new Date(data.available_until);
-
-      if (data.status === 'archived') {
-        showBlocked('This exam is no longer available',
-          'It has been archived. Please contact your teacher.');
-        return;
-      }
-      if (data.status === 'draft') {
-        showBlocked('This exam is not yet published',
-          'Please check back later or contact your teacher.');
-        return;
-      }
-      if (now < from) {
-        showBlocked('This exam is not available yet',
-          `The exam opens on ${formatDateTime(data.available_from)}.`, true);
-        return;
-      }
-      if (now > until) {
-        showBlocked('This exam window has ended',
-          `The exam closed on ${formatDateTime(data.available_until)}. Please contact your teacher.`);
-        return;
-      }
-
-      if (!data.exam_definition || !data.exam_definition.sections) {
-        showBlocked('Exam content unavailable',
-          'This exam has no questions yet. Please contact your teacher.');
-        return;
-      }
-
-      // Look up teacher and class for display
-      const [teacherRes, classRes] = await Promise.all([
-        db.from('profiles').select('full_name, email').eq('id', data.teacher_id).maybeSingle(),
-        db.from('classes').select('name').eq('id', data.class_id).maybeSingle()
-      ]);
-      state.teacherName = teacherRes.data?.full_name || teacherRes.data?.email || '—';
-      state.classLabel = classRes.data?.name || '—';
-
-      state.examRecord = data;
-      state.examDef = data.exam_definition;
-      populateStartScreen();
-
-    } catch (err) {
-      console.error('Failed to verify exam:', err);
-      showBlocked('Connection error',
-        `Could not verify the exam. Please check your connection and refresh. (${err.message || 'unknown'})`);
-    }
-  }
-
-  // ===== PREVIEW MODE INIT =====
-  async function initPreview(examId) {
-    if (!examId) {
-      showBlocked('No exam ID provided', 'Preview must be opened from the exam edit page.');
-      return;
-    }
-
-    // Verify the user is logged in. Preview is for teachers only.
-    try {
-      const { data: { session } } = await db.auth.getSession();
-      if (!session) {
-        showBlocked('Not signed in', 'You must be signed in to preview an exam.');
-        return;
-      }
-    } catch (err) {
-      console.warn('Auth check failed:', err);
-    }
-
-    try {
-      const { data, error } = await db.from('exams').select('*').eq('id', examId).maybeSingle();
-      if (error) throw error;
-      if (!data) {
-        showBlocked('Exam not found', 'The exam could not be loaded for preview.');
-        return;
-      }
-
-      if (!data.exam_definition || !data.exam_definition.sections) {
-        showBlocked('No content to preview', 'This exam has no questions yet. Upload a JSON file first.');
-        return;
-      }
-
-      // Look up names for display purposes
-      const [teacherRes, classRes] = await Promise.all([
-        db.from('profiles').select('full_name, email').eq('id', data.teacher_id).maybeSingle(),
-        db.from('classes').select('name').eq('id', data.class_id).maybeSingle()
-      ]);
-      state.teacherName = teacherRes.data?.full_name || teacherRes.data?.email || '—';
-      state.classLabel = classRes.data?.name || '—';
-
-      state.examRecord = data;
-      state.examDef = data.exam_definition;
-      state.examCode = data.code;
-      state.startTime = Date.now();
-
-      // Skip the start screen entirely — drop the teacher straight into the exam
-      const def = state.examDef;
-      const title = def.exam_metadata?.title || `${data.type}`;
-      document.getElementById('headerExamTitle').textContent = title;
-
-      // Replace the student label with a clear "PREVIEW MODE" indicator
-      const studentLabel = document.getElementById('studentLabel');
-      studentLabel.innerHTML = '<span class="gold-preview-label">PREVIEW MODE</span> · ' + escapeHtml(state.classLabel);
-
-      // Hide the proctoring monitors that don't apply
-      // (we'll keep the timer running just so the teacher sees activity)
-      const monitor = document.querySelector('.monitor');
-      if (monitor) {
-        const items = monitor.querySelectorAll('.monitor-item');
-        items.forEach(item => {
-          const label = item.querySelector('.monitor-label');
-          if (label && (label.textContent === 'Auto-save' ||
-                        label.textContent === 'Tab Switches' ||
-                        label.textContent === 'Status')) {
-            item.style.display = 'none';
-          }
-        });
-      }
-
-      // Hide the section-progress strip's auto-save styling concerns — purely aesthetic, leave it alone
-      renderExam();
-
-      // Replace the Submit button with a Close Preview button
-      const submitBtn = document.getElementById('submitBtn');
-      if (submitBtn) {
-        submitBtn.textContent = 'Close Preview';
-        submitBtn.onclick = () => window.close();
-        // If window.close fails (e.g. tab opened by user, not by JS), show a message instead
-        submitBtn.addEventListener('click', () => {
-          setTimeout(() => {
-            // If we're still here a moment later, the close didn't work
-            submitBtn.textContent = 'You can close this tab';
-            submitBtn.disabled = true;
-          }, 200);
-        });
-      }
-
-      startScreen.style.display = 'none';
-      examScreen.classList.add('active');
-      state.examActive = true;
-      startTimer();
-      setupSectionTracking();
-      window.scrollTo(0, 0);
-
-    } catch (err) {
-      console.error('Failed to load preview:', err);
-      showBlocked('Preview error',
-        `Could not load the exam for preview. (${err.message || 'unknown'})`);
-    }
-  }
-
-  function populateStartScreen() {
-    const e = state.examRecord;
-    const def = state.examDef;
-    const title = def.exam_metadata?.title || `${e.type}`;
-
-    document.getElementById('examStamp').textContent =
-      `${state.classLabel} · ${e.type} · ${e.quarter} ${e.year}`;
-    document.getElementById('examTitle').innerHTML =
-      e.type === 'MIDTERM' ? 'The <em>Midterm</em>' : 'The <em>Final Exam</em>';
-
-    const totalQ = def.sections.reduce((sum, s) => sum + (s.questions?.length || 0), 0);
-    document.getElementById('examSubtitle').textContent =
-      `${totalQ} questions · Online proctored exam`;
-
-    document.getElementById('infoClass').textContent = state.classLabel;
-    document.getElementById('infoTeacher').textContent = state.teacherName;
-    document.getElementById('infoCode').textContent = e.code;
-
-    document.getElementById('headerExamTitle').textContent = title;
-
-    // Apple mobile devices (iPhone, iPad) cannot use the Fullscreen API.
-    // Hide the fullscreen-specific rules and show a notice instead.
-    if (isAppleMobile()) {
-      const r1 = document.getElementById('ruleFullscreen1');
-      const r2 = document.getElementById('ruleFullscreen2');
-      if (r1) r1.style.display = 'none';
-      if (r2) r2.style.display = 'none';
-      const notice = document.getElementById('appleMobileNotice');
-      if (notice) notice.style.display = 'block';
-    }
-
-    loadingPanel.style.display = 'none';
-    startForm.style.display = 'block';
-    studentNameEl.focus();
-  }
-
-  function updateStartButton() {
-    const nameReady = studentNameEl.value.trim().length >= 2;
-    const ack = acknowledgeBox.checked;
-    startBtn.disabled = !(nameReady && ack);
-  }
-  studentNameEl.addEventListener('input', updateStartButton);
-  acknowledgeBox.addEventListener('change', updateStartButton);
-
-  // ===== START EXAM =====
-  startBtn.addEventListener('click', async () => {
-    const name = studentNameEl.value.trim().toUpperCase();
-    if (!name || !state.examRecord) return;
-
-    const flag = localStorage.getItem(submittedFlagKey(state.examCode, name));
-    if (flag) {
-      const submittedAt = new Date(flag).toLocaleString();
-      showBlocked('Already submitted',
-        `You already submitted this exam on ${submittedAt}. If this is a mistake, please contact your teacher.`);
-      return;
-    }
-
-    state.student = name;
-
-    // Try to resume an existing in-progress session
-    const savedSessionId = localStorage.getItem(lsKey('session'));
-    const savedName = localStorage.getItem(lsKey('name'));
-    let resumeData = null;
-
-    if (savedSessionId && savedName === name) {
-      try {
-        const { data } = await db.from('submissions').select('*')
-          .eq('session_id', savedSessionId)
-          .eq('status', 'in_progress')
-          .maybeSingle();
-        if (data) {
-          if (confirm('We found an unfinished exam from this session. Resume where you left off?')) {
-            resumeData = data;
-            state.submissionId = data.id;
-            state.sessionId = data.session_id;
-            state.startTime = new Date(data.started_at).getTime();
-            const p = data.proctoring || {};
-            state.switches = p.tab_switches || 0;
-            state.blurEvents = p.window_blur_events || 0;
-            state.fullscreenExits = p.fullscreen_exits || 0;
-            state.rightClicksBlocked = p.right_clicks_blocked || 0;
-            state.devtoolsAttempts = p.devtools_attempts || 0;
-            state.log = p.event_log || [];
-          }
-        }
-      } catch (err) {
-        console.warn('Could not check resume session:', err);
-      }
-    }
-
-    // Apple mobile devices (iPhone, iPad) don't support the Fullscreen API.
-    // Skip the request entirely on those — the exam still runs and tab switches
-    // are still recorded; only the fullscreen lock is unavailable.
-    if (!isAppleMobile()) {
-      try {
-        await document.documentElement.requestFullscreen();
-      } catch (err) {
-        alert('Fullscreen is required to begin the exam. Please allow fullscreen and try again.');
-        return;
-      }
-    }
-
-    if (!resumeData) {
-      state.sessionId = generateSessionId();
-      state.startTime = Date.now();
-      try {
-        const { data, error } = await db.from('submissions').insert({
-          exam_id: state.examRecord.id,
-          exam_code: state.examCode,
-          student_name: name,
-          session_id: state.sessionId,
-          status: 'in_progress',
-          started_at: new Date().toISOString(),
-          answers: {},
-          proctoring: {
-            tab_switches: 0, window_blur_events: 0, fullscreen_exits: 0,
-            right_clicks_blocked: 0, devtools_attempts: 0, event_log: []
-          },
-          user_agent: navigator.userAgent
-        }).select().single();
-        if (error) throw error;
-        state.submissionId = data.id;
-      } catch (err) {
-        console.error('Failed to create submission:', err);
-        alert(`Could not start the exam: ${err.message}\n\nPlease try again.`);
-        if (document.fullscreenElement) document.exitFullscreen();
-        return;
-      }
-      localStorage.setItem(lsKey('session'), state.sessionId);
-      localStorage.setItem(lsKey('name'), name);
-    }
-
-    studentLabel.textContent = `${name} · ${state.teacherName}`;
-    renderExam();
-    if (resumeData) restoreAnswersToForm(resumeData.answers || {});
-
-    startScreen.style.display = 'none';
-    examScreen.classList.add('active');
-    state.examActive = true;
-    logEvent(resumeData ? 'exam_resumed' : 'exam_started', `student: ${name}`);
-    startTimer();
-    setupSectionTracking();
-    requestWakeLock();
-    window.scrollTo(0, 0);
-  });
-
-  // ===== TIMER =====
-  function startTimer() {
-    setInterval(() => {
-      if (!state.examActive) return;
-      const elapsed = Math.floor((Date.now() - state.startTime) / 1000);
-      const m = String(Math.floor(elapsed / 60)).padStart(2, '0');
-      const s = String(elapsed % 60).padStart(2, '0');
-      timerEl.textContent = `${m}:${s}`;
-    }, 1000);
-  }
-
-  // ===== SCREEN WAKE LOCK =====
-  // Keeps the device screen on during the exam. Supported on modern mobile
-  // browsers (iOS Safari 16.4+, Android Chrome). Silently does nothing on
-  // older devices or where the request is denied — graceful fallback.
-  let wakeLock = null;
-
-  async function requestWakeLock() {
-    if (!('wakeLock' in navigator)) return;
-    try {
-      wakeLock = await navigator.wakeLock.request('screen');
-      // The lock can be released by the system (tab hidden, etc.). When that
-      // happens, clear our reference so we know to re-acquire it later.
-      wakeLock.addEventListener('release', () => { wakeLock = null; });
-    } catch (err) {
-      // Request can be rejected (low battery, permissions, unsupported) —
-      // not an error worth surfacing to the student.
-      console.warn('Wake lock request failed:', err);
-      wakeLock = null;
-    }
-  }
-
-  async function releaseWakeLock() {
-    if (wakeLock) {
-      try { await wakeLock.release(); } catch (err) { /* ignore */ }
-      wakeLock = null;
-    }
-  }
-
-  // ===== RENDER EXAM =====
-  function renderExam() {
-    examBody.innerHTML = '';
-
-    // Title block
-    if (state.examDef.exam_metadata?.title) {
-      const titleBlock = document.createElement('div');
-      titleBlock.className = 'exam-title-block';
-      titleBlock.innerHTML = `
-        <h2>${escapeHtml(state.examDef.exam_metadata.title)}</h2>
-        ${state.examDef.exam_metadata.instructions
-          ? `<div class="exam-instructions">${escapeHtml(state.examDef.exam_metadata.instructions)}</div>`
-          : ''}
-      `;
-      examBody.appendChild(titleBlock);
-    }
-
-    // Sections + questions
-    // Maintain a running counter so students see sequential numbers (1, 2, 3, ...)
-    // even if the JSON has gaps from edits (e.g., q1, q5, q14). The actual q.id
-    // stays as the internal reference for DOM ids and the answers payload.
-    let displayCounter = 0;
-    state.examDef.sections.forEach((section, sIdx) => {
-      const partEl = document.createElement('section');
-      partEl.className = 'part';
-      partEl.id = `section-${sIdx}`;
-      partEl.dataset.sectionIdx = sIdx;
-      partEl.dataset.sectionTitle = section.title || `Section ${sIdx + 1}`;
-
-      let html = `
-        <div class="part-header">
-          <div class="part-label">Section ${sIdx + 1} of ${state.examDef.sections.length}</div>
-          <div class="part-title">${escapeHtml(section.title || 'Untitled section')}</div>
-          ${section.instructions ? `<div class="part-instructions">${escapeHtml(section.instructions)}</div>` : ''}
-        </div>
-      `;
-
-      if (section.passage?.content) {
-        html += `
-          <div class="passage-box">
-            <span class="passage-label">Reading</span>
-            ${escapeHtml(section.passage.content)}
-          </div>
-        `;
-      }
-
-      partEl.innerHTML = html;
-
-      (section.questions || []).forEach(q => {
-        displayCounter++;
-        const qEl = renderQuestion(q, displayCounter);
-        if (qEl) partEl.appendChild(qEl);
-      });
-
-      examBody.appendChild(partEl);
-    });
-
-    // Submit button
-    const submitBtn = document.createElement('button');
-    submitBtn.className = 'submit-btn';
-    submitBtn.id = 'submitBtn';
-    submitBtn.textContent = 'Submit Exam';
-    examBody.appendChild(submitBtn);
-
-    submitBtn.addEventListener('click', openSubmitModal);
-
-    // Section progress totals
-    document.getElementById('totalSections').textContent = state.examDef.sections.length;
-  }
-
-  // ===== SECTION TRACKING (header progress) =====
-  function setupSectionTracking() {
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const idx = parseInt(entry.target.dataset.sectionIdx, 10);
-          const title = entry.target.dataset.sectionTitle;
-          document.getElementById('curSection').textContent = idx + 1;
-          document.getElementById('curSectionTitle').textContent = title;
-        }
-      });
-    }, { rootMargin: '-100px 0px -50% 0px', threshold: 0 });
-
-    document.querySelectorAll('.part').forEach(p => observer.observe(p));
-  }
-
-  // ===== QUESTION RENDERERS =====
-  function renderQuestion(q, displayNumber) {
-    const qEl = document.createElement('div');
-    qEl.className = 'question';
-    qEl.id = `q-${q.id}`;
-    qEl.dataset.qid = q.id;
-    qEl.dataset.qtype = q.type;
-    qEl.dataset.displayNumber = displayNumber;
-
-    const pointsText = q.points ? `${q.points} pt${q.points === 1 ? '' : 's'}` : '';
-    const pointsHtml = pointsText ? `<span class="q-points">${escapeHtml(pointsText)}</span>` : '';
-    const numHtml = `<span class="q-number">${escapeHtml(String(displayNumber))}</span>${pointsHtml}`;
-
-    switch (q.type) {
-      case 'multiple_choice': renderMultipleChoice(qEl, q, numHtml); break;
-      case 'true_false':      renderTrueFalse(qEl, q, numHtml); break;
-      case 'inline_choice':   renderInlineChoice(qEl, q, numHtml); break;
-      case 'fill_blank':      renderFillBlank(qEl, q, numHtml); break;
-      case 'fill_blank_multi':renderFillBlankMulti(qEl, q, numHtml); break;
-      case 'matching':        renderMatching(qEl, q, numHtml); break;
-      case 'categorization':  renderCategorization(qEl, q, numHtml); break;
-      case 'sentence_order':  renderSentenceOrder(qEl, q, numHtml); break;
-      case 'short_answer':    renderWritingPrompt(qEl, q, numHtml); break;
-      case 'writing_prompt':  renderWritingPrompt(qEl, q, numHtml); break;
-      case 'pool_writing':    renderPoolWriting(qEl, q, numHtml); break;
-      case 'image_label':     renderImageLabel(qEl, q, numHtml); break;
-      case 'image_match':     renderImageMatch(qEl, q, numHtml); break;
-      default:
-        qEl.innerHTML = `<div class="q-prompt">${numHtml}<em class="text-accent-red">Unknown question type: ${escapeHtml(q.type)}</em></div>`;
-    }
-
-    return qEl;
-  }
-
-  function renderMultipleChoice(qEl, q, numHtml) {
-    qEl.innerHTML = `
-      <div class="q-prompt">${numHtml}${escapeHtml(q.prompt)}</div>
-      <div class="options">
-        ${(q.options || []).map(opt => `
-          <label class="option">
-            <input type="radio" name="${escapeHtml(q.id)}" value="${escapeHtml(opt.key)}">
-            <span class="option-letter">${escapeHtml(String(opt.key).toUpperCase())}</span>
-            <span>${escapeHtml(opt.text)}</span>
-          </label>`).join('')}
-      </div>
-    `;
-  }
-
-  function renderTrueFalse(qEl, q, numHtml) {
-    qEl.innerHTML = `
-      <div class="q-prompt">${numHtml}<span class="visually-hidden">·</span></div>
-      <div class="tf-row">
-        <div class="tf-statement">${escapeHtml(q.prompt)}</div>
-        <div class="tf-buttons">
-          <label><input type="radio" name="${escapeHtml(q.id)}" value="T">T</label>
-          <label><input type="radio" name="${escapeHtml(q.id)}" value="F">F</label>
-        </div>
-      </div>
-    `;
-    // Cleaner layout: hide the empty prompt line
-    qEl.querySelector('.q-prompt').style.display = 'none';
-    // Re-attach the question number to the tf-row instead
-    const tfRow = qEl.querySelector('.tf-row');
-    const numWrap = document.createElement('span');
-    numWrap.innerHTML = numHtml;
-    numWrap.style.flexShrink = '0';
-    tfRow.insertBefore(numWrap, tfRow.firstChild);
-  }
-
-  function renderInlineChoice(qEl, q, numHtml) {
-    const opts = q.options || [];
-    const choicesHtml = `
-      <span class="inline-choices">
-        ${opts.map(o => `
-          <label><input type="radio" name="${escapeHtml(q.id)}" value="${escapeHtml(o)}"><span>${escapeHtml(o)}</span></label>
-        `).join('')}
-      </span>
-    `;
-    const promptHtml = escapeHtml(q.prompt).replace('{choice}', choicesHtml);
-    qEl.innerHTML = `<div class="q-prompt">${numHtml}${promptHtml}</div>`;
-  }
-
-  function renderFillBlank(qEl, q, numHtml) {
-    const inputHtml = `<input type="text" class="blank-input" name="${escapeHtml(q.id)}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">`;
-    const promptHtml = escapeHtml(q.prompt).replace('{blank}', inputHtml);
-    qEl.innerHTML = `<div class="q-prompt">${numHtml}${promptHtml}</div>`;
-  }
-
-  function renderFillBlankMulti(qEl, q, numHtml) {
-    let html = escapeHtml(q.prompt);
-    (q.blanks || []).forEach(blank => {
-      const input = `<input type="text" class="blank-input" name="${escapeHtml(blank.id)}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">`;
-      html = html.replace('{blank}', input);
-    });
-    qEl.innerHTML = `<div class="q-prompt">${numHtml}${html}</div>`;
-  }
-
-  function renderMatching(qEl, q, numHtml) {
-    const left = q.left_items || [];
-    const right = q.right_items || [];
-    let gridHtml = '';
-    left.forEach(l => {
-      const opts = right.map(r =>
-        `<option value="${escapeHtml(r.key)}">${escapeHtml(r.key)}) ${escapeHtml(r.text)}</option>`
-      ).join('');
-      gridHtml += `
-        <div class="match-left">${escapeHtml(l.id)}) ${escapeHtml(l.text)}</div>
-        <div class="match-arrow">→</div>
-        <select name="${escapeHtml(q.id)}__${escapeHtml(l.id)}">
-          <option value="">— select —</option>
-          ${opts}
-        </select>
-      `;
-    });
-    qEl.innerHTML = `
-      <div class="q-prompt">${numHtml}${escapeHtml(q.prompt)}</div>
-      <div class="match-grid">${gridHtml}</div>
-    `;
-  }
-
-  function renderCategorization(qEl, q, numHtml) {
-    const items = q.items || [];
-    const categories = q.categories || [];
-    const poolHtml = items.map(it => `<span class="pool-word">${escapeHtml(it)}</span>`).join('  ·  ');
-    const optsHtml = categories.map(c =>
-      `<option value="${escapeHtml(c.id)}">${escapeHtml(c.label)}</option>`
-    ).join('');
-    let gridHtml = '';
-    items.forEach(it => {
-      gridHtml += `
-        <div class="categ-item">${escapeHtml(it)}</div>
-        <select name="${escapeHtml(q.id)}__${escapeHtml(it)}">
-          <option value="">— choose category —</option>
-          ${optsHtml}
-        </select>
-      `;
-    });
-    qEl.innerHTML = `
-      <div class="q-prompt">${numHtml}${escapeHtml(q.prompt)}</div>
-      <div class="categ-pool">
-        <div class="categ-pool-label">Words</div>
-        ${items.map(i => `<span class="pool-word pool-word--spaced">${escapeHtml(i)}</span>`).join('')}
-      </div>
-      <div class="categ-grid">${gridHtml}</div>
-    `;
-  }
-
-  function renderSentenceOrder(qEl, q, numHtml) {
-    qEl.innerHTML = `
-      <div class="q-prompt">${numHtml}${escapeHtml(q.prompt || '')}</div>
-      <div class="order-words">${(q.words || []).map(escapeHtml).join(' / ')}</div>
-      <input type="text" class="order-input" name="${escapeHtml(q.id)}" placeholder="Write the sentence in correct order…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
-    `;
-  }
-
-  function renderShortAnswer(qEl, q, numHtml) {
-    qEl.innerHTML = `
-      <div class="q-prompt">${numHtml}${escapeHtml(q.prompt)}</div>
-      <input type="text" class="short-input" name="${escapeHtml(q.id)}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
-    `;
-  }
-
-  function renderWritingPrompt(qEl, q, numHtml) {
-    qEl.innerHTML = `
-      <div class="q-prompt">${numHtml}${escapeHtml(q.prompt)}</div>
-      <div class="writing-wrap">
-        <textarea class="writing-input" name="${escapeHtml(q.id)}" placeholder="Write your answer here…" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
-        <div class="word-count"><strong>0</strong> words</div>
-      </div>
-    `;
-    setupWordCount(qEl.querySelector('textarea'), qEl.querySelector('.word-count strong'));
-  }
-
-  function renderPoolWriting(qEl, q, numHtml) {
-    const required = q.required_count || (q.word_pool || []).length;
-    const poolHtml = (q.word_pool || [])
-      .map(w => `<span class="pool-word">${escapeHtml(w)}</span>`).join('');
-
-    let sentencesHtml = '';
-    for (let i = 1; i <= required; i++) {
-      sentencesHtml += `
-        <div class="pool-sentence-row">
-          <div class="pool-sentence-num">${String(i).padStart(2, '0')}</div>
-          <div class="pool-sentence-input writing-wrap">
-            <textarea class="writing-input" rows="2" name="${escapeHtml(q.id)}__${i}" placeholder="Sentence ${i}…" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
-            <div class="word-count"><strong>0</strong> words</div>
-          </div>
-        </div>
-      `;
-    }
-
-    qEl.innerHTML = `
-      <div class="q-prompt">${numHtml}${escapeHtml(q.prompt)}</div>
-      <div class="pool-bank">
-        <span class="pool-bank-label">Word bank</span>
-        ${poolHtml}
-      </div>
-      <div class="pool-sentences">${sentencesHtml}</div>
-    `;
-    qEl.querySelectorAll('.pool-sentence-row').forEach(row => {
-      const ta = row.querySelector('textarea');
-      const count = row.querySelector('.word-count strong');
-      setupWordCount(ta, count);
-    });
-  }
-
-  function renderImageLabel(qEl, q, numHtml) {
-    const imgHtml = q.image?.url
-      ? `<img src="${escapeHtml(q.image.url)}" alt="${escapeHtml(q.image.alt || '')}">`
-      : `<div class="image-missing">[Image not uploaded]</div>`;
-
-    const labelsHtml = (q.labels || []).map(label => `
-      <div class="image-label-item">
-        <div class="image-label-name">${escapeHtml(label.label)}</div>
-        <input type="text" class="image-label-input" name="${escapeHtml(q.id)}__${escapeHtml(label.id)}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
-      </div>
-    `).join('');
-
-    qEl.innerHTML = `
-      <div class="q-prompt">${numHtml}${escapeHtml(q.prompt)}</div>
-      <div class="question-image-wrap">${imgHtml}</div>
-      <div class="image-labels">${labelsHtml}</div>
-    `;
-  }
-
-  function renderImageMatch(qEl, q, numHtml) {
-    const imgHtml = q.image?.url
-      ? `<img src="${escapeHtml(q.image.url)}" alt="${escapeHtml(q.image.alt || '')}">`
-      : `<div class="image-missing">[Image not uploaded]</div>`;
-
-    const regionOpts = (q.image_regions || []).map(r =>
-      `<option value="${escapeHtml(r)}">${escapeHtml(r)}</option>`
-    ).join('');
-
-    let gridHtml = '';
-    (q.items || []).forEach(item => {
-      gridHtml += `
-        <div class="match-left">${escapeHtml(item)}</div>
-        <div class="match-arrow">→</div>
-        <select name="${escapeHtml(q.id)}__${escapeHtml(item)}">
-          <option value="">— select —</option>
-          ${regionOpts}
-        </select>
-      `;
-    });
-
-    qEl.innerHTML = `
-      <div class="q-prompt">${numHtml}${escapeHtml(q.prompt)}</div>
-      <div class="question-image-wrap">${imgHtml}</div>
-      <div class="match-grid">${gridHtml}</div>
-    `;
-  }
-
-  function setupWordCount(textarea, counterEl) {
-    textarea.addEventListener('input', () => {
-      counterEl.textContent = countWords(textarea.value);
-    });
-  }
-
-  // ===== ANSWER COLLECTION =====
-  function collectAnswers() {
-    const answers = {};
-    examBody.querySelectorAll('input, select, textarea').forEach(el => {
-      if (!el.name) return;
-      if (el.type === 'radio') {
-        if (el.checked) answers[el.name] = el.value;
-      } else if (el.value !== '') {
-        answers[el.name] = el.value;
-      }
-    });
-    return answers;
-  }
-
-  function restoreAnswersToForm(answers) {
-    Object.entries(answers).forEach(([name, value]) => {
-      if (value == null || value === '') return;
-      const radio = examBody.querySelector(`input[type="radio"][name="${CSS.escape(name)}"][value="${CSS.escape(value)}"]`);
-      if (radio) { radio.checked = true; return; }
-      const el = examBody.querySelector(`[name="${CSS.escape(name)}"]`);
-      if (el) {
-        el.value = value;
-        // Trigger word count refresh for textareas
-        if (el.tagName === 'TEXTAREA') {
-          el.dispatchEvent(new Event('input'));
-        }
-      }
-    });
-  }
-
-  // ===== AUTO-SAVE =====
-  function buildProctoringPayload() {
-    return {
-      tab_switches: state.switches,
-      window_blur_events: state.blurEvents,
-      fullscreen_exits: state.fullscreenExits,
-      right_clicks_blocked: state.rightClicksBlocked,
-      devtools_attempts: state.devtoolsAttempts,
-      event_log: state.log
-    };
-  }
-
-  function saveToLocalStorage() {
-    if (!state.examActive || state.previewMode) return;
-    try {
-      localStorage.setItem(lsKey('answers'), JSON.stringify(collectAnswers()));
-      localStorage.setItem(lsKey('proctoring'), JSON.stringify(buildProctoringPayload()));
-    } catch (err) {
-      console.warn('localStorage save failed:', err);
-    }
-  }
-
-  let saveTimeout = null;
-  let isSaving = false;
-  async function saveToSupabase(immediate = false) {
-    if (!state.examActive || !state.submissionId) return;
-    if (saveTimeout) clearTimeout(saveTimeout);
-    if (!immediate) {
-      saveTimeout = setTimeout(() => saveToSupabase(true), 10000);
-      return;
-    }
-    if (isSaving) return;
-    isSaving = true;
-    setSaveStatus('saving', 'Saving…');
-    try {
-      const { error } = await db.from('submissions').update({
-        answers: collectAnswers(),
-        proctoring: buildProctoringPayload()
-      }).eq('id', state.submissionId);
-      if (error) throw error;
-      setSaveStatus('saved', 'Saved');
-    } catch (err) {
-      console.error('Auto-save failed:', err);
-      setSaveStatus('error', 'Offline');
-    } finally {
-      isSaving = false;
-    }
-  }
-
-  document.addEventListener('input', (e) => {
-    if (!state.examActive || state.previewMode) return;
-    if (!e.target.matches('input, select, textarea')) return;
-    if (!e.target.closest('.exam-body')) return;
-    saveToLocalStorage();
-    setSaveStatus('saving', 'Saving…');
-    saveToSupabase(false);
-  });
-
-  document.addEventListener('change', (e) => {
-    if (!state.examActive || state.previewMode) return;
-    if (!e.target.matches('input, select, textarea')) return;
-    if (!e.target.closest('.exam-body')) return;
-    saveToLocalStorage();
-    saveToSupabase(false);
-  });
-
-  // ===== TAB / FULLSCREEN ===
-  document.addEventListener('visibilitychange', () => {
-    if (!state.examActive || state.previewMode) return;
-    if (document.hidden) {
-      state.switches++;
-      updateSwitchDisplay();
-      logEvent('tab_hidden', `count: ${state.switches}`);
-      saveToLocalStorage();
-    } else {
-      logEvent('tab_visible');
-      showToast(`Tab switch detected (${state.switches} total)`);
-      saveToSupabase(true);
-      // The OS releases the wake lock whenever the tab is hidden, so we
-      // re-acquire it each time the student comes back to the exam.
-      requestWakeLock();
-    }
-  });
-
-  window.addEventListener('blur', () => {
-    if (!state.examActive || state.previewMode) return;
-    state.blurEvents++;
-    logEvent('window_blur', `count: ${state.blurEvents}`);
-    saveToLocalStorage();
-  });
-
-  document.addEventListener('fullscreenchange', () => {
-    // Apple mobile devices never enter fullscreen, so this should never fire
-    // there — but guard anyway in case Safari decides to fire something spurious.
-    if (!state.examActive || state.previewMode || isAppleMobile()) return;
-    if (!document.fullscreenElement) {
-      state.fullscreenExits++;
-      statusValueEl.textContent = 'PAUSED';
-      statusValueEl.classList.add('alert');
-      lockout.classList.add('active');
-      logEvent('fullscreen_exit', `count: ${state.fullscreenExits}`);
-      saveToSupabase(true);
-    } else {
-      statusValueEl.textContent = 'Active';
-      statusValueEl.classList.remove('alert');
-      lockout.classList.remove('active');
-      logEvent('fullscreen_resumed');
-    }
-  });
-
-  document.getElementById('resumeBtn').addEventListener('click', async () => {
-    try { await document.documentElement.requestFullscreen(); }
-    catch (err) { alert('Could not re-enter fullscreen.'); }
-  });
-
-  document.addEventListener('contextmenu', e => {
-    if (state.examActive) {
-      e.preventDefault();
-      state.rightClicksBlocked++;
-      logEvent('right_click_blocked');
-    }
-  });
-
-  document.addEventListener('keydown', e => {
-    if (!state.examActive || state.previewMode) return;
-    if (e.key === 'F12' ||
-        (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key)) ||
-        (e.ctrlKey && e.key === 'u')) {
-      e.preventDefault();
-      state.devtoolsAttempts++;
-      logEvent('devtools_shortcut_blocked', e.key);
-      showToast('That shortcut is disabled during the exam');
-    }
-  });
-
-  window.addEventListener('beforeunload', e => {
-    releaseWakeLock();
-    if (state.examActive && !state.previewMode) {
-      saveToLocalStorage();
-      e.preventDefault();
-      e.returnValue = '';
-    }
-  });
-
-  // ===== SUBMIT FLOW =====
-  function findUnansweredQuestions() {
-    const blanks = [];
-    state.examDef.sections.forEach(section => {
-      (section.questions || []).forEach(q => {
-        if (isQuestionBlank(q)) {
-          blanks.push(q.id);
-        }
-      });
-    });
-    return blanks;
-  }
-
-  function isQuestionBlank(q) {
-    const answers = collectAnswers();
-    // Compound types — check that ALL sub-fields are answered
-    switch (q.type) {
-      case 'fill_blank_multi': {
-        const blanks = q.blanks || [];
-        return blanks.some(b => !answers[b.id] || answers[b.id].trim() === '');
-      }
-      case 'matching':
-      case 'image_match': {
-        const items = q.type === 'matching' ? (q.left_items || []).map(l => l.id) : (q.items || []);
-        return items.some(itemId => !answers[`${q.id}__${itemId}`]);
-      }
-      case 'categorization': {
-        return (q.items || []).some(it => !answers[`${q.id}__${it}`]);
-      }
-      case 'image_label': {
-        return (q.labels || []).some(l => !answers[`${q.id}__${l.id}`] || answers[`${q.id}__${l.id}`].trim() === '');
-      }
-      case 'pool_writing': {
-        const required = q.required_count || 0;
-        let filled = 0;
-        for (let i = 1; i <= required; i++) {
-          const v = answers[`${q.id}__${i}`];
-          if (v && v.trim() !== '') filled++;
-        }
-        return filled === 0;
-      }
-      default: {
-        const v = answers[q.id];
-        return v == null || (typeof v === 'string' && v.trim() === '');
-      }
-    }
-  }
-
-  function openSubmitModal() {
-    const blanks = findUnansweredQuestions();
-    const totalQ = state.examDef.sections.reduce((sum, s) => sum + (s.questions?.length || 0), 0);
-    const answered = totalQ - blanks.length;
-
-    document.getElementById('submitSummary').innerHTML =
-      `You have answered <strong>${answered} of ${totalQ}</strong> questions.`;
-
-    const blanksList = document.getElementById('blanksList');
-    if (blanks.length > 0) {
-      blanksList.style.display = 'block';
-      document.getElementById('blanksChips').innerHTML = blanks.map(id => {
-        // Look up the display number from the rendered question element.
-        // Fall back to the raw id if not found, just to be safe.
-        const el = document.getElementById(`q-${id}`);
-        const num = el?.dataset.displayNumber || id;
-        return `<button class="blank-chip" onclick="jumpToQuestion('${escapeHtml(id)}')">${escapeHtml(num)}</button>`;
-      }).join('');
-    } else {
-      blanksList.style.display = 'none';
-    }
-
-    document.getElementById('submitModal').classList.add('active');
-  }
-
-  function closeSubmitModal() {
-    document.getElementById('submitModal').classList.remove('active');
-  }
-
-  function jumpToQuestion(qId) {
-    closeSubmitModal();
-    const el = document.getElementById(`q-${qId}`);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      // Briefly highlight
-      el.style.transition = 'background 0.3s';
-      el.style.background = 'rgba(174, 145, 66, 0.15)';
-      setTimeout(() => { el.style.background = ''; }, 1500);
-      // Focus first input
-      const input = el.querySelector('input, select, textarea');
-      if (input) input.focus();
-    }
-  }
-  window.jumpToQuestion = jumpToQuestion;
-
-  document.getElementById('reviewBtn').addEventListener('click', closeSubmitModal);
-  document.getElementById('submitModal').addEventListener('click', (e) => {
-    if (e.target.id === 'submitModal') closeSubmitModal();
-  });
-
-  document.getElementById('confirmSubmitBtn').addEventListener('click', async () => {
-    closeSubmitModal();
-    state.examActive = false;
-    logEvent('exam_submitted');
-    setSaveStatus('saving', 'Submitting…');
-
-    const answers = collectAnswers();
-    const submittedAt = new Date();
-    const timeTakenSec = Math.floor((submittedAt.getTime() - state.startTime) / 1000);
-    const totalQ = state.examDef.sections.reduce((sum, s) => sum + (s.questions?.length || 0), 0);
-    const blanks = findUnansweredQuestions();
-
-    try {
-      const { error } = await db.from('submissions').update({
-        status: 'submitted',
-        submitted_at: submittedAt.toISOString(),
-        time_taken_seconds: timeTakenSec,
-        answers,
-        proctoring: buildProctoringPayload()
-      }).eq('id', state.submissionId);
-
-      if (error) throw error;
-
-      localStorage.setItem(submittedFlagKey(state.examCode, state.student), submittedAt.toISOString());
-      localStorage.removeItem(lsKey('session'));
-      localStorage.removeItem(lsKey('name'));
-      localStorage.removeItem(lsKey('answers'));
-      localStorage.removeItem(lsKey('proctoring'));
-
-      if (document.fullscreenElement) document.exitFullscreen();
-      releaseWakeLock();
-      document.querySelector('.section-progress').style.display = 'none';
-
-      examScreen.innerHTML = `
-        <div class="results">
-          <h2>Exam Submitted</h2>
-          <p class="modal-sub">
-            Your responses have been recorded and submitted to ${escapeHtml(state.teacherName)}.
-          </p>
-          <div class="results-row"><span>Student</span><span>${escapeHtml(state.student)}</span></div>
-          <div class="results-row"><span>Class</span><span>${escapeHtml(state.classLabel)}</span></div>
-          <div class="results-row"><span>Code</span><span class="mono-val">${escapeHtml(state.examCode)}</span></div>
-          <div class="results-row"><span>Submitted at</span><span>${submittedAt.toLocaleString()}</span></div>
-          <div class="results-row"><span>Time taken</span><span>${timerEl.textContent}</span></div>
-          <div class="results-row"><span>Questions answered</span><span>${totalQ - blanks.length} / ${totalQ}</span></div>
-          <p class="results-footer-note">
-            You may now close this window.
-          </p>
-        </div>
-      `;
-      window.scrollTo(0, 0);
-    } catch (err) {
-      console.error('Submit failed:', err);
-      state.examActive = true;
-      setSaveStatus('error', 'Submit failed');
-      alert(`Could not submit your exam: ${err.message}\n\nYour answers are saved. Please try submitting again.`);
-    }
-  });
-
-  // ===== START =====
-  init();
-</script>
-
+<script type="module" src="../js/pages/exam-page.js"></script>
 </body>
 </html>
-
-
-
-

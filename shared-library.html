@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shared Library — Approach International Student Center</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div id="navbarContainer"></div>
+
+<div class="auth-loading" id="authLoading">
+  <div class="spinner"></div>
+  <p style="font-family:var(--serif);font-style:italic;">Loading shared library…</p>
+</div>
+
+<main class="page" id="page" style="display:none;">
+  <div class="page-header">
+    <div>
+      <div class="page-stamp">Shared Library</div>
+      <h1>Browse <em>Shared</em> Assessments &amp; Exams</h1>
+      <p class="page-sub">Preview items shared by other teachers, then copy one to your own account to edit freely.</p>
+    </div>
+  </div>
+
+  <div class="filters" style="grid-template-columns:2fr 1fr;">
+    <div class="filter-field"><label>Search</label><input type="text" id="search" placeholder="Title, code, class, or teacher…"></div>
+    <div class="filter-field"><label>Type</label>
+      <select id="filterType">
+        <option value="">All types</option>
+        <option value="assessment">Assessments</option>
+        <option value="exam">Exams</option>
+      </select>
+    </div>
+  </div>
+
+  <div id="libraryGrid" class="library-grid">
+    <p style="color:var(--muted);font-style:italic;">Loading…</p>
+  </div>
+</main>
+
+<!-- ===== PREVIEW MODAL ===== -->
+<div class="modal-overlay" id="previewModal">
+  <div class="modal-box" style="max-width:760px;">
+    <div class="page-stamp" id="previewStamp">Preview</div>
+    <h2 id="previewTitle">—</h2>
+    <p class="modal-sub" id="previewSub">—</p>
+    <div class="library-preview-body" id="previewBody"></div>
+    <div class="modal-actions">
+      <button type="button" class="btn btn--secondary" id="previewCloseBtn">Close</button>
+      <button type="button" class="btn btn--primary" id="previewCopyBtn">Copy to My Account</button>
+    </div>
+  </div>
+</div>
+
+<div class="copyright">Copyright © 2026 Approach International Student Center, Inc. — All rights reserved.</div>
+
+<script type="module" src="js/pages/shared-library.js"></script>
+</body>
+</html>

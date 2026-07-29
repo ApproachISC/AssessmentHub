@@ -5,210 +5,58 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="google" content="notranslate">
 <title>Assessment Code Entry — Approach International Student Center</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
-<style>
-  body { min-height:100vh; background:linear-gradient(180deg,var(--nd-blue) 0%,var(--medium-blue) 100%); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:2rem 1rem; }
-  .entry-card { background:#fff; border-top:6px solid var(--nd-gold); padding:3rem 2.5rem 2.5rem; max-width:520px; width:100%; box-shadow:0 20px 60px rgba(0,0,0,0.25); text-align:center; }
-  .crest { display:inline-block; width:54px; height:54px; border:2px solid var(--nd-blue); border-radius:50%; line-height:50px; font-family:var(--font-display); font-size:1.7rem; font-weight:600; color:var(--nd-blue); margin-bottom:0.6rem; position:relative; }
-  .crest::after { content:''; position:absolute; inset:4px; border:1px solid var(--nd-gold); border-radius:50%; }
-  .inst-name { font-family:var(--font-display); font-size:1.3rem; font-weight:600; color:var(--nd-blue); }
-  .inst-sub { font-size:0.6rem; font-weight:500; letter-spacing:0.25em; text-transform:uppercase; color:var(--dark-gold); margin-top:0.25rem; margin-bottom:1.5rem; }
-  .entry-stamp { font-size:0.6rem; font-weight:600; letter-spacing:0.25em; text-transform:uppercase; color:var(--nd-gold); margin-bottom:0.4rem; }
-  .entry-title { font-family:var(--font-display); font-size:2.2rem; font-weight:600; color:var(--nd-blue); margin-bottom:0.3rem; }
-  .entry-title em { font-style:italic; color:var(--nd-gold); font-weight:500; }
-  .entry-sub { font-family:var(--font-display); font-style:italic; color:var(--medium-blue); font-size:1rem; margin-bottom:2rem; }
-  .pin-container { display:flex; align-items:center; justify-content:center; gap:0.4rem; margin-bottom:1.25rem; flex-wrap:wrap; }
-  .pin-group { display:flex; gap:0.3rem; }
-  .pin-box { width:44px; height:54px; border:2px solid var(--dark-sky-blue); background:var(--light-sky-blue); font-family:'JetBrains Mono',monospace,var(--font-body); font-size:1.3rem; font-weight:700; color:var(--nd-blue); text-align:center; text-transform:uppercase; transition:all 0.15s; cursor:text; }
-  .pin-box:focus { outline:none; border-color:var(--nd-gold); background:#fff; box-shadow:0 0 0 3px rgba(174,145,66,0.18); }
-  .pin-box.filled { border-color:var(--nd-blue); }
-  .pin-separator { font-size:1.4rem; font-weight:700; color:var(--dark-sky-blue); line-height:54px; padding:0 0.1rem; }
-  .pin-container.shake { animation:shake 0.4s; }
-  @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
-  .status-panel { display:none; border-top:3px solid var(--nd-gold); padding:1.25rem 1rem; margin-bottom:1rem; background:var(--light-sky-blue); text-align:left; }
-  .status-panel.active { display:block; }
-  .status-panel.error { background:rgba(171,16,11,0.06); border-top-color:var(--accent-red); }
-  .status-panel.upcoming { background:rgba(211,159,16,0.08); border-top-color:var(--bright-gold); }
-  .status-panel.closed { background:var(--medium-sky-blue); border-top-color:var(--medium-blue); }
-  .status-label { font-size:0.6rem; font-weight:600; letter-spacing:0.22em; text-transform:uppercase; color:var(--nd-gold); margin-bottom:0.3rem; }
-  .status-panel.error .status-label { color:var(--accent-red); }
-  .status-panel.upcoming .status-label { color:var(--dark-gold); }
-  .status-title { font-family:var(--font-display); font-size:1.3rem; font-weight:600; color:var(--nd-blue); margin-bottom:0.3rem; }
-  .status-message { font-family:var(--font-display); font-style:italic; color:var(--medium-blue); font-size:0.95rem; line-height:1.45; }
-  .status-detail { display:flex; gap:1.5rem; margin-top:0.75rem; flex-wrap:wrap; }
-  .status-detail span { font-size:0.82rem; color:var(--medium-blue); }
-  .status-detail span strong { display:block; font-size:0.6rem; font-weight:600; letter-spacing:0.15em; text-transform:uppercase; color:var(--nd-blue); margin-bottom:0.15rem; }
-  .actions { display:flex; gap:0.75rem; justify-content:center; flex-wrap:wrap; }
-  .help-text { margin-top:1.25rem; font-size:0.78rem; color:var(--medium-blue); font-family:var(--font-display); font-style:italic; }
-</style>
+<link rel="stylesheet" href="../css/styles.css">
 </head>
 <body>
 
-<div class="entry-card">
-  <div class="crest">A</div>
-  <div class="inst-name">Approach<span style="color:var(--nd-gold);">USA</span></div>
-  <div class="inst-sub">International Student Center</div>
-  <div class="entry-stamp">Assessment Access</div>
-  <h1 class="entry-title">Enter your <em>Code</em></h1>
-  <p class="entry-sub">Type the 12-character access code given by your teacher</p>
+<div class="entry-page">
+  <div class="entry-card">
+    <div class="entry-crest">A</div>
+    <div class="entry-inst-name">Approach<em>USA</em></div>
+    <div class="entry-inst-sub">International Student Center</div>
+    <div class="entry-stamp">Assessment Access</div>
+    <h1 class="entry-title">Enter your <em>Code</em></h1>
+    <p class="entry-sub">Type the 12-character access code given by your teacher</p>
 
-  <div class="pin-container" id="pinContainer">
-    <div class="pin-group">
-      <input class="pin-box" maxlength="1" placeholder=" " data-index="0" inputmode="text" autocomplete="off" autocorrect="off" spellcheck="false">
-      <input class="pin-box" maxlength="1" placeholder=" " data-index="1" inputmode="text" autocomplete="off" autocorrect="off" spellcheck="false">
-      <input class="pin-box" maxlength="1" placeholder=" " data-index="2" inputmode="text" autocomplete="off" autocorrect="off" spellcheck="false">
-      <input class="pin-box" maxlength="1" placeholder=" " data-index="3" inputmode="text" autocomplete="off" autocorrect="off" spellcheck="false">
-      <input class="pin-box" maxlength="1" placeholder=" " data-index="4" inputmode="text" autocomplete="off" autocorrect="off" spellcheck="false">
-      <input class="pin-box" maxlength="1" placeholder=" " data-index="5" inputmode="text" autocomplete="off" autocorrect="off" spellcheck="false">
+    <div class="pin-container" id="pinContainer">
+      <div class="pin-group">
+        <input class="pin-box" maxlength="1" placeholder=" " data-index="0" inputmode="text" autocomplete="off" autocorrect="off" spellcheck="false">
+        <input class="pin-box" maxlength="1" placeholder=" " data-index="1" inputmode="text" autocomplete="off" autocorrect="off" spellcheck="false">
+        <input class="pin-box" maxlength="1" placeholder=" " data-index="2" inputmode="text" autocomplete="off" autocorrect="off" spellcheck="false">
+        <input class="pin-box" maxlength="1" placeholder=" " data-index="3" inputmode="text" autocomplete="off" autocorrect="off" spellcheck="false">
+        <input class="pin-box" maxlength="1" placeholder=" " data-index="4" inputmode="text" autocomplete="off" autocorrect="off" spellcheck="false">
+        <input class="pin-box" maxlength="1" placeholder=" " data-index="5" inputmode="text" autocomplete="off" autocorrect="off" spellcheck="false">
+      </div>
+      <span class="pin-separator">—</span>
+      <div class="pin-group">
+        <input class="pin-box" maxlength="1" placeholder=" " data-index="6" inputmode="text" autocomplete="off" autocorrect="off" spellcheck="false">
+        <input class="pin-box" maxlength="1" placeholder=" " data-index="7" inputmode="text" autocomplete="off" autocorrect="off" spellcheck="false">
+        <input class="pin-box" maxlength="1" placeholder=" " data-index="8" inputmode="text" autocomplete="off" autocorrect="off" spellcheck="false">
+        <input class="pin-box" maxlength="1" placeholder=" " data-index="9" inputmode="text" autocomplete="off" autocorrect="off" spellcheck="false">
+        <input class="pin-box" maxlength="1" placeholder=" " data-index="10" inputmode="text" autocomplete="off" autocorrect="off" spellcheck="false">
+        <input class="pin-box" maxlength="1" placeholder=" " data-index="11" inputmode="text" autocomplete="off" autocorrect="off" spellcheck="false">
+      </div>
     </div>
-    <span class="pin-separator">—</span>
-    <div class="pin-group">
-      <input class="pin-box" maxlength="1" placeholder=" " data-index="6" inputmode="text" autocomplete="off" autocorrect="off" spellcheck="false">
-      <input class="pin-box" maxlength="1" placeholder=" " data-index="7" inputmode="text" autocomplete="off" autocorrect="off" spellcheck="false">
-      <input class="pin-box" maxlength="1" placeholder=" " data-index="8" inputmode="text" autocomplete="off" autocorrect="off" spellcheck="false">
-      <input class="pin-box" maxlength="1" placeholder=" " data-index="9" inputmode="text" autocomplete="off" autocorrect="off" spellcheck="false">
-      <input class="pin-box" maxlength="1" placeholder=" " data-index="10" inputmode="text" autocomplete="off" autocorrect="off" spellcheck="false">
-      <input class="pin-box" maxlength="1" placeholder=" " data-index="11" inputmode="text" autocomplete="off" autocorrect="off" spellcheck="false">
+
+    <div class="status-panel" id="statusPanel">
+      <div class="status-label" id="statusLabel">—</div>
+      <div class="status-title" id="statusTitle">—</div>
+      <div class="status-message" id="statusMessage">—</div>
+      <div class="status-detail" id="statusDetail"></div>
     </div>
+
+    <div class="entry-actions" id="actions" style="display:none;">
+      <button class="btn btn--secondary" id="tryAgainBtn">Try Again</button>
+    </div>
+
+    <p class="entry-help-text">Looking for an exam? <a href="../exam/enter-code.html">Enter an exam code →</a></p>
   </div>
 
-  <div class="status-panel" id="statusPanel">
-    <div class="status-label" id="statusLabel">—</div>
-    <div class="status-title" id="statusTitle">—</div>
-    <div class="status-message" id="statusMessage">—</div>
-    <div class="status-detail" id="statusDetail"></div>
+  <div class="copyright" style="background:transparent;color:rgba(255,255,255,0.5);border:none;margin-top:1.5rem;">
+    Copyright © 2026 Approach International Student Center, Inc.
   </div>
-
-  <div class="actions" id="actions" style="display:none;">
-    <button class="btn-secondary" onclick="clearCode()">Try Again</button>
-  </div>
-
-  <p class="help-text">Looking for an exam? <a href="enter-code.html" style="color:var(--nd-gold);">Enter an exam code →</a></p>
 </div>
 
-<div class="copyright" style="background:transparent;color:rgba(255,255,255,0.5);border:none;margin-top:1.5rem;">
-  Copyright © 2026 Approach International Student Center, Inc.
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  const SUPABASE_URL = 'https://okyauyzdensuvuoyphds.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9reWF1eXpkZW5zdXZ1b3lwaGRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1NTgwOTUsImV4cCI6MjA5MzEzNDA5NX0.NZUclCDHecS9bcZOLHj1ZXBFf5b5k9klRwTMfJrglfI';
-  const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-  const boxes = [...document.querySelectorAll('.pin-box')];
-  const pinContainer = document.getElementById('pinContainer');
-  let isChecking = false;
-
-  function escapeHtml(s) { if(s==null)return''; return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-  function formatDate(iso) { if(!iso)return'—'; const d=new Date(iso); return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})+', '+d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}); }
-  function shakePin() { pinContainer.classList.remove('shake'); void pinContainer.offsetWidth; pinContainer.classList.add('shake'); setTimeout(()=>pinContainer.classList.remove('shake'),400); }
-  function showPanel(type, label, title, message, detail='') {
-    const p = document.getElementById('statusPanel');
-    p.className = 'status-panel active ' + type;
-    document.getElementById('statusLabel').textContent = label;
-    document.getElementById('statusTitle').textContent = title;
-    document.getElementById('statusMessage').textContent = message;
-    document.getElementById('statusDetail').innerHTML = detail;
-  }
-
-  function getCurrentCode() {
-    const chars = Array.from(boxes).map(b => b.value.toUpperCase()).join('');
-    if (chars.length !== 12) return null;
-    // Format: YYYYQQ-TTXXXX  (positions 0-5, then 6-11 with hyphen between)
-    return `${chars.slice(0, 6)}-${chars.slice(6)}`;
-  }
-
-  function checkIfComplete() {
-    const code = getCurrentCode();
-    if (code && !isChecking) {
-      verifyCode(code);
-    }
-  }
-
-  boxes.forEach((box,idx) => {
-    box.addEventListener('input', (e) => {
-      let val = e.target.value.replace(/[^a-zA-Z0-9]/g,'').toUpperCase();
-      if (val.length > 1) { const rem=val.slice(0,12-idx); [...rem].forEach((ch,i)=>{ if(boxes[idx+i])boxes[idx+i].value=ch; }); boxes[Math.min(idx+rem.length,11)]?.focus(); }
-      else { box.value=val; box.classList.toggle('filled',!!val); if(val&&idx<11)boxes[idx+1].focus(); }
-      checkIfComplete();
-    });
-    box.addEventListener('keydown', (e) => {
-      if(e.key==='Backspace'&&!box.value&&idx>0){boxes[idx-1].value='';boxes[idx-1].classList.remove('filled');boxes[idx-1].focus();}
-      if(e.key==='ArrowLeft'&&idx>0)boxes[idx-1].focus();
-      if(e.key==='ArrowRight'&&idx<11)boxes[idx+1].focus();
-    });
-    box.addEventListener('focus', () => box.select());
-    box.addEventListener('paste', (e) => {
-      e.preventDefault();
-      const pasted=(e.clipboardData?.getData('text')||'').replace(/[^a-zA-Z0-9]/g,'').toUpperCase();
-      [...pasted.slice(0,12)].forEach((ch,i)=>{ if(boxes[i]){boxes[i].value=ch;boxes[i].classList.add('filled');} });
-      boxes[Math.min(pasted.length,11)].focus();
-      checkIfComplete();
-    });
-  });
-
-  function clearCode() {
-    boxes.forEach(b=>{b.value='';b.classList.remove('filled');});
-    document.getElementById('statusPanel').className='status-panel';
-    document.getElementById('actions').style.display='none';
-    isChecking=false; boxes[0].focus();
-  }
-  window.clearCode = clearCode;
-
-  async function verifyCode(code) {
-    isChecking = true;
-    showPanel('checking','Checking','Verifying…','');
-    try {
-      const { data: exam, error } = await db.from('assessments')
-        .select('*')
-        .eq('code', code).maybeSingle();
-      if (error) throw error;
-      if (!exam) {
-        shakePin();
-        showPanel('error','Invalid Code','Code not recognized','That code does not match any assessment. Please check it and try again.');
-        document.getElementById('actions').style.display='flex'; isChecking=false; return;
-      }
-
-      // Fetch teacher and class separately — Supabase can't auto-join teacher_id
-      // because it references auth.users (not a public table).
-      const [teacherRes, classRes] = await Promise.all([
-        db.from('profiles').select('full_name, email').eq('id', exam.teacher_id).maybeSingle(),
-        db.from('classes').select('name').eq('id', exam.class_id).maybeSingle()
-      ]);
-      const now=new Date(), from=new Date(exam.available_from), until=new Date(exam.available_until);
-      const className=classRes.data?.name||'—', teacherName=teacherRes.data?.full_name||teacherRes.data?.email||'—';
-      if (exam.status==='draft') { showPanel('error','Not Published','Not available yet','This assessment has not been published.'); document.getElementById('actions').style.display='flex'; isChecking=false; return; }
-      if (exam.status==='archived') { showPanel('closed','Archived','No longer available','This assessment has been archived.'); document.getElementById('actions').style.display='flex'; isChecking=false; return; }
-      if (now<from) {
-        showPanel('upcoming','Upcoming','Not open yet','This assessment is not open yet.',
-          `<span><strong>Class</strong>${escapeHtml(className)}</span><span><strong>Teacher</strong>${escapeHtml(teacherName)}</span><span><strong>Opens</strong>${formatDate(exam.available_from)}</span>`);
-        document.getElementById('actions').style.display='flex'; isChecking=false; return;
-      }
-      if (now>until) { showPanel('closed','Closed','Window has ended',`This assessment closed on ${formatDate(exam.available_until)}.`); document.getElementById('actions').style.display='flex'; isChecking=false; return; }
-      if (!exam.assessment_definition?.sections) { showPanel('error','Not Ready','No questions yet','This assessment has no questions. Contact your teacher.'); document.getElementById('actions').style.display='flex'; isChecking=false; return; }
-      showPanel('checking','Access Granted','Loading…','Taking you to the assessment…');
-      setTimeout(() => { window.location.href=`assessment-page.html?code=${encodeURIComponent(exam.code)}`; }, 700);
-    } catch(err) {
-      showPanel('error','Error','Could not verify',err.message||'Check your connection.');
-      document.getElementById('actions').style.display='flex'; isChecking=false;
-    }
-  }
-
-  // URL pre-fill from QR code scan
-  function prefillFromUrl() {
-    const params = new URLSearchParams(window.location.search);
-    const raw = params.get('code');
-    if (!raw) { boxes[0].focus(); return; }
-    const cleaned = raw.toUpperCase().replace(/[^A-Z0-9]/g,'');
-    if (cleaned.length!==12) { boxes[0].focus(); return; }
-    for (let i=0;i<12;i++) { boxes[i].value=cleaned[i]; boxes[i].classList.add('filled'); }
-    checkIfComplete();
-  }
-  prefillFromUrl();
-</script>
+<script type="module" src="../js/pages/assessment-enter-code.js"></script>
 </body>
 </html>

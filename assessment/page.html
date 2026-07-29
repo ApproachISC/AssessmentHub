@@ -5,269 +5,105 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="google" content="notranslate">
 <title>Assessment — Approach International Student Center</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
-<style>
-  /* ===== START SCREEN ===== */
-  .start-screen {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1.5rem;
-    background: linear-gradient(180deg, var(--light-warm-white) 0%, var(--light-sky-blue) 100%);
-  }
-  .start-card {
-    max-width: 640px;
-    width: 100%;
-    background: #fff;
-    border-top: 6px solid var(--nd-gold);
-    box-shadow: 0 10px 40px rgba(12,35,64,0.08), 0 2px 6px rgba(12,35,64,0.05);
-    padding: 2.25rem 2.5rem 2rem;
-  }
-  .institutional-mark { text-align: center; margin-bottom: 1.25rem; padding-bottom: 1rem; border-bottom: 1px solid var(--dark-sky-blue); }
-  .institutional-mark img { width: 64px; }
-  .crest {
-    display: inline-block; width: 50px; height: 50px;
-    border: 2px solid var(--nd-blue); border-radius: 50%;
-    line-height: 46px; font-family: var(--font-display); font-size: 1.6rem;
-    font-weight: 600; color: var(--nd-blue); margin-bottom: 0.5rem; position: relative;
-  }
-  .crest::after { content: ''; position: absolute; inset: 4px; border: 1px solid var(--nd-gold); border-radius: 50%; }
-  .institutional-name { font-family: var(--font-display); font-size: 1.25rem; font-weight: 600; color: var(--nd-blue); line-height: 1.1; }
-  .institutional-sub { font-size: 0.6rem; font-weight: 500; letter-spacing: 0.25em; text-transform: uppercase; color: var(--dark-gold); margin-top: 0.3rem; }
-  .start-stamp { font-size: 0.6rem; font-weight: 500; letter-spacing: 0.22em; color: var(--dark-gold); text-transform: uppercase; text-align: center; margin-bottom: 0.4rem; }
-  .start-title { font-family: var(--font-display); font-weight: 600; font-size: clamp(1.75rem,4vw,2.4rem); line-height: 1.05; text-align: center; color: var(--nd-blue); margin-bottom: 0.3rem; }
-  .start-title em { font-style: italic; color: var(--nd-gold); font-weight: 500; }
-  .start-subtitle { font-family: var(--font-display); font-style: italic; font-size: 1rem; color: var(--medium-blue); text-align: center; margin-bottom: 1.25rem; }
-  .exam-info-card { background: var(--light-sky-blue); border-left: 3px solid var(--nd-gold); padding: 0.85rem 1.1rem; margin-bottom: 1rem; }
-  .info-row { display: flex; justify-content: space-between; align-items: center; padding: 0.25rem 0; border-bottom: 1px dashed var(--dark-sky-blue); font-size: 0.85rem; }
-  .info-row:last-child { border-bottom: none; }
-  .info-label { font-size: 0.6rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--medium-blue); }
-  .info-value { color: var(--nd-blue); font-weight: 500; }
-  .name-fields label { display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.6rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--medium-blue); margin-bottom: 1rem; }
-  .name-fields input { font-family: var(--font-body); font-size: 1rem; font-weight: 400; padding: 0.65rem 0.85rem; border: 1px solid var(--dark-sky-blue); background: var(--light-sky-blue); color: var(--nd-blue); transition: all 0.2s; }
-  .name-fields input:focus { outline: none; border-color: var(--nd-gold); background: #fff; box-shadow: 0 0 0 3px rgba(174,145,66,0.15); }
-  .name-fields .help-text { font-family: var(--font-display); font-style: italic; font-size: 0.8rem; color: var(--medium-blue); margin-top: 0.3rem; text-transform: none; letter-spacing: normal; font-weight: 400; }
-  .start-btn { font-family: var(--font-body); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; background: var(--nd-blue); color: var(--light-warm-white); border: none; border-bottom: 3px solid var(--nd-gold); padding: 0.95rem 2rem; cursor: pointer; transition: all 0.2s; width: 100%; }
-  .start-btn:hover:not(:disabled) { background: var(--medium-blue); }
-  .start-btn:disabled { background: var(--dark-sky-blue); color: var(--medium-blue); cursor: not-allowed; border-bottom-color: var(--medium-blue); }
-  .blocked-card { background: rgba(171,16,11,0.06); border-top: 3px solid var(--accent-red); padding: 1.5rem; text-align: center; }
-  .blocked-card h2 { font-family: var(--font-display); font-size: 1.5rem; font-weight: 600; color: var(--nd-blue); margin-bottom: 0.4rem; }
-  .blocked-card p { font-family: var(--font-display); font-style: italic; font-size: 1rem; color: var(--medium-blue); line-height: 1.45; }
-
-  /* ===== PASSAGE PAGE ===== */
-  .passage-page { display: none; min-height: 100vh; background: var(--light-warm-white); }
-  .passage-page.active { display: block; }
-  .passage-content { max-width: 720px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
-  .passage-label-bar { font-size: 0.6rem; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: var(--nd-gold); margin-bottom: 0.5rem; }
-  .passage-title { font-family: var(--font-display); font-size: 2rem; font-weight: 600; color: var(--nd-blue); margin-bottom: 1.25rem; }
-  .passage-text { font-family: var(--font-display); font-size: 1.1rem; line-height: 1.75; color: var(--nd-blue); background: var(--light-warm-white); border-left: 4px solid var(--nd-gold); padding: 1.5rem 1.75rem; white-space: pre-wrap; margin-bottom: 2rem; }
-  .passage-cta { font-family: var(--font-display); font-style: italic; color: var(--medium-blue); margin-bottom: 1.25rem; font-size: 1rem; }
-
-  /* ===== ASSESSMENT SCREEN ===== */
-  .assess-screen { display: none; min-height: 100vh; background: var(--light-warm-white); }
-  .assess-screen.active { display: block; }
-  .assess-header { background: var(--nd-blue); color: var(--light-warm-white); border-bottom: 3px solid var(--nd-gold); padding: 0.85rem 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; position: sticky; top: 0; z-index: 10; }
-  .assess-title { font-family: var(--font-display); font-size: 1.1rem; font-weight: 600; color: #fff; }
-  .assess-title small { display: block; font-family: var(--font-body); font-size: 0.62rem; color: var(--dark-sky-blue); font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; margin-top: 0.2rem; }
-  .assess-save-indicator { font-size: 0.7rem; color: var(--dark-sky-blue); font-family: var(--font-body); letter-spacing: 0.1em; }
-  .assess-save-indicator.saving { color: var(--bright-gold); }
-  .assess-save-indicator.saved { color: #6b9b6b; }
-  .assess-body { max-width: 760px; margin: 0 auto; padding: 2rem 1.5rem 6rem; }
-  .question { background: #fff; border-top: 3px solid var(--nd-gold); padding: 2rem; box-shadow: 0 2px 8px rgba(12,35,64,0.04); }
-  .q-number { display: inline-block; background: var(--nd-blue); color: var(--nd-gold); font-size: 0.62rem; font-weight: 700; letter-spacing: 0.12em; padding: 0.2rem 0.55rem; margin-right: 0.6rem; vertical-align: 1px; }
-  .q-points { font-size: 0.7rem; font-weight: 500; color: var(--medium-blue); margin-left: 0.5rem; font-family: var(--font-body); }
-  .q-prompt { font-size: 1rem; line-height: 1.65; color: var(--nd-blue); margin-bottom: 0.75rem; }
-  .options { display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.75rem; }
-  .option { display: flex; align-items: center; gap: 0.85rem; padding: 0.65rem 1rem; border: 1px solid var(--medium-blue); background: var(--light-sky-blue); cursor: pointer; transition: all 0.15s; font-size: 0.98rem; color: var(--medium-blue); }
-  .option:hover { background: var(--medium-sky-blue); border-color: var(--nd-blue); }
-  .option:has(input:checked) { background: var(--nd-blue); color: var(--light-warm-white); border-color: var(--nd-gold); font-weight: 500; }
-  .option:has(input:checked) .option-letter { color: var(--nd-gold); }
-  .option input { display: none; }
-  .option-letter { font-size: 0.7rem; font-weight: 700; color: var(--nd-gold); letter-spacing: 0.1em; min-width: 1.2rem; }
-  /* Multiple select — checkboxes */
-  .option.ms:has(input:checked) { background: var(--nd-blue); color: var(--light-warm-white); border-color: var(--nd-gold); }
-  .option.ms:has(input:checked) .option-letter { color: var(--nd-gold); }
-  /* True/False */
-  .tf-row { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.85rem 1rem; background: var(--light-sky-blue); border-left: 3px solid var(--medium-blue); }
-  .tf-statement { flex: 1; color: var(--nd-blue); font-size: 0.98rem; }
-  .tf-buttons { display: flex; gap: 0.4rem; flex-shrink: 0; }
-  .tf-buttons label { cursor: pointer; padding: 0.3rem 0.85rem; border: 1px solid var(--medium-blue); background: #fff; font-family: var(--font-body); font-size: 0.75rem; font-weight: 600; color: var(--medium-blue); transition: all 0.15s; user-select: none; letter-spacing: 0.1em; }
-  .tf-buttons input { display: none; }
-  .tf-buttons label:has(input:checked) { background: var(--nd-blue); color: var(--nd-gold); border-color: var(--nd-gold); }
-  /* Blank input */
-  .blank-input { display: inline-block; border: none; border-bottom: 1.5px solid var(--medium-blue); background: transparent; font-family: var(--font-body); font-size: 1rem; padding: 0.15rem 0.4rem; min-width: 130px; color: var(--accent-red); font-weight: 500; transition: all 0.2s; }
-  .blank-input:focus { outline: none; border-bottom: 1.5px solid var(--nd-gold); background: var(--light-sky-blue); }
-  /* Dropdown inline */
-  .dropdown-inline { display: inline-block; margin: 0 0.25rem; }
-  .dropdown-inline select { font-family: var(--font-body); font-size: 0.98rem; padding: 0.3rem 0.6rem; border: 1px solid var(--medium-blue); background: var(--light-sky-blue); color: var(--nd-blue); cursor: pointer; transition: all 0.15s; }
-  .dropdown-inline select:focus { outline: none; border-color: var(--nd-gold); }
-  /* Matching */
-  .match-grid { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0.6rem 1.25rem; align-items: center; margin-top: 0.75rem; }
-  .match-left { padding: 0.6rem 0.85rem; background: var(--medium-sky-blue); border-left: 2px solid var(--nd-gold); font-size: 0.95rem; color: var(--nd-blue); }
-  .match-arrow { text-align: center; color: var(--nd-gold); font-family: var(--font-display); font-size: 1.2rem; }
-  .match-arrow-down { display: none; text-align: center; color: var(--nd-gold); font-family: var(--font-display); font-size: 1.2rem; }
-  .match-grid select { padding: 0.55rem 0.85rem; font-family: var(--font-body); font-size: 0.95rem; border: 1px solid var(--dark-sky-blue); background: #fff; color: var(--nd-blue); cursor: pointer; }
-  .match-grid select:focus { outline: none; border-color: var(--nd-gold); box-shadow: 0 0 0 3px rgba(174,145,66,0.15); }
-  /* Drag reorder */
-  .drag-zone-wrap { margin-top: 0.75rem; }
-  .drag-bank-label, .drag-answer-label { font-size: 0.6rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--medium-blue); margin-bottom: 0.4rem; display: block; }
-  .drag-bank { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0.85rem 1rem; background: var(--medium-sky-blue); border-left: 3px solid var(--nd-gold); margin-bottom: 1rem; min-height: 3rem; align-items: center; }
-  .drag-answer { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0.85rem 1rem; background: #fff; border: 2px dashed var(--dark-sky-blue); min-height: 3rem; align-items: center; transition: background 0.15s, border-color 0.15s; }
-  .drag-answer.over { background: var(--light-sky-blue); border-color: var(--nd-gold); }
-  .drag-chip { padding: 0.4rem 0.85rem; background: var(--nd-blue); color: var(--nd-gold); font-family: var(--font-body); font-size: 0.88rem; font-weight: 600; cursor: grab; user-select: none; border: 1px solid var(--nd-gold); touch-action: none; }
-  .drag-chip:active { cursor: grabbing; opacity: 0.7; }
-  .drag-chip.dragging { opacity: 0.35; }
-  .drag-empty { font-family: var(--font-display); font-style: italic; color: var(--dark-sky-blue); font-size: 0.9rem; }
-  /* Drag categorize */
-  .dc-bank { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0.85rem 1rem; background: var(--medium-sky-blue); border-left: 3px solid var(--nd-gold); margin-bottom: 1rem; min-height: 3rem; align-items: center; }
-  .dc-columns { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); gap: 0.6rem; margin-top: 0.5rem; }
-  .dc-col-head { background: var(--nd-blue); color: var(--nd-gold); padding: 0.5rem 0.75rem; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; text-align: center; }
-  .dc-drop { background: var(--light-sky-blue); border: 1px solid var(--dark-sky-blue); border-top: none; padding: 0.5rem; min-height: 80px; display: flex; flex-direction: column; gap: 0.3rem; transition: background 0.15s, border-color 0.15s; }
-  .dc-drop.over { background: var(--medium-sky-blue); border-color: var(--nd-gold); }
-  .dc-chip { padding: 0.35rem 0.7rem; background: var(--nd-blue); color: var(--nd-gold); font-family: var(--font-body); font-size: 0.82rem; font-weight: 600; cursor: grab; user-select: none; border: 1px solid var(--nd-gold); }
-  .dc-chip:active { cursor: grabbing; }
-
-  /* ===== NAVIGATION ===== */
-  .assess-nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 2px solid var(--nd-gold); padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; z-index: 9; box-shadow: 0 -4px 16px rgba(12,35,64,0.08); }
-  .nav-prev, .nav-next, .nav-submit { font-family: var(--font-body); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; padding: 0.85rem 1.5rem; cursor: pointer; border: none; transition: all 0.2s; }
-  .nav-prev { background: transparent; color: var(--medium-blue); border: 1px solid var(--medium-blue); }
-  .nav-prev:hover:not(:disabled) { background: var(--medium-blue); color: var(--light-warm-white); }
-  .nav-prev:disabled { opacity: 0.35; cursor: not-allowed; }
-  .nav-next { background: var(--nd-blue); color: var(--nd-gold); border-bottom: 3px solid var(--nd-gold); }
-  .nav-next:hover { background: var(--medium-blue); }
-  .nav-submit { background: var(--nd-gold); color: var(--nd-blue); border-bottom: 3px solid var(--nd-blue); }
-  .nav-submit:hover { background: var(--bright-gold); }
-  .nav-progress-text { font-size: 0.72rem; font-weight: 500; color: var(--medium-blue); letter-spacing: 0.1em; text-align: center; white-space: nowrap; }
-  .nav-progress-text strong { color: var(--nd-blue); font-weight: 700; }
-
-  /* ===== RESULTS SCREEN ===== */
-  .results-screen { display: none; min-height: 100vh; background: var(--light-warm-white); padding-bottom: 4rem; }
-  .results-screen.active { display: block; }
-  .results-header { background: var(--nd-blue); border-bottom: 3px solid var(--nd-gold); padding: 1.25rem 1.5rem; text-align: center; }
-  .results-header-title { font-family: var(--font-display); font-size: 1.5rem; font-weight: 600; color: #fff; }
-  .results-header-sub { font-size: 0.65rem; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--dark-sky-blue); margin-top: 0.3rem; }
-  .results-body { max-width: 760px; margin: 0 auto; padding: 2rem 1.5rem; }
-  /* score card */
-  .score-card { background: var(--nd-blue); border-top: 6px solid var(--nd-gold); text-align: center; padding: 2.5rem; margin-bottom: 2rem; }
-  .score-card .score-label { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: var(--dark-sky-blue); margin-bottom: 0.5rem; }
-  .score-card .score-number { font-family: var(--font-display); font-size: 5rem; font-weight: 600; color: var(--nd-gold); line-height: 1; }
-  .score-card .score-max { font-family: var(--font-display); font-size: 1.75rem; color: var(--dark-sky-blue); }
-  .score-card .score-pct { font-size: 0.8rem; color: var(--dark-sky-blue); margin-top: 0.75rem; font-weight: 500; letter-spacing: 0.15em; }
-  /* per-question result */
-  .result-q { background: #fff; padding: 1.5rem; margin-bottom: 0.85rem; border-left: 4px solid var(--dark-sky-blue); }
-  .result-q.correct { border-left-color: var(--success-green); }
-  .result-q.incorrect { border-left-color: var(--accent-red); }
-  .result-q.partial { border-left-color: var(--bright-gold); }
-  .result-q.pending { border-left-color: var(--medium-blue); }
-  .result-q-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 0.6rem; flex-wrap: wrap; }
-  .result-q-num { background: var(--nd-blue); color: var(--nd-gold); font-size: 0.62rem; font-weight: 700; letter-spacing: 0.12em; padding: 0.2rem 0.55rem; flex-shrink: 0; }
-  .result-q-prompt { flex: 1; font-size: 0.95rem; color: var(--nd-blue); line-height: 1.5; }
-  .result-q-badge { font-size: 0.6rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.2rem 0.5rem; border: 1px solid; white-space: nowrap; flex-shrink: 0; }
-  .result-q-badge.correct { background: rgba(58,107,58,0.1); color: var(--success-green); border-color: var(--success-green); }
-  .result-q-badge.incorrect { background: rgba(171,16,11,0.08); color: var(--accent-red); border-color: var(--accent-red); }
-  .result-q-badge.partial { background: rgba(211,159,16,0.1); color: var(--dark-gold); border-color: var(--bright-gold); }
-  .result-q-badge.pending { background: var(--medium-sky-blue); color: var(--medium-blue); border-color: var(--medium-blue); }
-  .result-q-detail { margin-top: 0.6rem; padding-top: 0.6rem; border-top: 1px dashed var(--dark-sky-blue); font-size: 0.88rem; }
-  .result-q-detail .your-answer { color: var(--nd-blue); font-weight: 500; margin-bottom: 0.25rem; }
-  .result-q-detail .correct-answer { color: var(--success-green); font-weight: 500; }
-  .result-q-detail .pending-note { color: var(--medium-blue); font-style: italic; font-family: var(--font-display); }
-  /* Spinner */
-  .spinner { display: inline-block; width: 36px; height: 36px; border: 3px solid var(--dark-sky-blue); border-top-color: var(--nd-gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 0.75rem; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .loading-panel { text-align: center; padding: 1.5rem 0; }
-  .toast { position: fixed; top: 5rem; right: 1.5rem; background: var(--nd-blue); color: var(--light-warm-white); padding: 0.85rem 1.4rem; border-left: 3px solid var(--nd-gold); font-size: 0.78rem; font-weight: 500; letter-spacing: 0.08em; transform: translateX(120%); transition: transform 0.3s; z-index: 50; max-width: 320px; }
-  .toast.show { transform: translateX(0); }
-  .toast.error { border-left-color: var(--accent-red); }
-  .toast.success { border-left-color: var(--success-green); }
-  @media (max-width: 600px) {
-    .start-card { padding: 1.75rem 1.25rem; }
-    .assess-body { padding: 1.5rem 1rem 6rem; }
-    .match-grid { display: flex; flex-direction: column; gap: 0.4rem; }
-    .match-grid select { width: 100%; }
-    .match-arrow { display: none; }
-    .match-arrow-down { display: block; }
-    .dc-columns { grid-template-columns: 1fr 1fr; }
-    .nav-prev, .nav-next, .nav-submit { padding: 0.75rem 1rem; font-size: 0.68rem; }
-    .question { width: 100%; }
-  }
-</style>
+<link rel="stylesheet" href="../css/styles.css">
 </head>
 <body>
 
 <!-- ===== START SCREEN ===== -->
-<div class="start-screen" id="startScreen">
-  <div class="start-card">
-    <div class="institutional-mark">
-      <img src="images/black-logo.png" alt="Approach International Student Center">
-      <div class="institutional-name">Approach<span style="color:var(--nd-gold);">USA</span></div>
-      <div class="institutional-sub">International Student Center</div>
-    </div>
+<div class="assess-start-screen" id="startScreen">
+  <div class="assess-start-card">
+    <div class="entry-crest" style="margin:0 auto 0.6rem;display:block;width:54px;">A</div>
+    <div class="entry-inst-name" style="text-align:center;">Approach<em>USA</em></div>
+    <div class="entry-inst-sub" style="text-align:center;">International Student Center</div>
 
-    <div class="loading-panel" id="loadingPanel">
-      <div class="spinner"></div>
-      <p style="font-family:var(--font-display);font-style:italic;color:var(--medium-blue);">Verifying your assessment…</p>
+    <div class="assess-loading" id="loadingPanel">
+      <div class="spinner" style="margin:0 auto;"></div>
+      <p>Verifying your assessment…</p>
     </div>
 
     <div id="blockedPanel" style="display:none;">
-      <div class="blocked-card" id="blockedCard">
-        <h2 id="blockedTitle">—</h2>
-        <p id="blockedMessage">—</p>
+      <div class="status-panel active error">
+        <div class="status-label">Access Blocked</div>
+        <div class="status-title" id="blockedTitle">—</div>
+        <div class="status-message" id="blockedMessage">—</div>
       </div>
-      <a href="assessment-enter-code.html" class="start-btn" style="margin-top:1.25rem;display:block;text-align:center;text-decoration:none;">Return to Code Entry</a>
+      <a href="enter-code.html" class="btn btn--primary assess-start-btn" style="margin-top:1.25rem;text-decoration:none;">Return to Code Entry</a>
     </div>
 
     <div id="startForm" style="display:none;">
-      <div class="start-stamp" id="examStamp">Assessment · Loading…</div>
-      <h1 class="start-title" id="examTitle"><em>Assessment</em></h1>
-      <p class="start-subtitle" id="examSubtitle">Loading…</p>
+      <div class="assess-stamp" id="examStamp">Assessment · Loading…</div>
+      <h1 class="assess-start-title" id="examTitle"><em>Assessment</em></h1>
+      <p class="assess-start-subtitle" id="examSubtitle">Loading…</p>
 
-      <div class="exam-info-card">
-        <div class="info-row"><span class="info-label">Class</span><span class="info-value" id="infoClass">—</span></div>
-        <div class="info-row"><span class="info-label">Teacher</span><span class="info-value" id="infoTeacher">—</span></div>
-        <div class="info-row"><span class="info-label">Code</span><span class="info-value" id="infoCode" style="font-family:'JetBrains Mono',monospace;letter-spacing:0.05em;">—</span></div>
+      <div class="assess-info-card">
+        <div class="assess-info-row"><span class="assess-info-label">Class</span><span class="assess-info-value" id="infoClass">—</span></div>
+        <div class="assess-info-row"><span class="assess-info-label">Teacher</span><span class="assess-info-value" id="infoTeacher">—</span></div>
+        <div class="assess-info-row"><span class="assess-info-label">Code</span><span class="assess-info-value code" id="infoCode">—</span></div>
       </div>
 
-      <div class="name-fields">
-        <label>Full Name
-          <input type="text" id="studentName" required placeholder="Type your full name"
-                 autocomplete="off" autocorrect="off" autocapitalize="words" spellcheck="false">
-          <span class="help-text">Your name will be saved in uppercase.</span>
-        </label>
+      <div class="assess-name-field">
+        <label for="studentName">Full Name</label>
+        <input type="text" id="studentName" required placeholder="Type your full name"
+               autocomplete="off" autocorrect="off" autocapitalize="words" spellcheck="false">
+        <div class="field-help">Your name will be saved in uppercase.</div>
       </div>
 
-      <button class="start-btn" id="startBtn" disabled>Begin Assessment</button>
+      <div class="proctor-rules" id="proctorRules" style="display:none;">
+        <h3>Before you begin</h3>
+        <ol id="rulesList"></ol>
+        <div id="appleMobileNotice" class="apple-mobile-notice" style="display:none;">
+          <strong class="apple-mobile-notice__heading">Note for iPhone &amp; iPad users</strong>
+          Fullscreen mode is not available on Apple mobile devices. The assessment will work normally, but switching to other apps will still be recorded.
+        </div>
+      </div>
+
+      <label class="acknowledge-row" id="acknowledgeRow" style="display:none;">
+        <input type="checkbox" id="acknowledgeBox">
+        <span>I have read the rules and understand that any irregularity will be recorded and reported to my teacher.</span>
+      </label>
+
+      <button class="btn btn--primary assess-start-btn" id="startBtn" disabled>Begin Assessment</button>
     </div>
   </div>
 </div>
 
 <!-- ===== PASSAGE PAGE ===== -->
-<div class="passage-page" id="passagePage">
-  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressFill" style="width:0%;"></div></div>
-  <div class="progress-label"><span id="passageProgressLabel">Reading</span><span id="progressText">—</span></div>
-  <div class="passage-content">
-    <div class="passage-label-bar" id="passageSectionLabel">—</div>
-    <div class="passage-title" id="passageTitle">—</div>
-    <div class="passage-text" id="passageText"></div>
-    <p class="passage-cta">Read the text above, then click <strong>Begin Questions</strong> to answer the questions for this section.</p>
-    <button class="start-btn" id="passageNextBtn" style="max-width:260px;">Begin Questions →</button>
+<div class="assess-passage-page" id="passagePage" style="display:none;">
+  <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%;"></div></div>
+  <div class="progress-label"><span id="passageProgressLabel">Reading</span> · <span id="progressText">—</span></div>
+  <div class="assess-passage-content">
+    <div class="assess-passage-label" id="passageSectionLabel">—</div>
+    <div class="assess-passage-title" id="passageTitle">—</div>
+    <div class="assess-passage-text" id="passageText"></div>
+    <p class="assess-passage-cta">Read the text above, then click <strong>Begin Questions</strong> to answer the questions for this section.</p>
+    <button class="btn btn--primary" id="passageNextBtn">Begin Questions →</button>
   </div>
 </div>
 
 <!-- ===== ASSESSMENT SCREEN ===== -->
-<div class="assess-screen" id="assessScreen">
+<div class="assess-screen" id="assessScreen" style="display:none;">
   <header class="assess-header">
     <div class="assess-title">
       <span id="headerTitle">Assessment</span>
       <small id="headerStudent">—</small>
     </div>
-    <div class="assess-save-indicator saved" id="saveIndicator">✓ Saved</div>
+    <div class="assess-monitor" id="assessMonitor">
+      <div class="assess-monitor-item">
+        <span class="assess-monitor-label">Auto-save</span>
+        <span class="assess-monitor-value saved" id="saveIndicator">Saved</span>
+      </div>
+      <div class="assess-monitor-item" id="monitorTabSwitches" style="display:none;">
+        <span class="assess-monitor-label">Tab Switches</span>
+        <span class="assess-monitor-value" id="switchCount">0</span>
+      </div>
+      <div class="assess-monitor-item" id="monitorFullscreen" style="display:none;">
+        <span class="assess-monitor-label">Status</span>
+        <span class="assess-monitor-value" id="fullscreenStatus">Active</span>
+      </div>
+    </div>
   </header>
-  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressFill2" style="width:0%;"></div></div>
-  <div class="progress-label"><span id="progressLabel">—</span><span id="progressText2">—</span></div>
+  <div class="progress-track"><div class="progress-fill" id="progressFill2" style="width:0%;"></div></div>
+  <div class="progress-label"><span id="progressLabel">—</span> · <span id="progressText2">—</span></div>
   <main class="assess-body" id="assessBody"></main>
   <nav class="assess-nav-bar">
     <button class="nav-prev" id="prevBtn" disabled>← Previous</button>
@@ -276,1069 +112,40 @@
   </nav>
 </div>
 
-<!-- ===== RESULTS SCREEN ===== -->
-<div class="results-screen" id="resultsScreen">
-  <div class="results-header">
-    <div class="results-header-title" id="resultsTitle">Assessment Complete</div>
-    <div class="results-header-sub" id="resultsSubtitle">—</div>
-  </div>
-  <div class="results-body">
-    <div id="scoreCardArea"></div>
-    <div id="resultsQArea"></div>
-    <p style="text-align:center;font-family:var(--font-display);font-style:italic;color:var(--medium-blue);margin-top:2rem;">
-      You may now close this window.
-    </p>
+<!-- ===== LOCKOUT OVERLAY (fullscreen proctoring only) ===== -->
+<div class="lockout" id="lockout">
+  <div class="lockout-card">
+    <h2>Assessment Paused</h2>
+    <p>You exited fullscreen mode. Re-enter fullscreen to continue. This event has been recorded.</p>
+    <button class="btn btn--primary" id="resumeBtn">Resume Assessment</button>
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  const SUPABASE_URL = 'https://okyauyzdensuvuoyphds.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9reWF1eXpkZW5zdXZ1b3lwaGRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1NTgwOTUsImV4cCI6MjA5MzEzNDA5NX0.NZUclCDHecS9bcZOLHj1ZXBFf5b5k9klRwTMfJrglfI';
-  const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-  // ===== STATE =====
-  const state = {
-    assessment: null,
-    def: null,
-    code: null,
-    submissionId: null,
-    sessionId: null,
-    student: '',
-    teacherName: '',
-    classLabel: '',
-    startTime: null,
-    active: false,
-    previewMode: false,
-    // Navigation
-    pages: [],      // flat array of {type:'passage'|'question', sectionIdx, questionIdx?, displayNumber?}
-    currentPage: 0,
-    answers: {},    // all answers, keyed by question id
-    dragState: {}   // per-question drag state (reorder / categorize)
-  };
-
-  // ===== HELPERS =====
-  function escapeHtml(s) {
-    if (s == null) return '';
-    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  }
-  function showToast(msg, type = '') {
-    const t = document.getElementById('toast');
-    t.textContent = msg; t.className = 'toast show ' + type;
-    setTimeout(() => t.classList.remove('show'), 3500);
-  }
-  function formatDate(iso) {
-    if (!iso) return '—';
-    const d = new Date(iso);
-    return d.toLocaleDateString('en-US', {month:'short',day:'numeric',year:'numeric'}) + ', ' +
-           d.toLocaleTimeString('en-US', {hour:'numeric',minute:'2-digit'});
-  }
-  function generateSessionId() { return `sess_${Date.now()}_${Math.random().toString(36).slice(2,10)}`; }
-  function lsKey(s) { return `assess_${state.code}_${s}`; }
-  function submittedKey(code, name) { return `asubmitted_${code}_${name.toUpperCase().trim()}`; }
-  function setSaveStatus(s, text) {
-    const el = document.getElementById('saveIndicator');
-    el.className = 'assess-save-indicator ' + s;
-    el.textContent = text;
-  }
-
-  // ===== INIT =====
-  async function init() {
-    const params = new URLSearchParams(window.location.search);
-    // Preview mode — load by ID, skip all checks
-    if (params.get('preview') === 'true') {
-      state.previewMode = true;
-      return initPreview(params.get('id'));
-    }
-    state.code = params.get('code');
-    if (!state.code) { showBlocked('No code provided', 'Open this page through the assessment entry portal.'); return; }
-
-    try {
-      const { data, error } = await db.from('assessments').select('*').eq('code', state.code).maybeSingle();
-      if (error) throw error;
-      if (!data) { showBlocked('Code not recognized', 'The code is not valid. Return to the entry page.'); return; }
-
-      const now = new Date();
-      if (data.status === 'draft') { showBlocked('Not published yet', 'This assessment is not yet available.'); return; }
-      if (data.status === 'archived') { showBlocked('No longer available', 'This assessment has been archived.'); return; }
-      if (now < new Date(data.available_from)) { showBlocked('Not open yet', `This assessment opens on ${formatDate(data.available_from)}.`); return; }
-      if (now > new Date(data.available_until)) { showBlocked('Window has closed', `This assessment closed on ${formatDate(data.available_until)}.`); return; }
-      if (!data.assessment_definition?.sections) { showBlocked('No content', 'This assessment has no questions yet. Contact your teacher.'); return; }
-
-      const [teacherRes, classRes] = await Promise.all([
-        db.from('profiles').select('full_name, email').eq('id', data.teacher_id).maybeSingle(),
-        db.from('classes').select('name').eq('id', data.class_id).maybeSingle()
-      ]);
-      state.teacherName = teacherRes.data?.full_name || teacherRes.data?.email || '—';
-      state.classLabel = classRes.data?.name || '—';
-      state.assessment = data;
-      state.def = data.assessment_definition;
-      populateStartScreen();
-    } catch (err) {
-      showBlocked('Connection error', `Could not verify the assessment. (${err.message || 'unknown'})`);
-    }
-  }
-
-  async function initPreview(id) {
-    if (!id) { showBlocked('No ID', 'Preview must be opened from the edit page.'); return; }
-    try {
-      const { data: { session } } = await db.auth.getSession();
-      if (!session) { showBlocked('Not signed in', 'Sign in to preview assessments.'); return; }
-      const { data, error } = await db.from('assessments').select('*').eq('id', id).maybeSingle();
-      if (error) throw error;
-      if (!data) { showBlocked('Not found', 'Assessment could not be loaded.'); return; }
-      if (!data.assessment_definition?.sections) { showBlocked('No content', 'Upload questions first.'); return; }
-      const [teacherRes, classRes] = await Promise.all([
-        db.from('profiles').select('full_name,email').eq('id', data.teacher_id).maybeSingle(),
-        db.from('classes').select('name').eq('id', data.class_id).maybeSingle()
-      ]);
-      state.teacherName = teacherRes.data?.full_name || '—';
-      state.classLabel = classRes.data?.name || '—';
-      state.assessment = data;
-      state.def = data.assessment_definition;
-      state.student = 'PREVIEW';
-      state.code = data.code;
-      state.startTime = Date.now();
-      buildPages();
-      document.getElementById('startScreen').style.display = 'none';
-      document.getElementById('headerTitle').textContent = state.assessment.title || 'Assessment';
-      document.getElementById('headerStudent').innerHTML = '<span style="color:var(--nd-gold);font-weight:700;letter-spacing:0.2em;">PREVIEW MODE</span>';
-      state.active = true;
-      navigateTo(0);
-    } catch (err) {
-      showBlocked('Preview error', err.message || 'unknown');
-    }
-  }
-
-  function showBlocked(title, message) {
-    document.getElementById('loadingPanel').style.display = 'none';
-    document.getElementById('startForm').style.display = 'none';
-    document.getElementById('blockedPanel').style.display = 'block';
-    document.getElementById('blockedTitle').textContent = title;
-    document.getElementById('blockedMessage').textContent = message;
-  }
-
-  function populateStartScreen() {
-    const d = state.assessment;
-    const title = state.assessment.title || 'Assessment';
-    const totalQ = state.def.sections.reduce((s, sec) => s + (sec.questions?.length || 0), 0);
-    document.getElementById('examStamp').textContent = `${state.classLabel} · ${d.quarter} ${d.year}`;
-    document.getElementById('examTitle').innerHTML = `<em>${escapeHtml(title)}</em>`;
-    document.getElementById('examSubtitle').textContent = `${totalQ} question${totalQ === 1 ? '' : 's'}`;
-    document.getElementById('infoClass').textContent = state.classLabel;
-    document.getElementById('infoTeacher').textContent = state.teacherName;
-    document.getElementById('infoCode').textContent = d.code;
-    document.getElementById('loadingPanel').style.display = 'none';
-    document.getElementById('startForm').style.display = 'block';
-    document.getElementById('studentName').focus();
-  }
-
-  const studentNameEl = document.getElementById('studentName');
-  studentNameEl.addEventListener('input', () => {
-    document.getElementById('startBtn').disabled = studentNameEl.value.trim().length < 2;
-  });
-
-  // ===== START =====
-  document.getElementById('startBtn').addEventListener('click', async () => {
-    const name = studentNameEl.value.trim().toUpperCase();
-    if (!name) return;
-    if (localStorage.getItem(submittedKey(state.code, name))) {
-      showBlocked('Already submitted', 'You already submitted this assessment. Contact your teacher if this is a mistake.');
-      return;
-    }
-    state.student = name;
-
-    // Try to resume
-    const savedSession = localStorage.getItem(lsKey('session'));
-    const savedName = localStorage.getItem(lsKey('name'));
-    let resumeData = null;
-    if (savedSession && savedName === name) {
-      try {
-        const { data } = await db.from('assessment_submissions')
-          .select('*').eq('session_id', savedSession).eq('status', 'in_progress').maybeSingle();
-        if (data && confirm('We found an unfinished attempt. Resume where you left off?')) {
-          resumeData = data;
-          state.submissionId = data.id;
-          state.sessionId = data.session_id;
-          state.startTime = new Date(data.started_at).getTime();
-          state.answers = data.answers || {};
-        }
-      } catch (e) { /* ignore */ }
-    }
-
-    if (!resumeData) {
-      state.sessionId = generateSessionId();
-      state.startTime = Date.now();
-      try {
-        const { data, error } = await db.from('assessment_submissions').insert({
-          assessment_id: state.assessment.id,
-          assessment_code: state.code,
-          student_name: name,
-          session_id: state.sessionId,
-          status: 'in_progress',
-          started_at: new Date().toISOString(),
-          answers: {},
-          user_agent: navigator.userAgent
-        }).select().single();
-        if (error) throw error;
-        state.submissionId = data.id;
-      } catch (err) {
-        showToast('Could not start: ' + (err.message || 'error'), 'error');
-        return;
-      }
-      localStorage.setItem(lsKey('session'), state.sessionId);
-      localStorage.setItem(lsKey('name'), name);
-    }
-
-    document.getElementById('headerTitle').textContent =
-      state.assessment.title || 'Assessment';
-    document.getElementById('headerStudent').textContent = `${name} · ${state.teacherName}`;
-    document.getElementById('startScreen').style.display = 'none';
-    state.active = true;
-    buildPages();
-    navigateTo(0);
-    if (resumeData) restoreAnswersFromState();
-  });
-
-  // ===== PAGE BUILDER =====
-  // Builds a flat array of pages: passage pages (for sections with content)
-  // followed by question pages, one question at a time.
-  function buildPages() {
-    state.pages = [];
-    let displayCounter = 0;
-    (state.def.sections || []).forEach((section, sIdx) => {
-      // If section has a passage, add a dedicated reading page first
-      if (section.passage?.content) {
-        state.pages.push({ type: 'passage', sectionIdx: sIdx });
-      }
-      (section.questions || []).forEach((q, qIdx) => {
-        displayCounter++;
-        state.pages.push({ type: 'question', sectionIdx: sIdx, questionIdx: qIdx, displayNumber: displayCounter });
-      });
-    });
-    state.totalQuestions = displayCounter;
-  }
-
-  // ===== NAVIGATION =====
-  function navigateTo(pageIndex) {
-    if (pageIndex < 0 || pageIndex >= state.pages.length) return;
-
-    // Save current page's answer before leaving
-    if (state.active && state.currentPage !== pageIndex) saveCurrentPageAnswer();
-
-    state.currentPage = pageIndex;
-    const page = state.pages[pageIndex];
-
-    // Hide all screens
-    document.getElementById('passagePage').classList.remove('active');
-    document.getElementById('assessScreen').classList.remove('active');
-
-    if (page.type === 'passage') renderPassagePage(page);
-    else renderQuestionPage(page);
-
-    updateProgress();
-    window.scrollTo(0, 0);
-    scheduleAutoSave();
-  }
-
-  function saveCurrentPageAnswer() {
-    const page = state.pages[state.currentPage];
-    if (!page || page.type !== 'question') return;
-    const section = state.def.sections[page.sectionIdx];
-    const q = section.questions[page.questionIdx];
-    collectQuestionAnswer(q);
-  }
-
-  function updateProgress() {
-    const total = state.pages.length;
-    const pct = total > 0 ? Math.round(((state.currentPage + 1) / total) * 100) : 0;
-    const qPages = state.pages.filter(p => p.type === 'question');
-    const qIdx = qPages.findIndex((_, i) => {
-      const globalIdx = state.pages.indexOf(qPages[i]);
-      return globalIdx >= state.currentPage;
-    });
-
-    document.getElementById('progressFill').style.width = pct + '%';
-    document.getElementById('progressFill2').style.width = pct + '%';
-
-    const page = state.pages[state.currentPage];
-    const section = state.def.sections[page?.sectionIdx || 0];
-    const sectionLabel = section?.title || `Section ${(page?.sectionIdx || 0) + 1}`;
-    document.getElementById('passageProgressLabel').textContent = sectionLabel;
-    document.getElementById('progressLabel').textContent = sectionLabel;
-
-    if (page?.type === 'question') {
-      const dn = page.displayNumber;
-      document.getElementById('progressText').textContent = `Question ${dn} of ${state.totalQuestions}`;
-      document.getElementById('progressText2').textContent = `Question ${dn} of ${state.totalQuestions}`;
-      document.getElementById('navProgress').innerHTML = `Question <strong>${dn}</strong> of <strong>${state.totalQuestions}</strong>`;
-    } else {
-      document.getElementById('progressText').textContent = 'Reading';
-      document.getElementById('progressText2').textContent = 'Reading';
-      document.getElementById('navProgress').textContent = 'Reading passage';
-    }
-
-    const isFirst = state.currentPage === 0;
-    const isLast = state.currentPage === state.pages.length - 1;
-    document.getElementById('prevBtn').disabled = isFirst;
-
-    const nextBtn = document.getElementById('nextBtn');
-    const nav = document.querySelector('.assess-nav-bar');
-    // Remove old submit button if any
-    const oldSubmit = document.getElementById('submitBtnNav');
-    if (oldSubmit) oldSubmit.remove();
-
-    if (isLast) {
-      nextBtn.style.display = 'none';
-      const submitBtn = document.createElement('button');
-      submitBtn.className = 'nav-submit';
-      submitBtn.id = 'submitBtnNav';
-      submitBtn.textContent = 'Submit Assessment';
-      submitBtn.addEventListener('click', handleSubmit);
-      nav.appendChild(submitBtn);
-    } else {
-      nextBtn.style.display = 'block';
-    }
-  }
-
-  document.getElementById('prevBtn').addEventListener('click', () => { saveCurrentPageAnswer(); navigateTo(state.currentPage - 1); });
-  document.getElementById('nextBtn').addEventListener('click', () => { saveCurrentPageAnswer(); navigateTo(state.currentPage + 1); });
-
-  // ===== PASSAGE PAGE RENDER =====
-  function renderPassagePage(page) {
-    const section = state.def.sections[page.sectionIdx];
-    document.getElementById('passageSectionLabel').textContent = section.title || `Section ${page.sectionIdx + 1}`;
-    document.getElementById('passageTitle').textContent = section.title || '';
-    document.getElementById('passageText').textContent = section.passage.content;
-    document.getElementById('passagePage').classList.add('active');
-
-    document.getElementById('passageNextBtn').onclick = () => {
-      saveCurrentPageAnswer();
-      navigateTo(state.currentPage + 1);
-    };
-
-    // Hide the question nav bar on passage pages
-    document.querySelector('.assess-nav-bar').style.display = 'none';
-  }
-
-  // ===== QUESTION PAGE RENDER =====
-  function renderQuestionPage(page) {
-    const section = state.def.sections[page.sectionIdx];
-    const q = section.questions[page.questionIdx];
-    document.querySelector('.assess-nav-bar').style.display = 'flex';
-    document.getElementById('assessScreen').classList.add('active');
-    renderQuestion(q, page.displayNumber);
-  }
-
-  function renderQuestion(q, displayNumber) {
-    const body = document.getElementById('assessBody');
-    body.innerHTML = '';
-    const qEl = document.createElement('div');
-    qEl.className = 'question';
-    qEl.id = `q-${q.id}`;
-    const numHtml = `<span class="q-number">${escapeHtml(String(displayNumber))}</span>`;
-    const ptsHtml = q.points ? `<span class="q-points">${q.points} pt${q.points===1?'':'s'}</span>` : '';
-
-    // Append to DOM first so getElementById works inside drag renderers
-    body.appendChild(qEl);
-
-    switch (q.type) {
-      case 'multiple_choice':  renderMC(qEl, q, numHtml, ptsHtml); break;
-      case 'multiple_select':  renderMS(qEl, q, numHtml, ptsHtml); break;
-      case 'true_false':       renderTF(qEl, q, numHtml, ptsHtml); break;
-      case 'fill_blank':       renderFB(qEl, q, numHtml, ptsHtml); break;
-      case 'fill_blank_multi': renderFBM(qEl, q, numHtml, ptsHtml); break;
-      case 'dropdown':         renderDD(qEl, q, numHtml, ptsHtml); break;
-      case 'matching':         renderMatching(qEl, q, numHtml, ptsHtml); break;
-      case 'drag_reorder':     renderDragReorder(qEl, q, numHtml, ptsHtml); break;
-      case 'drag_categorize':  renderDragCategorize(qEl, q, numHtml, ptsHtml); break;
-      default:
-        qEl.innerHTML = `<div class="q-prompt">${numHtml} <em style="color:var(--accent-red)">Unknown type: ${escapeHtml(q.type)}</em></div>`;
-    }
-
-    // Restore saved answer
-    restoreAnswer(q);
-  }
-
-  // ===== QUESTION RENDERERS =====
-  function renderMC(el, q, numHtml, ptsHtml) {
-    el.innerHTML = `
-      <div class="q-prompt">${numHtml}${escapeHtml(q.prompt)}${ptsHtml}</div>
-      <div class="options">
-        ${(q.options||[]).map(o => `
-          <label class="option">
-            <input type="radio" name="${escapeHtml(q.id)}" value="${escapeHtml(o.key)}">
-            <span class="option-letter">${escapeHtml(String(o.key).toUpperCase())}</span>
-            <span>${escapeHtml(o.text)}</span>
-          </label>`).join('')}
-      </div>`;
-  }
-
-  function renderMS(el, q, numHtml, ptsHtml) {
-    el.innerHTML = `
-      <div class="q-prompt">${numHtml}${escapeHtml(q.prompt)}${ptsHtml}</div>
-      <div style="font-family:var(--font-display);font-style:italic;color:var(--medium-blue);font-size:0.9rem;margin-bottom:0.5rem;">Select all that apply.</div>
-      <div class="options">
-        ${(q.options||[]).map(o => `
-          <label class="option ms">
-            <input type="checkbox" name="${escapeHtml(q.id)}" value="${escapeHtml(o.key)}">
-            <span class="option-letter">${escapeHtml(String(o.key).toUpperCase())}</span>
-            <span>${escapeHtml(o.text)}</span>
-          </label>`).join('')}
-      </div>`;
-  }
-
-  function renderTF(el, q, numHtml, ptsHtml) {
-    el.innerHTML = `
-      <div class="tf-row">
-        <span style="flex-shrink:0;">${numHtml}</span>
-        <div class="tf-statement">${escapeHtml(q.prompt)}${ptsHtml}</div>
-        <div class="tf-buttons">
-          <label><input type="radio" name="${escapeHtml(q.id)}" value="T">T</label>
-          <label><input type="radio" name="${escapeHtml(q.id)}" value="F">F</label>
-        </div>
-      </div>`;
-  }
-
-  function renderFB(el, q, numHtml, ptsHtml) {
-    const inp = `<input type="text" class="blank-input" name="${escapeHtml(q.id)}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">`;
-    el.innerHTML = `<div class="q-prompt">${numHtml}${escapeHtml(q.prompt).replace('{blank}', inp)}${ptsHtml}</div>`;
-  }
-
-  function renderFBM(el, q, numHtml, ptsHtml) {
-    let html = escapeHtml(q.prompt);
-    (q.blanks||[]).forEach(b => {
-      html = html.replace('{blank}', `<input type="text" class="blank-input" name="${escapeHtml(b.id)}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">`);
-    });
-    el.innerHTML = `<div class="q-prompt">${numHtml}${html}${ptsHtml}</div>`;
-  }
-
-  function renderDD(el, q, numHtml, ptsHtml) {
-    const opts = (q.options||[]).map(o => `<option value="${escapeHtml(o)}">${escapeHtml(o)}</option>`).join('');
-    const sel = `<span class="dropdown-inline"><select name="${escapeHtml(q.id)}"><option value="">— choose —</option>${opts}</select></span>`;
-    el.innerHTML = `<div class="q-prompt">${numHtml}${escapeHtml(q.prompt).replace('{choice}', sel)}${ptsHtml}</div>`;
-  }
-
-  function renderMatching(el, q, numHtml, ptsHtml) {
-    const right = q.right_items || [];
-    let gridHtml = '';
-    (q.left_items||[]).forEach(l => {
-      const opts = right.map(r => `<option value="${escapeHtml(r.key)}">${escapeHtml(r.key)}) ${escapeHtml(r.text)}</option>`).join('');
-      gridHtml += `<div class="match-left">${escapeHtml(l.id)}) ${escapeHtml(l.text)}</div>
-        <div class="match-arrow">→</div>
-        <div class="match-arrow-down">↓</div>
-        <select name="${escapeHtml(q.id)}__${escapeHtml(l.id)}"><option value="">— select —</option>${opts}</select>`;
-    });
-    el.innerHTML = `<div class="q-prompt">${numHtml}${escapeHtml(q.prompt)}${ptsHtml}</div><div class="match-grid">${gridHtml}</div>`;
-  }
-
-  function renderDragReorder(el, q, numHtml, ptsHtml) {
-    const words = [...(q.words || [])].sort(() => Math.random() - 0.5);
-    const qId = q.id;
-    state.dragState[qId] = { bank: [...words], answer: [] };
-
-    el.innerHTML = `
-      <div class="q-prompt">${numHtml}${escapeHtml(q.prompt)}${ptsHtml}</div>
-      <div class="drag-zone-wrap">
-        <span class="drag-bank-label">Words (drag from here)</span>
-        <div class="drag-bank" id="bank-${escapeHtml(qId)}"></div>
-        <span class="drag-answer-label">Your answer (drag here)</span>
-        <div class="drag-answer" id="answer-${escapeHtml(qId)}"></div>
-      </div>`;
-
-    renderDragChips(qId);
-    setupDragZones(qId, 'reorder');
-  }
-
-  function renderDragCategorize(el, q, numHtml, ptsHtml) {
-    const qId = q.id;
-    const items = [...(q.items || [])].sort(() => Math.random() - 0.5);
-    const catMap = {};
-    (q.categories || []).forEach(c => catMap[c.id] = []);
-    state.dragState[qId] = { bank: [...items], catMap };
-
-    const colsHtml = (q.categories || []).map(c => `
-      <div>
-        <div class="dc-col-head">${escapeHtml(c.label)}</div>
-        <div class="dc-drop" id="cat-${escapeHtml(qId)}-${escapeHtml(c.id)}" data-cat="${escapeHtml(c.id)}"></div>
-      </div>`).join('');
-
-    el.innerHTML = `
-      <div class="q-prompt">${numHtml}${escapeHtml(q.prompt)}${ptsHtml}</div>
-      <span class="drag-bank-label">Items (drag into a category)</span>
-      <div class="dc-bank" id="dcbank-${escapeHtml(qId)}"></div>
-      <div class="dc-columns">${colsHtml}</div>`;
-
-    renderDragChips(qId);
-    setupDragZones(qId, 'categorize');
-  }
-
-  function renderDragChips(qId) {
-    const ds = state.dragState[qId];
-    if (!ds) return;
-
-    // For drag_categorize the bank uses dc-chip/makeDcChip so the correct
-    // drag handlers fire. For drag_reorder the bank uses drag-chip/makeChip.
-    const isCategorize = ds.catMap !== undefined;
-
-    if (ds.bank !== undefined) {
-      const bankEl = document.getElementById('bank-' + qId) || document.getElementById('dcbank-' + qId);
-      if (bankEl) {
-        bankEl.innerHTML = '';
-        if (ds.bank.length === 0) {
-          bankEl.innerHTML = `<span class="drag-empty">${isCategorize ? 'All items placed' : 'All words placed'}</span>`;
-        } else {
-          ds.bank.forEach(word => {
-            const chip = isCategorize ? makeDcChip(word, qId) : makeChip(word, qId);
-            bankEl.appendChild(chip);
-          });
-        }
-      }
-    }
-
-    if (ds.answer !== undefined) {
-      const ansEl = document.getElementById('answer-' + qId);
-      if (ansEl) {
-        ansEl.innerHTML = '';
-        if (ds.answer.length === 0) ansEl.innerHTML = '<span class="drag-empty">Drop words here to build your answer</span>';
-        else ds.answer.forEach(word => { ansEl.appendChild(makeChip(word, qId)); });
-      }
-    }
-
-    if (ds.catMap) {
-      const page = state.pages[state.currentPage];
-      if (!page) return;
-      const section = state.def.sections[page.sectionIdx];
-      const q = section.questions[page.questionIdx];
-      (q.categories || []).forEach(c => {
-        const zone = document.getElementById(`cat-${qId}-${c.id}`);
-        if (zone) {
-          zone.innerHTML = '';
-          const items = ds.catMap[c.id] || [];
-          if (items.length === 0) zone.innerHTML = '<span class="drag-empty" style="font-size:0.8rem;">Drop here</span>';
-          else items.forEach(word => zone.appendChild(makeDcChip(word, qId)));
-        }
-      });
-    }
-  }
-
-  function makeChip(word, qId) {
-    const chip = document.createElement('div');
-    chip.className = 'drag-chip';
-    chip.textContent = word;
-    chip.dataset.word = word;
-    chip.dataset.qid = qId;
-    chip.draggable = true;
-    chip.addEventListener('dragstart', onChipDragStart);
-    // Touch support
-    chip.addEventListener('touchstart', onTouchStart, { passive: true });
-    chip.addEventListener('touchmove', onTouchMove, { passive: false });
-    chip.addEventListener('touchend', onTouchEnd);
-    return chip;
-  }
-
-  function makeDcChip(word, qId) {
-    const chip = document.createElement('div');
-    chip.className = 'dc-chip';
-    chip.textContent = word;
-    chip.dataset.word = word;
-    chip.dataset.qid = qId;
-    chip.draggable = true;
-    chip.addEventListener('dragstart', onDcChipDragStart);
-    chip.addEventListener('touchstart', onTouchStart, { passive: true });
-    chip.addEventListener('touchmove', onTouchMove, { passive: false });
-    chip.addEventListener('touchend', onTouchEnd);
-    return chip;
-  }
-
-  // ===== DRAG-AND-DROP (mouse) =====
-  let dragging = { word: null, qId: null, from: null, fromCat: null, type: null };
-
-  function onChipDragStart(e) {
-    dragging = { word: e.target.dataset.word, qId: e.target.dataset.qid, from: 'bank', type: 'reorder' };
-    e.target.classList.add('dragging');
-    e.dataTransfer.effectAllowed = 'move';
-  }
-  function onDcChipDragStart(e) {
-    const catZone = e.target.closest('[data-cat]');
-    dragging = { word: e.target.dataset.word, qId: e.target.dataset.qid, from: catZone ? 'cat' : 'bank', fromCat: catZone?.dataset.cat || null, type: 'categorize' };
-    e.target.classList.add('dragging');
-    e.dataTransfer.effectAllowed = 'move';
-  }
-
-  function setupDragZones(qId, type) {
-    if (type === 'reorder') {
-      const bankEl = document.getElementById('bank-' + qId);
-      const ansEl = document.getElementById('answer-' + qId);
-      [bankEl, ansEl].forEach(zone => {
-        if (!zone) return;
-        zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('over'); });
-        zone.addEventListener('dragleave', () => zone.classList.remove('over'));
-        zone.addEventListener('drop', e => {
-          e.preventDefault(); zone.classList.remove('over');
-          if (dragging.qId !== qId) return;
-          document.querySelector('.drag-chip.dragging')?.classList.remove('dragging');
-          const ds = state.dragState[qId];
-          const isAnswerZone = zone.id.startsWith('answer-');
-          const isFromBank = dragging.from === 'bank';
-          if (isAnswerZone && isFromBank) {
-            ds.bank = ds.bank.filter(w => w !== dragging.word);
-            ds.answer.push(dragging.word);
-          } else if (!isAnswerZone && !isFromBank) {
-            ds.answer = ds.answer.filter(w => w !== dragging.word);
-            ds.bank.push(dragging.word);
-          }
-          renderDragChips(qId);
-          collectQuestionAnswer(getCurrentQuestion());
-          dragging = {};
-        });
-      });
-    } else {
-      const bankEl = document.getElementById('dcbank-' + qId);
-      if (bankEl) {
-        bankEl.addEventListener('dragover', e => { e.preventDefault(); bankEl.classList.add('over'); });
-        bankEl.addEventListener('dragleave', () => bankEl.classList.remove('over'));
-        bankEl.addEventListener('drop', e => {
-          e.preventDefault(); bankEl.classList.remove('over');
-          if (dragging.qId !== qId || dragging.from !== 'cat') return;
-          document.querySelector('.dc-chip.dragging')?.classList.remove('dragging');
-          const ds = state.dragState[qId];
-          ds.catMap[dragging.fromCat] = (ds.catMap[dragging.fromCat] || []).filter(w => w !== dragging.word);
-          ds.bank.push(dragging.word);
-          renderDragChips(qId);
-          collectQuestionAnswer(getCurrentQuestion());
-          dragging = {};
-        });
-      }
-      document.querySelectorAll(`[id^="cat-${qId}-"]`).forEach(zone => {
-        zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('over'); });
-        zone.addEventListener('dragleave', () => zone.classList.remove('over'));
-        zone.addEventListener('drop', e => {
-          e.preventDefault(); zone.classList.remove('over');
-          if (dragging.qId !== qId) return;
-          document.querySelector('.dc-chip.dragging, .drag-chip.dragging')?.classList.remove('dragging');
-          const catId = zone.dataset.cat;
-          const ds = state.dragState[qId];
-          if (dragging.from === 'bank') ds.bank = ds.bank.filter(w => w !== dragging.word);
-          else if (dragging.from === 'cat') ds.catMap[dragging.fromCat] = (ds.catMap[dragging.fromCat]||[]).filter(w => w !== dragging.word);
-          if (!ds.catMap[catId]) ds.catMap[catId] = [];
-          ds.catMap[catId].push(dragging.word);
-          renderDragChips(qId);
-          collectQuestionAnswer(getCurrentQuestion());
-          dragging = {};
-        });
-      });
-    }
-  }
-
-  // ===== TOUCH DRAG SUPPORT =====
-  let touch = { chip: null, clone: null, startX: 0, startY: 0 };
-  function onTouchStart(e) {
-    touch.chip = e.currentTarget;
-    const rect = touch.chip.getBoundingClientRect();
-    const t = e.touches[0];
-    touch.startX = t.clientX - rect.left;
-    touch.startY = t.clientY - rect.top;
-    touch.clone = touch.chip.cloneNode(true);
-    touch.clone.style.cssText = `position:fixed;z-index:999;opacity:0.8;pointer-events:none;left:${t.clientX - touch.startX}px;top:${t.clientY - touch.startY}px;`;
-    document.body.appendChild(touch.clone);
-    // Simulate dragstart
-    const dc = touch.chip.classList.contains('dc-chip');
-    if (dc) onDcChipDragStart({ target: touch.chip, dataTransfer: { effectAllowed: 'move' } });
-    else onChipDragStart({ target: touch.chip, dataTransfer: { effectAllowed: 'move' } });
-  }
-  function onTouchMove(e) {
-    e.preventDefault();
-    const t = e.touches[0];
-    if (touch.clone) { touch.clone.style.left = (t.clientX - touch.startX) + 'px'; touch.clone.style.top = (t.clientY - touch.startY) + 'px'; }
-    // Highlight drop zone
-    document.querySelectorAll('.drag-answer,.drag-bank,.dc-drop,.dc-bank').forEach(z => z.classList.remove('over'));
-    const el = document.elementFromPoint(t.clientX, t.clientY);
-    const zone = el?.closest('.drag-answer,.drag-bank,.dc-drop,.dc-bank');
-    if (zone) zone.classList.add('over');
-  }
-  function onTouchEnd(e) {
-    if (touch.clone) { touch.clone.remove(); touch.clone = null; }
-    const t = e.changedTouches[0];
-    const el = document.elementFromPoint(t.clientX, t.clientY);
-    const zone = el?.closest('.drag-answer,.drag-bank,.dc-drop,.dc-bank');
-    document.querySelectorAll('.drag-answer,.drag-bank,.dc-drop,.dc-bank').forEach(z => z.classList.remove('over'));
-    if (zone) {
-      zone.dispatchEvent(new DragEvent('drop', { bubbles: true, cancelable: true }));
-    }
-    touch = { chip: null, clone: null, startX: 0, startY: 0 };
-  }
-
-  // ===== ANSWER COLLECTION =====
-  function getCurrentQuestion() {
-    const page = state.pages[state.currentPage];
-    if (!page || page.type !== 'question') return null;
-    return state.def.sections[page.sectionIdx].questions[page.questionIdx];
-  }
-
-  function collectQuestionAnswer(q) {
-    if (!q) return;
-    const body = document.getElementById('assessBody');
-    if (!body) return;
-
-    if (q.type === 'multiple_choice' || q.type === 'true_false' || q.type === 'dropdown') {
-      const checked = body.querySelector(`input[name="${CSS.escape(q.id)}"]:checked`);
-      if (checked) state.answers[q.id] = checked.value;
-    } else if (q.type === 'multiple_select') {
-      const checked = [...body.querySelectorAll(`input[name="${CSS.escape(q.id)}"]:checked`)].map(i => i.value);
-      if (checked.length) state.answers[q.id] = checked;
-    } else if (q.type === 'fill_blank') {
-      const inp = body.querySelector(`input[name="${CSS.escape(q.id)}"]`);
-      if (inp?.value) state.answers[q.id] = inp.value;
-    } else if (q.type === 'fill_blank_multi') {
-      (q.blanks||[]).forEach(b => {
-        const inp = body.querySelector(`input[name="${CSS.escape(b.id)}"]`);
-        if (inp?.value) state.answers[b.id] = inp.value;
-      });
-    } else if (q.type === 'matching') {
-      (q.left_items||[]).forEach(l => {
-        const sel = body.querySelector(`select[name="${CSS.escape(q.id)}__${CSS.escape(l.id)}"]`);
-        if (sel?.value) state.answers[`${q.id}__${l.id}`] = sel.value;
-      });
-    } else if (q.type === 'drag_reorder') {
-      const ds = state.dragState[q.id];
-      if (ds) state.answers[q.id] = ds.answer.join(' ');
-    } else if (q.type === 'drag_categorize') {
-      const ds = state.dragState[q.id];
-      if (ds) {
-        Object.entries(ds.catMap).forEach(([catId, items]) => {
-          items.forEach(item => { state.answers[`${q.id}__${item}`] = catId; });
-        });
-      }
-    }
-  }
-
-  function restoreAnswer(q) {
-    const body = document.getElementById('assessBody');
-    if (!body) return;
-
-    // Restore drag states from answers
-    if (q.type === 'drag_reorder' && state.answers[q.id]) {
-      const answered = state.answers[q.id].split(' ').filter(Boolean);
-      const allWords = q.words || [];
-      const bank = allWords.filter(w => !answered.includes(w));
-      state.dragState[q.id] = { bank, answer: answered };
-      renderDragChips(q.id);
-    } else if (q.type === 'drag_categorize') {
-      const ds = state.dragState[q.id];
-      if (!ds) return;
-      // Restore from answers map
-      const placed = new Set();
-      Object.entries(state.answers).forEach(([key, val]) => {
-        if (key.startsWith(q.id + '__')) {
-          const item = key.slice(q.id.length + 2);
-          if (!ds.catMap[val]) ds.catMap[val] = [];
-          if (!ds.catMap[val].includes(item)) ds.catMap[val].push(item);
-          placed.add(item);
-        }
-      });
-      ds.bank = (q.items || []).filter(i => !placed.has(i));
-      renderDragChips(q.id);
-      return;
-    }
-
-    // Standard form inputs
-    setTimeout(() => {
-      if (q.type === 'multiple_choice' || q.type === 'true_false' || q.type === 'dropdown') {
-        const v = state.answers[q.id];
-        if (v) { const el = body.querySelector(`input[name="${CSS.escape(q.id)}"][value="${CSS.escape(v)}"]`) || body.querySelector(`select[name="${CSS.escape(q.id)}"]`); if (el) { el.type === 'radio' ? (el.checked = true) : (el.value = v); } }
-      } else if (q.type === 'multiple_select') {
-        const vals = state.answers[q.id] || [];
-        vals.forEach(v => { const el = body.querySelector(`input[name="${CSS.escape(q.id)}"][value="${CSS.escape(v)}"]`); if (el) el.checked = true; });
-      } else if (q.type === 'fill_blank') {
-        const v = state.answers[q.id];
-        if (v) { const el = body.querySelector(`input[name="${CSS.escape(q.id)}"]`); if (el) el.value = v; }
-      } else if (q.type === 'fill_blank_multi') {
-        (q.blanks||[]).forEach(b => { const v = state.answers[b.id]; if (v) { const el = body.querySelector(`input[name="${CSS.escape(b.id)}"]`); if (el) el.value = v; } });
-      } else if (q.type === 'matching') {
-        (q.left_items||[]).forEach(l => { const v = state.answers[`${q.id}__${l.id}`]; if (v) { const el = body.querySelector(`select[name="${CSS.escape(q.id)}__${CSS.escape(l.id)}"]`); if (el) el.value = v; } });
-      }
-    }, 50);
-  }
-
-  function restoreAnswersFromState() { /* answers already in state.answers, restoreAnswer called on render */ }
-
-  // ===== AUTO-SAVE =====
-  let saveTimeout = null;
-  function scheduleAutoSave() {
-    if (saveTimeout) clearTimeout(saveTimeout);
-    saveTimeout = setTimeout(saveToSupabase, 8000);
-  }
-
-  document.getElementById('assessBody').addEventListener('input', () => {
-    const q = getCurrentQuestion();
-    if (q) collectQuestionAnswer(q);
-    scheduleAutoSave();
-    setSaveStatus('saving', '● Saving…');
-  });
-  document.getElementById('assessBody').addEventListener('change', () => {
-    const q = getCurrentQuestion();
-    if (q) collectQuestionAnswer(q);
-    scheduleAutoSave();
-  });
-
-  async function saveToSupabase() {
-    if (!state.active || !state.submissionId || state.previewMode) return;
-    setSaveStatus('saving', '● Saving…');
-    try {
-      const { error } = await db.from('assessment_submissions').update({ answers: state.answers }).eq('id', state.submissionId);
-      if (error) throw error;
-      setSaveStatus('saved', '✓ Saved');
-    } catch (err) {
-      setSaveStatus('', '⚠ Offline');
-    }
-  }
-
-  // ===== SUBMIT =====
-  async function handleSubmit() {
-    saveCurrentPageAnswer();
-    if (!confirm('Submit this assessment? Once submitted you cannot change your answers.')) return;
-    if (state.previewMode) { showResultsScreen(); return; }
-
-    const submittedAt = new Date();
-    const timeSec = Math.floor((submittedAt.getTime() - state.startTime) / 1000);
-
-    // Compute auto-grades
-    const { autoScore, maxScore } = computeAutoScore();
-
-    try {
-      const { error } = await db.from('assessment_submissions').update({
-        status: 'submitted',
-        submitted_at: submittedAt.toISOString(),
-        time_taken_seconds: timeSec,
-        answers: state.answers,
-        auto_score: autoScore,
-        total_score: autoScore,
-        max_score: maxScore,
-        results_shown: state.assessment.results_visibility !== 'none'
-      }).eq('id', state.submissionId);
-      if (error) throw error;
-
-      localStorage.setItem(submittedKey(state.code, state.student), submittedAt.toISOString());
-      localStorage.removeItem(lsKey('session'));
-      localStorage.removeItem(lsKey('name'));
-    } catch (err) {
-      showToast('Submit failed: ' + err.message, 'error');
-      return;
-    }
-    showResultsScreen();
-  }
-
-  // ===== AUTO GRADING =====
-  function computeAutoScore() {
-    let autoScore = 0, maxScore = 0;
-    (state.def.sections || []).forEach(sec => {
-      (sec.questions || []).forEach(q => {
-        maxScore += Number(q.points) || 0;
-        autoScore += gradeQuestion(q);
-      });
-    });
-    return { autoScore: Math.round(autoScore * 100) / 100, maxScore };
-  }
-
-  function gradeQuestion(q) {
-    const pts = Number(q.points) || 0;
-    const a = state.answers;
-    switch (q.type) {
-      case 'multiple_choice':
-        return a[q.id] === q.answer ? pts : 0;
-      case 'multiple_select': {
-        const correct = q.correct_answers || [];
-        const given = a[q.id] || [];
-        if (!correct.length) return 0;
-        const perItem = pts / correct.length;
-        let earned = 0;
-        correct.forEach(k => { if (given.includes(k)) earned += perItem; });
-        // Deduct for wrong selections (but don't go negative)
-        const wrong = given.filter(k => !correct.includes(k));
-        earned -= wrong.length * perItem;
-        return Math.max(0, Math.round(earned * 100) / 100);
-      }
-      case 'true_false':
-        return String(a[q.id]).toUpperCase() === String(q.answer).toUpperCase() ? pts : 0;
-      case 'fill_blank': {
-        const v = (a[q.id] || '').trim().toLowerCase();
-        const candidates = (q.accepted_answers?.length ? q.accepted_answers : [q.answer]).filter(Boolean);
-        return candidates.some(c => c.trim().toLowerCase() === v) ? pts : 0;
-      }
-      case 'fill_blank_multi': {
-        const blanks = q.blanks || [];
-        let earned = 0;
-        blanks.forEach(b => {
-          const v = (a[b.id] || '').trim().toLowerCase();
-          const cands = (b.accepted_answers?.length ? b.accepted_answers : [b.answer]).filter(Boolean);
-          if (cands.some(c => c.trim().toLowerCase() === v)) earned += Number(b.points) || (pts / Math.max(blanks.length, 1));
-        });
-        return Math.round(earned * 100) / 100;
-      }
-      case 'dropdown':
-        return a[q.id] === q.answer ? pts : 0;
-      case 'matching': {
-        const lefts = q.left_items || [];
-        const perItem = pts / Math.max(lefts.length, 1);
-        let earned = 0;
-        lefts.forEach(l => { if (a[`${q.id}__${l.id}`] === (q.answers||{})[l.id]) earned += perItem; });
-        return Math.round(earned * 100) / 100;
-      }
-      case 'drag_reorder': {
-        const given = (a[q.id] || '').trim().toLowerCase();
-        const expected = (q.expected || '').trim().toLowerCase();
-        return given === expected ? pts : 0;
-      }
-      case 'drag_categorize': {
-        const items = q.items || [];
-        const perItem = pts / Math.max(items.length, 1);
-        let earned = 0;
-        items.forEach(it => { if (a[`${q.id}__${it}`] === (q.answers||{})[it]) earned += perItem; });
-        return Math.round(earned * 100) / 100;
-      }
-      default: return 0;
-    }
-  }
-
-  // ===== RESULTS SCREEN =====
-  function showResultsScreen() {
-    document.getElementById('assessScreen').classList.remove('active');
-    document.getElementById('passagePage').classList.remove('active');
-    document.querySelector('.assess-nav-bar').style.display = 'none';
-    document.getElementById('resultsScreen').classList.add('active');
-
-    const visibility = state.previewMode ? 'full_breakdown' : (state.assessment.results_visibility || 'none');
-    const title = state.assessment.title || 'Assessment';
-    document.getElementById('resultsTitle').textContent = `${title} — Complete`;
-    document.getElementById('resultsSubtitle').textContent = `${state.student} · ${state.classLabel}`;
-
-    const scoreArea = document.getElementById('scoreCardArea');
-    const qArea = document.getElementById('resultsQArea');
-
-    if (visibility === 'none') {
-      scoreArea.innerHTML = `
-        <div style="background:#fff;border-top:6px solid var(--nd-gold);padding:3rem 2rem;text-align:center;margin-bottom:2rem;">
-          <div style="font-family:var(--font-display);font-size:2rem;font-weight:600;color:var(--nd-blue);margin-bottom:0.75rem;">Assessment Submitted ✓</div>
-          <p style="font-family:var(--font-display);font-style:italic;color:var(--medium-blue);font-size:1.1rem;">Your answers have been recorded. Your teacher will share your results.</p>
-        </div>`;
-      qArea.innerHTML = '';
-      return;
-    }
-
-    const { autoScore, maxScore } = computeAutoScore();
-    const pct = maxScore > 0 ? Math.round((autoScore / maxScore) * 100) : 0;
-
-    scoreArea.innerHTML = `
-      <div class="score-card">
-        <div class="score-label">Your Score</div>
-        <div><span class="score-number">${autoScore}</span><span class="score-max"> / ${maxScore}</span></div>
-        <div class="score-pct">${pct}%</div>
-      </div>`;
-
-    if (visibility !== 'full_breakdown') { qArea.innerHTML = ''; return; }
-
-    // Full breakdown
-    let counter = 0;
-    (state.def.sections || []).forEach(sec => {
-      (sec.questions || []).forEach(q => {
-        counter++;
-        const earned = gradeQuestion(q);
-        const max = Number(q.points) || 0;
-        const isManual = false; // all assessment types are auto-graded
-        const correct = earned === max && max > 0;
-        const partial = earned > 0 && earned < max;
-        const cls = correct ? 'correct' : partial ? 'partial' : 'incorrect';
-        const badge = correct ? 'Correct' : partial ? 'Partial' : 'Incorrect';
-
-        const div = document.createElement('div');
-        div.className = `result-q ${cls}`;
-
-        let detailHtml = getAnswerDisplay(q);
-
-        div.innerHTML = `
-          <div class="result-q-header">
-            <span class="result-q-num">${counter}</span>
-            <span class="result-q-prompt">${escapeHtml(q.prompt || '')}</span>
-            <span class="result-q-badge ${cls}">${badge} (${earned}/${max})</span>
-          </div>
-          <div class="result-q-detail">${detailHtml}</div>`;
-        qArea.appendChild(div);
-      });
-    });
-    window.scrollTo(0, 0);
-  }
-
-  function getAnswerDisplay(q) {
-    const a = state.answers;
-    const studentLabel = '<span style="font-size:0.65rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--medium-blue);display:block;margin-bottom:0.2rem;">Your answer</span>';
-    const correctLabel = '<span style="font-size:0.65rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--success-green);display:block;margin-top:0.5rem;margin-bottom:0.2rem;">Correct answer</span>';
-
-    switch (q.type) {
-      case 'multiple_choice': {
-        const given = a[q.id];
-        const givenOpt = (q.options||[]).find(o => o.key === given);
-        const corrOpt = (q.options||[]).find(o => o.key === q.answer);
-        return studentLabel + `<div class="your-answer">${given ? `${given.toUpperCase()}) ${escapeHtml(givenOpt?.text||'')}` : '(no answer)'}</div>` +
-               (given !== q.answer ? correctLabel + `<div class="correct-answer">${q.answer.toUpperCase()}) ${escapeHtml(corrOpt?.text||'')}</div>` : '');
-      }
-      case 'multiple_select': {
-        const given = a[q.id] || [];
-        const correct = q.correct_answers || [];
-        const givenStr = given.length ? given.map(k => { const o = (q.options||[]).find(x => x.key===k); return `${k.toUpperCase()}) ${o?.text||k}`; }).join(', ') : '(no answer)';
-        const corrStr = correct.map(k => { const o = (q.options||[]).find(x => x.key===k); return `${k.toUpperCase()}) ${o?.text||k}`; }).join(', ');
-        return studentLabel + `<div class="your-answer">${escapeHtml(givenStr)}</div>` +
-               correctLabel + `<div class="correct-answer">${escapeHtml(corrStr)}</div>`;
-      }
-      case 'true_false': {
-        const given = a[q.id];
-        return studentLabel + `<div class="your-answer">${given ? (given === 'T' ? 'True' : 'False') : '(no answer)'}</div>` +
-               (given !== q.answer ? correctLabel + `<div class="correct-answer">${q.answer === 'T' ? 'True' : 'False'}</div>` : '');
-      }
-      case 'fill_blank':
-        return studentLabel + `<div class="your-answer">${escapeHtml(a[q.id] || '(no answer)')}</div>` + correctLabel + `<div class="correct-answer">${escapeHtml(q.answer || '')}</div>`;
-      case 'fill_blank_multi': {
-        let rows = '';
-        (q.blanks||[]).forEach(b => {
-          rows += `<div style="margin-bottom:0.3rem;"><strong style="font-size:0.8rem;">${escapeHtml(b.id)}</strong>: ${escapeHtml(a[b.id]||'(blank)')} <span style="color:var(--success-green);">→ ${escapeHtml(b.answer)}</span></div>`;
-        });
-        return studentLabel + rows;
-      }
-      case 'dropdown':
-        return studentLabel + `<div class="your-answer">${escapeHtml(a[q.id]||'(no answer)')}</div>` + correctLabel + `<div class="correct-answer">${escapeHtml(q.answer||'')}</div>`;
-      case 'matching': {
-        let rows = '';
-        (q.left_items||[]).forEach(l => {
-          const given = a[`${q.id}__${l.id}`];
-          const expected = (q.answers||{})[l.id];
-          const ok = given === expected;
-          rows += `<div style="margin-bottom:0.3rem;font-size:0.88rem;">${escapeHtml(l.id)}) ${escapeHtml(l.text)} → <span style="color:${ok?'var(--success-green)':'var(--accent-red)'};">${escapeHtml(given||'(none)')}</span>${!ok?' <span style="color:var(--success-green);">(correct: '+escapeHtml(expected||'')+')</span>':''}</div>`;
-        });
-        return studentLabel + rows;
-      }
-      case 'drag_reorder':
-        return studentLabel + `<div class="your-answer">${escapeHtml(a[q.id]||'(not answered)')}</div>` + correctLabel + `<div class="correct-answer">${escapeHtml(q.expected||'')}</div>`;
-      case 'drag_categorize': {
-        let rows = '';
-        (q.items||[]).forEach(it => {
-          const given = a[`${q.id}__${it}`];
-          const expected = (q.answers||{})[it];
-          const catLabel = cat => (q.categories||[]).find(c=>c.id===cat)?.label || cat;
-          const ok = given === expected;
-          rows += `<div style="margin-bottom:0.3rem;font-size:0.88rem;">${escapeHtml(it)} → <span style="color:${ok?'var(--success-green)':'var(--accent-red)'};">${escapeHtml(given?catLabel(given):'(not placed)')}</span>${!ok?' <span style="color:var(--success-green);">(correct: '+escapeHtml(catLabel(expected||''))+')</span>':''}</div>`;
-        });
-        return studentLabel + rows;
-      }
-      default: return '';
-    }
-  }
-
-  // ===== START =====
-  window.scrollTo(0, 0);
-  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-  init();
-</script>
+<!-- ===== SUBMIT CONFIRMATION MODAL ===== -->
+<div class="modal-overlay" id="submitModal">
+  <div class="modal-box">
+    <h2>Submit your <em>assessment</em>?</h2>
+    <p class="modal-sub">Once submitted, you cannot change your answers.</p>
+    <div class="modal-actions">
+      <button class="btn btn--secondary" id="cancelSubmitBtn">Go Back &amp; Review</button>
+      <button class="btn btn--gold" id="confirmSubmitBtn">Submit Anyway</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== RESULTS SCREEN ===== -->
+<div class="assess-results-screen" id="resultsScreen" style="display:none;">
+  <div class="assess-results-header">
+    <div class="assess-results-title" id="resultsTitle">Assessment Complete</div>
+    <div class="assess-results-sub" id="resultsSubtitle">—</div>
+  </div>
+  <div class="assess-results-body">
+    <div id="scoreCardArea"></div>
+    <div id="resultsQArea"></div>
+    <p class="assess-results-footnote">You may now close this window.</p>
+  </div>
+</div>
+
+<script type="module" src="../js/pages/assessment-page.js"></script>
 </body>
 </html>

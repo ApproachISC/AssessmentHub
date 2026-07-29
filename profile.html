@@ -4,71 +4,31 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Profile — Approach International Student Center</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
-<div class="brand-bar">
-  <div class="brand-bar-logo">
-    <img src="images/gold-logo.png" alt="Approach International Student Center" class="brand-logo">
-  </div>
-  <div class="brand-bar-right">
-    <!--<a href="assessment-dashboard.html" class="nav-link">Assessments</a>-->
-    <a href="dashboard.html" class="nav-link">Exams</a>
-    <div class="user-menu">
-      <button class="user-menu-trigger" id="userMenuTrigger">
-        <span class="user-info">
-          <strong id="userName">—</strong>
-          <span id="userRole"></span>
-        </span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ae9142" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-icon lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-        <span style="font-size: 0.9em;">▼</span>
-      </button>
-      <div class="user-menu-dropdown" id="userMenuDropdown">
-        <a href="qr-generator.html" target="_blank">QR Code Generator ➚</a>
-        <a href="tasgac_session_log.html" target="_blank">TAs Session Log Report ➚</a>
-        <a href="admin-dashboard.html" id="adminLink" style="display:none;">Administration</a>
-        <a href="profile.html">Profile</a>
-        <button id="signoutBtn">Sign Out</button>
-      </div>
-    </div>
-  </div>
-</div>
+<div id="navbarContainer"></div>
 
-<main>
+<main class="centered">
   <div class="card profile">
     <div class="institutional-mark">
       <img src="images/black-logo.png" alt="Approach International Student Center">
-      <div class="institutional-name">Approach<span style="color: var(--nd-gold);">USA</span></div>
+      <div class="institutional-name">Approach<em>USA</em></div>
       <div class="institutional-sub">International Student Center</div>
     </div>
 
-    <h1>Account <em>Profile</em></h1>
+    <h1 class="text-center">Account <em>Profile</em></h1>
 
     <div class="alert error" id="errorAlert"></div>
     <div class="alert success" id="successAlert"></div>
 
     <!-- User Info Section -->
     <div class="info-section">
-      <div class="info-row">
-        <span class="info-label">Email</span>
-        <span class="info-value" id="emailDisplay">—</span>
-      </div>
-      <div class="info-row">
-        <span class="info-label">Full Name</span>
-        <span class="info-value" id="fullNameDisplay">—</span>
-      </div>
-      <div class="info-row">
-        <span class="info-label">Role</span>
-        <span class="info-value" id="roleDisplay">—</span>
-      </div>
-      <div class="info-row">
-        <span class="info-label">Account Created</span>
-        <span class="info-value" id="createdDisplay">—</span>
-      </div>
+      <div class="info-row"><span class="info-label">Email</span><span class="info-value" id="emailDisplay">—</span></div>
+      <div class="info-row"><span class="info-label">Full Name</span><span class="info-value" id="fullNameDisplay">—</span></div>
+      <div class="info-row"><span class="info-label">Role</span><span class="info-value" id="roleDisplay">—</span></div>
+      <div class="info-row"><span class="info-label">Account Created</span><span class="info-value" id="createdDisplay">—</span></div>
     </div>
 
     <!-- Change Name Form -->
@@ -79,7 +39,7 @@
           <label for="fullName">Full Name</label>
           <input type="text" id="fullName" required minlength="2">
         </div>
-        <button type="submit" class="btn-primary" id="nameSubmitBtn">Update Name</button>
+        <button type="submit" class="btn btn--primary" id="nameSubmitBtn">Update Name</button>
       </form>
     </div>
 
@@ -104,7 +64,7 @@
           <label for="confirmPassword">Confirm New Password</label>
           <input type="password" id="confirmPassword" required autocomplete="new-password">
         </div>
-        <button type="submit" class="btn-primary" id="passwordSubmitBtn">Change Password</button>
+        <button type="submit" class="btn btn--primary" id="passwordSubmitBtn">Change Password</button>
       </form>
     </div>
 
@@ -116,218 +76,6 @@
   Copyright © 2026 Approach International Student Center, Inc. — All rights reserved.
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  const SUPABASE_URL = 'https://okyauyzdensuvuoyphds.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9reWF1eXpkZW5zdXZ1b3lwaGRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1NTgwOTUsImV4cCI6MjA5MzEzNDA5NX0.NZUclCDHecS9bcZOLHj1ZXBFf5b5k9klRwTMfJrglfI';
-
-  const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-  const errorAlert = document.getElementById('errorAlert');
-  const successAlert = document.getElementById('successAlert');
-  const nameForm = document.getElementById('nameForm');
-  const passwordForm = document.getElementById('passwordForm');
-  const fullNameInput = document.getElementById('fullName');
-  const currentPasswordInput = document.getElementById('currentPassword');
-  const newPasswordInput = document.getElementById('newPassword');
-  const confirmPasswordInput = document.getElementById('confirmPassword');
-  const nameSubmitBtn = document.getElementById('nameSubmitBtn');
-  const passwordSubmitBtn = document.getElementById('passwordSubmitBtn');
-  const backLink = document.getElementById('backLink');
-
-  let currentUser = null;
-
-  function showError(msg) {
-    errorAlert.textContent = msg;
-    errorAlert.classList.add('show');
-    successAlert.classList.remove('show');
-  }
-
-  function showSuccess(msg) {
-    successAlert.textContent = msg;
-    successAlert.classList.add('show');
-    errorAlert.classList.remove('show');
-  }
-
-  function checkPasswordRules() {
-    const pwd = newPasswordInput.value;
-    const length = pwd.length >= 8;
-    const letter = /[a-zA-Z]/.test(pwd);
-    const number = /[0-9]/.test(pwd);
-    document.getElementById('ruleLength').classList.toggle('met', length);
-    document.getElementById('ruleLetter').classList.toggle('met', letter);
-    document.getElementById('ruleNumber').classList.toggle('met', number);
-    return length && letter && number;
-  }
-
-  newPasswordInput.addEventListener('input', checkPasswordRules);
-
-  document.getElementById('userMenuTrigger').addEventListener('click', () => {
-    const dropdown = document.getElementById('userMenuDropdown');
-    dropdown.classList.toggle('show');
-  });
-
-  document.addEventListener('click', (e) => {
-    const userMenu = document.querySelector('.user-menu');
-    if (!userMenu.contains(e.target)) {
-      document.getElementById('userMenuDropdown').classList.remove('show');
-    }
-  });
-
-  document.getElementById('signoutBtn').addEventListener('click', async () => {
-    await db.auth.signOut();
-    window.location.href = 'login.html';
-  });
-
-  // On page load: verify session and load profile
-  (async () => {
-    const { data: { session }, error } = await db.auth.getSession();
-    if (!session) {
-      window.location.href = 'login.html';
-      return;
-    }
-    currentUser = session.user;
-    try {
-      const user = currentUser;
-      const { data: profile, error: profileError } = await db.from('profiles')
-        .select('full_name, role, is_active, created_at')
-        .eq('id', user.id)
-        .single();
-
-      if (profileError || !profile) {
-        showError('Could not load your profile. Please try again.');
-        return;
-      }
-
-      if (!profile.is_active) {
-        showError('Your account has been deactivated. Signing out...');
-        setTimeout(async () => {
-          await db.auth.signOut();
-          window.location.href = 'login.html';
-        }, 2000);
-        return;
-      }
-
-      currentUser = { ...user, ...profile };
-
-      // Populate user info
-      document.getElementById('emailDisplay').textContent = user.email;
-      document.getElementById('fullNameDisplay').textContent = profile.full_name;
-      document.getElementById('roleDisplay').textContent = profile.role === 'academic' ? 'Academic' : 'Teacher';
-      document.getElementById('userName').textContent = profile.full_name || user.email;
-      document.getElementById('userRole').textContent = (profile.role === 'academic' ? 'Academic Team' : 'Teacher');
-
-      // Format created date
-      if (profile.created_at) {
-        const date = new Date(profile.created_at);
-        document.getElementById('createdDisplay').textContent = date.toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric'
-        });
-      }
-
-      fullNameInput.value = profile.full_name;
-
-      // Determine which dashboard to go back to
-      const dashboardPath = profile.role === 'academic' ? 'admin-dashboard.html' : 'dashboard.html';
-      backLink.href = dashboardPath;
-    } catch (err) {
-      console.error('Error loading profile:', err);
-      showError('Failed to load profile. Please try again.');
-    }
-  })();
-
-  // Change name form submission
-  nameForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    if (fullNameInput.value.trim().length < 2) {
-      showError('Full name must be at least 2 characters.');
-      return;
-    }
-
-    nameSubmitBtn.disabled = true;
-    nameSubmitBtn.textContent = 'Updating…';
-    errorAlert.classList.remove('show');
-
-    try {
-      const { error } = await db.from('profiles')
-        .update({ full_name: fullNameInput.value.trim() })
-        .eq('id', currentUser.id);
-
-      if (error) throw error;
-
-      document.getElementById('fullNameDisplay').textContent = fullNameInput.value.trim();
-      showSuccess('Name updated successfully.');
-      nameSubmitBtn.textContent = 'Update Name';
-      nameSubmitBtn.disabled = false;
-    } catch (err) {
-      showError(err.message || 'Failed to update name. Please try again.');
-      nameSubmitBtn.textContent = 'Update Name';
-      nameSubmitBtn.disabled = false;
-    }
-  });
-
-  // Change password form submission
-  passwordForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    if (!checkPasswordRules()) {
-      showError('New password does not meet all requirements.');
-      return;
-    }
-
-    if (newPasswordInput.value !== confirmPasswordInput.value) {
-      showError('New passwords do not match.');
-      return;
-    }
-
-    passwordSubmitBtn.disabled = true;
-    passwordSubmitBtn.textContent = 'Changing…';
-    errorAlert.classList.remove('show');
-
-    try {
-      // Verify current password
-      const { error: signInError } = await db.auth.signInWithPassword({
-        email: currentUser.email,
-        password: currentPasswordInput.value
-      });
-
-      if (signInError) {
-        throw new Error('Current password is incorrect.');
-      }
-
-      // Update password
-      const { error: updateError } = await db.auth.updateUser({
-        password: newPasswordInput.value
-      });
-
-      if (updateError) throw updateError;
-
-      showSuccess('Password changed successfully. You may need to sign in again.');
-      passwordForm.reset();
-      currentPasswordInput.value = '';
-      newPasswordInput.value = '';
-      confirmPasswordInput.value = '';
-      document.getElementById('ruleLength').classList.remove('met');
-      document.getElementById('ruleLetter').classList.remove('met');
-      document.getElementById('ruleNumber').classList.remove('met');
-      passwordSubmitBtn.textContent = 'Change Password';
-      passwordSubmitBtn.disabled = false;
-
-      // Sign out user after 2 seconds so they can log in with new password
-      setTimeout(async () => {
-        await db.auth.signOut();
-        window.location.href = 'login.html';
-      }, 2000);
-    } catch (err) {
-      showError(err.message || 'Failed to change password. Please try again.');
-      passwordSubmitBtn.textContent = 'Change Password';
-      passwordSubmitBtn.disabled = false;
-    }
-  });
-</script>
-
+<script type="module" src="js/pages/profile.js"></script>
 </body>
 </html>

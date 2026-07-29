@@ -4,55 +4,25 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Assessment Submissions — Approach International Student Center</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../css/styles.css">
 </head>
 <body>
 
-<div class="brand-bar">
-  <div class="brand-bar-logo">
-    <img src="images/gold-logo.png" alt="Approach International Student Center" class="brand-logo">
-  </div>
-  <div class="brand-bar-right">
-    <a href="assessment-dashboard.html" class="nav-link">Assessments</a>
-    <a href="dashboard.html" class="nav-link">Exams</a>
-    <div class="user-menu">
-      <button class="user-menu-trigger" id="userMenuTrigger">
-        <span class="user-info">
-          <strong id="userName">—</strong>
-          <span id="userRole"></span>
-        </span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ae9142" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-icon lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-        <span style="font-size: 0.9em;">▼</span>
-      </button>
-      <div class="user-menu-dropdown" id="userMenuDropdown">
-        <a href="qr-generator.html" target="_blank">QR Code Generator ➚</a>
-        <a href="tasgac_session_log.html" target="_blank">TAs Session Log Report ➚</a>
-        <a href="admin-dashboard.html" id="adminLink" style="display:none;">Administration</a>
-        <a href="profile.html">Profile</a>
-        <button id="signoutBtn">Sign Out</button>
-      </div>
-    </div>
-  </div>
-</div>
+<div id="navbarContainer"></div>
 
-<div class="auth-loading" id="authLoading"><div class="spinner"></div><p style="font-family:var(--font-display);font-style:italic;">Loading…</p></div>
+<div class="auth-loading" id="authLoading"><div class="spinner"></div><p style="font-family:var(--serif);font-style:italic;">Loading…</p></div>
 
-<div class="page" id="page" style="display:none;">
-  <div class="breadcrumb" style="margin-bottom:1rem;">
-    <a href="assessment-dashboard.html">Assessments</a> <span>›</span> <span id="bcAssessment">—</span> <span>›</span> Submissions
+<main class="page" id="page" style="display:none;">
+  <div class="breadcrumb">
+    <a href="dashboard.html">Assessments</a> <span>›</span> <span id="bcAssessment">—</span> <span>›</span> Submissions
   </div>
   <div class="page-header">
     <div>
       <div class="page-stamp">Assessment Submissions</div>
-      <h1 style="font-family:var(--font-display);font-size:2.4rem;font-weight:600;color:var(--nd-blue);">
-        <em style="color:var(--nd-gold);font-style:italic;font-weight:500;" id="pageAssessmentTitle">Submissions</em>
-      </h1>
+      <h1><em id="pageAssessmentTitle">Submissions</em></h1>
       <p class="page-sub" id="pageSub">—</p>
     </div>
-    <button class="btn-secondary" id="exportBtn">Export CSV</button>
+    <button class="btn btn--secondary" id="exportBtn">Export CSV</button>
   </div>
 
   <div class="stats-row">
@@ -96,133 +66,10 @@
       <tbody id="tableBody"><tr><td colspan="6"><div class="empty-state"><p>Loading…</p></div></td></tr></tbody>
     </table>
   </div>
-</div>
+</main>
 
-<div class="toast" id="toast"></div>
 <div class="copyright">Copyright © 2026 Approach International Student Center, Inc. — All rights reserved.</div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  const SUPABASE_URL = 'https://okyauyzdensuvuoyphds.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9reWF1eXpkZW5zdXZ1b3lwaGRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1NTgwOTUsImV4cCI6MjA5MzEzNDA5NX0.NZUclCDHecS9bcZOLHj1ZXBFf5b5k9klRwTMfJrglfI';
-  const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  let currentProfile=null, assessment=null, allSubs=[], sortBy='submitted_at', sortDir='desc';
-  const toast=document.getElementById('toast');
-  function showToast(m,t=''){toast.textContent=m;toast.className='toast show '+t;setTimeout(()=>toast.classList.remove('show'),4000);}
-  function escapeHtml(s){if(s==null)return'';return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-  function formatDate(iso){if(!iso)return'—';const d=new Date(iso);return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})+', '+d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});}
-  function formatDur(s){if(s==null)return'—';return `${Math.floor(s/60)}m ${String(s%60).padStart(2,'0')}s`;}
-
-  async function checkAuth(){
-    const {data:{session}}=await db.auth.getSession();
-    if(!session){window.location.href='login.html';return false;}
-    const {data:p}=await db.from('profiles').select('*').eq('id',session.user.id).single();
-    if(!p||!p.is_active){await db.auth.signOut();window.location.href='login.html';return false;}
-    currentProfile=p;
-    document.getElementById('userName').textContent=p.full_name||session.user.email;
-    if(p.role==='academic')document.getElementById('adminLink').style.display='inline-block';
-    return true;
-  }
-  document.getElementById('userMenuTrigger').addEventListener('click',()=>document.getElementById('userMenuDropdown').classList.toggle('show'));
-  document.addEventListener('click',e=>{const m=document.querySelector('.user-menu');if(m&&!m.contains(e.target))document.getElementById('userMenuDropdown').classList.remove('show');});
-  document.getElementById('signoutBtn').addEventListener('click',async()=>{await db.auth.signOut();window.location.href='login.html';});
-
-  async function loadData(){
-    const params=new URLSearchParams(window.location.search);
-    const id=params.get('id');
-    if(!id){showToast('No assessment ID','error');return;}
-    try{
-      const [aRes,sRes]=await Promise.all([
-        db.from('assessments').select('*').eq('id',id).single(),
-        db.from('assessment_submissions').select('*').eq('assessment_id',id).order('submitted_at',{ascending:false,nullsFirst:false})
-      ]);
-      if(aRes.error)throw aRes.error;
-      assessment=aRes.data;
-      allSubs=sRes.data||[];
-      document.getElementById('bcAssessment').textContent=assessment.title||assessment.code;
-      document.getElementById('pageAssessmentTitle').textContent=assessment.title||assessment.code;
-      document.getElementById('pageSub').textContent=`${assessment.quarter} ${assessment.year} · ${allSubs.length} submission${allSubs.length===1?'':'s'}`;
-      updateStats();renderTable();
-      document.getElementById('authLoading').style.display='none';
-      document.getElementById('page').style.display='block';
-    }catch(err){showToast('Load failed: '+err.message,'error');document.getElementById('authLoading').style.display='none';document.getElementById('page').style.display='block';}
-  }
-
-  function updateStats(){
-    let ip=0,sub=0,rev=0;
-    allSubs.forEach(s=>{if(s.status==='in_progress')ip++;else if(s.reviewed)rev++;else sub++;});
-    document.getElementById('statTotal').textContent=allSubs.length;
-    document.getElementById('statInProgress').textContent=ip;
-    document.getElementById('statSubmitted').textContent=sub;
-    document.getElementById('statReviewed').textContent=rev;
-  }
-
-  function getFiltered(){
-    const search=document.getElementById('filterSearch').value.toLowerCase();
-    const status=document.getElementById('filterStatus').value;
-    const dateRange=document.getElementById('filterDate').value;
-    const now=new Date();
-    let dateMin=null;
-    if(dateRange==='today')dateMin=new Date(now.getFullYear(),now.getMonth(),now.getDate());
-    else if(dateRange==='week')dateMin=new Date(now-7*864e5);
-    let r=allSubs.filter(s=>{
-      if(status==='reviewed'&&!(s.status==='submitted'&&s.reviewed))return false;
-      if(status==='submitted'&&!(s.status==='submitted'&&!s.reviewed))return false;
-      if(status==='in_progress'&&s.status!=='in_progress')return false;
-      if(dateMin&&s.submitted_at&&new Date(s.submitted_at)<dateMin)return false;
-      if(search&&!s.student_name.toLowerCase().includes(search))return false;
-      return true;
-    });
-    r.sort((a,b)=>{let av=a[sortBy],bv=b[sortBy];if(av==null)av='';if(bv==null)bv='';if(typeof av==='string')return sortDir==='asc'?av.localeCompare(bv):bv.localeCompare(av);return sortDir==='asc'?(av>bv?1:-1):(bv>av?1:-1);});
-    return r;
-  }
-
-  function renderTable(){
-    const subs=getFiltered();
-    const tbody=document.getElementById('tableBody');
-    if(!subs.length){tbody.innerHTML=`<tr><td colspan="6"><div class="empty-state"><div class="icon">⌗</div><h3>No submissions found</h3><p>${allSubs.length===0?'No students have started this assessment yet.':'Try adjusting your filters.'}</p></div></td></tr>`;return;}
-    tbody.innerHTML=subs.map(s=>{
-      let chip;
-      if(s.status==='in_progress')chip='<span class="chip in_progress">In Progress</span>';
-      else if(s.reviewed)chip='<span class="chip active">Reviewed</span>';
-      else chip='<span class="chip upcoming">Submitted</span>';
-      const score=s.total_score!=null&&s.max_score!=null?`${s.total_score} / ${s.max_score}`:(s.status==='submitted'?'<span style="font-style:italic;color:var(--medium-blue);font-family:var(--font-display);">Pending</span>':'—');
-      return `<tr>
-        <td style="font-weight:500;">${escapeHtml(s.student_name)}</td>
-        <td>${chip}</td>
-        <td style="font-size:0.82rem;color:var(--medium-blue);">${formatDate(s.submitted_at||s.started_at)}</td>
-        <td style="font-size:0.82rem;color:var(--medium-blue);">${formatDur(s.time_taken_seconds)}</td>
-        <td>${score}</td>
-        <td><div class="row-actions">
-          ${s.status==='submitted'
-            ?`<a href="assessment-submission-detail.html?id=${s.id}" class="row-btn">Review</a>`
-            :`<button class="row-btn archive" onclick="deleteInProgress('${s.id}','${escapeHtml(s.student_name)}')">Delete</button>`}
-        </div></td>
-      </tr>`;
-    }).join('');
-  }
-
-  async function deleteInProgress(id,name){
-    if(!confirm(`Delete in-progress submission from ${name}?`))return;
-    try{const {error}=await db.from('assessment_submissions').delete().eq('id',id);if(error)throw error;allSubs=allSubs.filter(s=>s.id!==id);updateStats();renderTable();showToast('Deleted','success');}
-    catch(err){showToast('Failed: '+err.message,'error');}
-  }
-  window.deleteInProgress=deleteInProgress;
-
-  ['filterSearch','filterStatus','filterDate'].forEach(id=>{const el=document.getElementById(id);if(el){el.addEventListener('input',renderTable);el.addEventListener('change',renderTable);}});
-  document.querySelectorAll('th[data-sort]').forEach(th=>{th.addEventListener('click',()=>{const col=th.dataset.sort;if(sortBy===col)sortDir=sortDir==='asc'?'desc':'asc';else{sortBy=col;sortDir='asc';}document.querySelectorAll('th[data-sort]').forEach(t=>{t.classList.remove('sorted');t.querySelector('.sort-arrow').textContent='↕';});th.classList.add('sorted');th.querySelector('.sort-arrow').textContent=sortDir==='asc'?'↑':'↓';renderTable();});});
-
-  document.getElementById('exportBtn').addEventListener('click',()=>{
-    const subs=getFiltered();
-    const headers=['Student','Status','Submitted At','Duration (sec)','Auto Score','Manual Score','Total Score','Max Score','Reviewed'];
-    const rows=subs.map(s=>[s.student_name,s.reviewed?'Reviewed':s.status,s.submitted_at||s.started_at||'',s.time_taken_seconds||'',s.auto_score??'',s.manual_score??'',s.total_score??'',s.max_score??'',s.reviewed?'Yes':'No']);
-    const csv=[headers,...rows].map(r=>r.map(c=>{const v=String(c==null?'':c);return v.includes(',')||v.includes('"')||v.includes('\n')?`"${v.replace(/"/g,'""')}"`:v;}).join(',')).join('\n');
-    const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
-    const url=URL.createObjectURL(blob);const a=document.createElement('a');
-    a.href=url;a.download=`${assessment?.code||'assessment'}-submissions.csv`;a.click();URL.revokeObjectURL(url);
-  });
-
-  (async()=>{if(!(await checkAuth()))return;await loadData();})();
-</script>
+<script type="module" src="../js/pages/assessment-submissions.js"></script>
 </body>
 </html>

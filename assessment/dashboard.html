@@ -4,56 +4,26 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Assessment Dashboard — Approach International Student Center</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../css/styles.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
 
-<div class="brand-bar">
-  <div class="brand-bar-logo">
-    <img src="images/gold-logo.png" alt="Approach International Student Center" class="brand-logo">
-  </div>
-  <div class="brand-bar-right">
-    <a href="assessment-dashboard.html" class="nav-link">Assessments</a>
-    <a href="dashboard.html" class="nav-link">Exams</a>
-    <div class="user-menu">
-      <button class="user-menu-trigger" id="userMenuTrigger">
-        <span class="user-info">
-          <strong id="userName">—</strong>
-          <span id="userRole"></span>
-        </span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ae9142" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-icon lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-        <span style="font-size: 0.9em;">▼</span>
-      </button>
-      <div class="user-menu-dropdown" id="userMenuDropdown">
-        <a href="qr-generator.html" target="_blank">QR Code Generator ➚</a>
-        <a href="tasgac_session_log.html" target="_blank">TAs Session Log Report ➚</a>
-        <a href="admin-dashboard.html" id="adminLink" style="display:none;">Administration</a>
-        <a href="profile.html">Profile</a>
-        <button id="signoutBtn">Sign Out</button>
-      </div>
-    </div>
-  </div>
-</div>
+<div id="navbarContainer"></div>
 
 <div class="auth-loading" id="authLoading">
   <div class="spinner"></div>
-  <p style="font-family:var(--font-display);font-style:italic;">Loading…</p>
+  <p style="font-family:var(--serif);font-style:italic;">Loading…</p>
 </div>
 
-<div class="page" id="page" style="display:none;">
+<main class="page" id="page" style="display:none;">
   <div class="page-header">
     <div>
       <div class="page-stamp">Assessment Management</div>
-      <h1 id="pageTitle" style="font-family:var(--font-display);font-size:2.4rem;font-weight:600;color:var(--nd-blue);">
-        My <em style="color:var(--nd-gold);font-style:italic;font-weight:500;">Assessments</em>
-      </h1>
+      <h1 id="pageTitle">My <em>Assessments</em></h1>
       <p class="page-sub">Create and manage assessments for your students</p>
     </div>
-    <a href="assessment-create.html" class="btn-primary" style="text-decoration:none;white-space:nowrap;">+ New Assessment</a>
+    <a href="create.html" class="btn btn--primary">+ New Assessment</a>
   </div>
 
   <div class="stats-row">
@@ -64,11 +34,11 @@
   </div>
 
   <div class="filters">
-    <div class="filter-field">
+    <div class="filter-field field">
       <label for="filterSearch">Search</label>
       <input type="text" id="filterSearch" placeholder="Title, code, or class…">
     </div>
-    <div class="filter-field">
+    <div class="filter-field field">
       <label for="filterStatus">Status</label>
       <select id="filterStatus">
         <option value="">All statuses</option>
@@ -77,7 +47,7 @@
         <option value="archived">Archived</option>
       </select>
     </div>
-    <div class="filter-field">
+    <div class="filter-field field">
       <label for="filterQuarter">Quarter</label>
       <select id="filterQuarter">
         <option value="">All quarters</option>
@@ -87,11 +57,11 @@
         <option value="FALL">Fall</option>
       </select>
     </div>
-    <div class="filter-field">
+    <div class="filter-field field">
       <label for="filterYear">Year</label>
       <select id="filterYear"><option value="">All years</option></select>
     </div>
-    <div class="filter-field" id="filterTeacherField" style="display:none;">
+    <div class="filter-field field" id="filterTeacherField" style="display:none;">
       <label for="filterTeacher">Teacher</label>
       <select id="filterTeacher"><option value="">All teachers</option></select>
     </div>
@@ -114,36 +84,34 @@
     </table>
   </div>
   <div class="pagination" id="paginationBar">
-    <button class="pagination-btn" id="prevPage" onclick="previousPage()">← Previous</button>
+    <button class="pagination-btn" id="prevPage">← Previous</button>
     <span class="pagination-info" id="pageInfo">—</span>
-    <button class="pagination-btn" id="nextPage" onclick="nextPage()">Next →</button>
+    <button class="pagination-btn" id="nextPage">Next →</button>
   </div>
-</div>
+</main>
 
 <!-- COPY MODAL -->
 <div class="modal-overlay" id="copyModal">
-  <div class="modal">
-    <div class="modal-stamp">Copy Assessment</div>
-    <h2>Copy <em style="color:var(--nd-gold);font-style:italic;font-weight:500;">Assessment</em></h2>
+  <div class="modal-box">
+    <div class="page-stamp">Copy Assessment</div>
+    <h2>Copy <em>Assessment</em></h2>
     <p class="modal-sub" id="copyModalSub">Create a new assessment from an existing one</p>
-    <div style="background:var(--light-sky-blue);border-left:3px solid var(--medium-blue);padding:0.85rem 1rem;margin-bottom:1rem;font-family:var(--font-display);font-style:italic;font-size:0.95rem;color:var(--medium-blue);">
-      All questions and sections will be copied. The code will be regenerated. The copy starts as a Draft.
-    </div>
+    <div class="modal-notice">All questions and sections will be copied. The code will be regenerated. The copy starts as a Draft.</div>
     <div class="modal-grid">
-      <div class="modal-field full"><label>Title</label><input type="text" id="copyTitle" placeholder="Assessment title"></div>
-      <div class="modal-field full"><label>Class</label><select id="copyClassId"></select></div>
-      <div class="modal-field"><label>Level</label><select id="copyLevelId"></select></div>
-      <div class="modal-field" id="copyTeacherField"><label>Teacher</label><select id="copyTeacherId"></select></div>
-      <div class="modal-field"><label>Year</label><input type="number" id="copyYear" min="2020" max="2099" value="2026"></div>
-      <div class="modal-field"><label>Quarter</label>
+      <div class="field full"><label>Title</label><input type="text" id="copyTitle" placeholder="Assessment title"></div>
+      <div class="field full"><label>Class</label><select id="copyClassId"></select></div>
+      <div class="field"><label>Level</label><select id="copyLevelId"></select></div>
+      <div class="field" id="copyTeacherField"><label>Teacher</label><select id="copyTeacherId"></select></div>
+      <div class="field"><label>Year</label><input type="number" id="copyYear" min="2020" max="2099" value="2026"></div>
+      <div class="field"><label>Quarter</label>
         <select id="copyQuarter">
           <option value="WINTER">Winter</option><option value="SPRING">Spring</option>
           <option value="SUMMER">Summer</option><option value="FALL">Fall</option>
         </select>
       </div>
-      <div class="modal-field"><label>Available From</label><input type="datetime-local" id="copyFrom"></div>
-      <div class="modal-field"><label>Available Until</label><input type="datetime-local" id="copyUntil"></div>
-      <div class="modal-field full"><label>Results Visibility</label>
+      <div class="field"><label>Available From</label><input type="datetime-local" id="copyFrom"></div>
+      <div class="field"><label>Available Until</label><input type="datetime-local" id="copyUntil"></div>
+      <div class="field full"><label>Results Visibility</label>
         <select id="copyVisibility">
           <option value="score_only">Score only</option>
           <option value="full_breakdown">Full breakdown</option>
@@ -152,8 +120,8 @@
       </div>
     </div>
     <div class="modal-actions">
-      <button class="btn-secondary" onclick="closeCopyModal()">Cancel</button>
-      <button class="btn-primary" id="copySubmitBtn">Create Copy</button>
+      <button class="btn btn--secondary" id="copyCancelBtn">Cancel</button>
+      <button class="btn btn--primary" id="copySubmitBtn">Create Copy</button>
     </div>
   </div>
 </div>
@@ -161,7 +129,7 @@
 <!-- SHARE MODAL -->
 <div class="modal-overlay" id="shareModal">
   <div class="share-modal">
-    <div class="share-modal-stamp">Share with Class</div>
+    <div class="page-stamp">Share with Class</div>
     <h2 id="shareModalTitle">Assessment</h2>
     <div class="share-modal-sub">Project this screen so students can scan or type</div>
     <div class="share-columns">
@@ -177,223 +145,12 @@
       </div>
     </div>
     <div class="share-window" id="shareWindow">—</div>
-    <div class="share-actions"><button class="btn-secondary" onclick="closeShareModal()">Close</button></div>
+    <div class="share-actions"><button class="btn btn--secondary" id="shareCloseBtn">Close</button></div>
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
 <div class="copyright">Copyright © 2026 Approach International Student Center, Inc. — All rights reserved.</div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  const SUPABASE_URL = 'https://okyauyzdensuvuoyphds.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9reWF1eXpkZW5zdXZ1b3lwaGRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1NTgwOTUsImV4cCI6MjA5MzEzNDA5NX0.NZUclCDHecS9bcZOLHj1ZXBFf5b5k9klRwTMfJrglfI';
-  const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  const QUARTER_CODES = {WINTER:'WT',SPRING:'SP',SUMMER:'SM',FALL:'FA'};
-  const ALPHANUM = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  const PAGE_SIZE = 20;
-  let currentProfile=null, allAssessments=[], allClasses=[], allLevels=[], allTeachers=[];
-  let sortBy='available_from', sortDir='desc', currentPage=1, copyingFrom=null;
-  const toast = document.getElementById('toast');
-  function showToast(msg,type=''){toast.textContent=msg;toast.className='toast show '+type;setTimeout(()=>toast.classList.remove('show'),4000);}
-  function escapeHtml(s){if(s==null)return'';return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-  function formatDate(iso){if(!iso)return'—';const d=new Date(iso);return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})+', '+d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});}
-  function formatDateForInput(iso){if(!iso)return'';const d=new Date(iso);const p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`;}
-  function generateRandomSuffix(){let s='';for(let i=0;i<4;i++)s+=ALPHANUM[Math.floor(Math.random()*ALPHANUM.length)];return s;}
-
-  async function checkAuth(){
-    const {data:{session}}=await db.auth.getSession();
-    if(!session){window.location.href='login.html';return false;}
-    const {data:profile}=await db.from('profiles').select('*').eq('id',session.user.id).single();
-    if(!profile||!profile.is_active){await db.auth.signOut();window.location.href='login.html';return false;}
-    currentProfile=profile;
-    document.getElementById('userName').textContent=profile.full_name||session.user.email;
-    document.getElementById('userRole').textContent = (profile.role === 'academic' ? 'Academic Team' : 'Teacher');
-    if(profile.role==='academic'){document.getElementById('adminLink').style.display='inline-block';document.getElementById('pageTitle').innerHTML='All <em style="color:var(--nd-gold);font-style:italic;font-weight:500;">Assessments</em>';document.getElementById('filterTeacherField').style.display='inherit';}
-    return true;
-  }
-  document.getElementById('userMenuTrigger').addEventListener('click',()=>document.getElementById('userMenuDropdown').classList.toggle('show'));
-  document.addEventListener('click',e=>{const m=document.querySelector('.user-menu');if(m&&!m.contains(e.target))document.getElementById('userMenuDropdown').classList.remove('show');});
-  document.getElementById('signoutBtn').addEventListener('click',async()=>{await db.auth.signOut();window.location.href='login.html';});
-
-  async function loadData(){
-    try{
-      const [aRes,cRes,lRes,tRes]=await Promise.all([
-        db.from('assessments').select('*').order('created_at',{ascending:false}),
-        db.from('classes').select('*').order('name'),
-        db.from('levels').select('*').order('display_order'),
-        db.from('profiles').select('id,full_name,email,role,is_active').order('full_name')
-      ]);
-      if(aRes.error)throw aRes.error;
-      allClasses=cRes.data||[]; allLevels=lRes.data||[]; allTeachers=(tRes.data||[]).filter(t=>t.is_active);
-      let raw=aRes.data||[];
-      if(currentProfile.role==='teacher')raw=raw.filter(a=>a.teacher_id===currentProfile.id);
-      allAssessments=raw.map(a=>{const cls=allClasses.find(c=>c.id===a.class_id);return{...a,_class_name:cls?.name||'—'};});
-      const years=[...new Set(allAssessments.map(a=>a.year))].sort((a,b)=>b-a);
-      document.getElementById('filterYear').innerHTML='<option value="">All years</option>'+years.map(y=>`<option value="${y}">${y}</option>`).join('');
-      if(currentProfile.role==='academic')document.getElementById('filterTeacher').innerHTML='<option value="">All teachers</option>'+allTeachers.map(t=>`<option value="${t.id}">${escapeHtml(t.full_name||t.email)}</option>`).join('');
-      updateStats(); renderTable();
-      document.getElementById('authLoading').style.display='none';
-      document.getElementById('page').style.display='block';
-    }catch(err){showToast('Failed to load: '+err.message,'error');document.getElementById('authLoading').style.display='none';document.getElementById('page').style.display='block';}
-  }
-
-  function updateStats(){let active=0,draft=0,archived=0;allAssessments.forEach(a=>{if(a.status==='active')active++;else if(a.status==='draft')draft++;else archived++;});document.getElementById('statTotal').textContent=allAssessments.length;document.getElementById('statActive').textContent=active;document.getElementById('statDraft').textContent=draft;document.getElementById('statArchived').textContent=archived;}
-
-  function getFiltered(){
-    const search=document.getElementById('filterSearch').value.toLowerCase();
-    const status=document.getElementById('filterStatus').value;
-    const quarter=document.getElementById('filterQuarter').value;
-    const year=document.getElementById('filterYear').value;
-    const teacher=currentProfile.role==='academic'?document.getElementById('filterTeacher').value:'';
-    let r=allAssessments.filter(a=>{
-      if(status&&a.status!==status)return false;
-      if(quarter&&a.quarter!==quarter)return false;
-      if(year&&String(a.year)!==year)return false;
-      if(teacher&&a.teacher_id!==teacher)return false;
-      if(search&&!`${a.title||''} ${a.code} ${a._class_name}`.toLowerCase().includes(search))return false;
-      return true;
-    });
-    r.sort((a,b)=>{let av=a[sortBy],bv=b[sortBy];if(av==null)av='';if(bv==null)bv='';if(typeof av==='string')return sortDir==='asc'?av.localeCompare(bv):bv.localeCompare(av);return sortDir==='asc'?(av>bv?1:-1):(bv>av?1:-1);});
-    return r;
-  }
-
-  function getWindowStatus(a){const now=new Date(),from=new Date(a.available_from),until=new Date(a.available_until);if(a.status==='draft')return'draft';if(a.status==='archived')return'archived';if(now<from)return'upcoming';if(now>until)return'closed';return'live';}
-
-  function renderTable(){
-    const filtered=getFiltered();const total=filtered.length;const totalPages=Math.ceil(total/PAGE_SIZE)||1;
-    if(currentPage>totalPages)currentPage=1;
-    const start=(currentPage-1)*PAGE_SIZE,end=Math.min(start+PAGE_SIZE,total);
-    const page=filtered.slice(start,end);
-    const tbody=document.getElementById('tableBody');
-    if(!page.length){
-      tbody.innerHTML=`<tr><td colspan="5"><div class="empty-state"><div class="icon">⌗</div><h3>No assessments found</h3><p>${allAssessments.length===0?'Create your first assessment to get started.':'Try adjusting your filters.'}</p>${allAssessments.length===0?'<a href="assessment-create.html" class="btn-primary">+ New Assessment</a>':''}</div></td></tr>`;
-    }else{
-      tbody.innerHTML=page.map(a=>{
-        const ws=getWindowStatus(a);
-        const visLabel={score_only:'Score',full_breakdown:'Full',none:'Hidden'}[a.results_visibility]||'—';
-        const visClass={score_only:'results-score',full_breakdown:'results-full',none:'results-none'}[a.results_visibility]||'';
-        return `<tr>
-          <td>
-            <div style="font-weight:600;color:var(--nd-blue);margin-bottom:0.3rem;">${escapeHtml(a.title||'—')}</div>
-            <div style="display:flex;align-items:center;gap:0.4rem;flex-wrap:wrap;">
-              <span style="font-family:'JetBrains Mono',monospace;font-size:0.78rem;font-weight:600;letter-spacing:0.04em;color:var(--medium-blue);">${escapeHtml(a.code)}</span>
-              <button class="row-btn" style="padding:0.15rem 0.4rem;font-size:0.58rem;" onclick="copyToClipboard('${escapeHtml(a.code)}')" title="Copy code">⎘</button>
-              ${ws==='live'?`<button class="row-btn" style="padding:0.15rem 0.4rem;font-size:0.58rem;" onclick="openShareModal('${a.id}')" title="Share with class">⤢</button>`:''}
-            </div>
-          </td>
-          <td>
-            <div style="font-weight:500;color:var(--nd-blue);margin-bottom:0.2rem;">${escapeHtml(a._class_name)}</div>
-            <div style="font-size:0.78rem;color:var(--medium-blue);">${escapeHtml(a.quarter)} · ${a.year}</div>
-          </td>
-          <td>
-            <span class="chip ${ws}">${ws}</span>
-            <div style="font-size:0.7rem;color:var(--medium-blue);margin-top:0.3rem;">Results: ${visLabel}</div>
-          </td>
-          <td style="font-size:0.8rem;color:var(--medium-blue);">${formatDate(a.available_from)}<br><span style="opacity:0.7;">→ ${formatDate(a.available_until)}</span></td>
-          <td><div class="row-actions">
-            <a href="assessment-submissions.html?id=${a.id}" class="row-btn">Submissions</a>
-            <a href="assessment-edit.html?id=${a.id}" class="row-btn">Edit</a>
-            <button class="row-btn" onclick="openCopyModal('${a.id}')">Copy</button>
-            ${a.status==='archived'
-              ?`<button class="row-btn unarchive" onclick="quickStatus('${a.id}','active')">Restore</button>`
-              :`<button class="row-btn archive" onclick="quickStatus('${a.id}','archived')">Archive</button>`}
-          </div></td>
-        </tr>`;
-      }).join('');
-    }
-    document.getElementById('pageInfo').textContent=total===0?'No results':`${start+1}–${end} of ${total}`;
-    document.getElementById('prevPage').disabled=currentPage<=1;
-    document.getElementById('nextPage').disabled=currentPage>=totalPages;
-    document.getElementById('paginationBar').style.display=totalPages>1?'flex':'none';
-  }
-
-  function previousPage(){if(currentPage>1){currentPage--;renderTable();}}
-  function nextPage(){const f=getFiltered();if(currentPage<Math.ceil(f.length/PAGE_SIZE)){currentPage++;renderTable();}}
-  window.previousPage=previousPage;window.nextPage=nextPage;
-
-  ['filterSearch','filterStatus','filterQuarter','filterYear','filterTeacher'].forEach(id=>{const el=document.getElementById(id);if(el){el.addEventListener('input',()=>{currentPage=1;renderTable();});el.addEventListener('change',()=>{currentPage=1;renderTable();});}});
-  document.querySelectorAll('th[data-sort]').forEach(th=>{th.addEventListener('click',()=>{const col=th.dataset.sort;if(sortBy===col)sortDir=sortDir==='asc'?'desc':'asc';else{sortBy=col;sortDir='asc';}document.querySelectorAll('th[data-sort]').forEach(t=>{t.classList.remove('sorted');t.querySelector('.sort-arrow').textContent='↕';});th.classList.add('sorted');th.querySelector('.sort-arrow').textContent=sortDir==='asc'?'↑':'↓';renderTable();});});
-
-  async function quickStatus(id,newStatus){
-    const a=allAssessments.find(x=>x.id===id);if(!a)return;
-    if(!confirm(`${newStatus==='archived'?'Archive':'Restore'} this assessment?`))return;
-    try{const {error}=await db.from('assessments').update({status:newStatus}).eq('id',id);if(error)throw error;a.status=newStatus;updateStats();renderTable();showToast('Done','success');}
-    catch(err){showToast('Failed: '+err.message,'error');}
-  }
-  window.quickStatus=quickStatus;
-
-  function copyToClipboard(text){navigator.clipboard.writeText(text).then(()=>showToast(`Code ${text} copied`,'success'));}
-  window.copyToClipboard=copyToClipboard;
-
-  function openCopyModal(id){
-    const a=allAssessments.find(x=>x.id===id);if(!a)return;
-    copyingFrom=a;
-    document.getElementById('copyModalSub').textContent=`Copying: ${a.title||a.code} (${a._class_name})`;
-    document.getElementById('copyClassId').innerHTML='<option value="">— class —</option>'+allClasses.filter(c=>c.is_active||c.id===a.class_id).map(c=>`<option value="${c.id}" ${c.id===a.class_id?'selected':''}>${escapeHtml(c.name)}</option>`).join('');
-    document.getElementById('copyLevelId').innerHTML='<option value="">— level —</option>'+allLevels.filter(l=>l.is_active||l.id===a.level_id).map(l=>`<option value="${l.id}" ${l.id===a.level_id?'selected':''}>${escapeHtml(l.name)}</option>`).join('');
-    if(currentProfile.role==='academic'){document.getElementById('copyTeacherField').style.display='block';document.getElementById('copyTeacherId').innerHTML='<option value="">— teacher —</option>'+allTeachers.map(t=>`<option value="${t.id}" ${t.id===a.teacher_id?'selected':''}>${escapeHtml(t.full_name||t.email)}</option>`).join('');}
-    else document.getElementById('copyTeacherField').style.display='none';
-    document.getElementById('copyTitle').value=(a.title||'')+'';
-    document.getElementById('copyYear').value=a.year;
-    document.getElementById('copyQuarter').value=a.quarter;
-    document.getElementById('copyFrom').value=formatDateForInput(a.available_from);
-    document.getElementById('copyUntil').value=formatDateForInput(a.available_until);
-    document.getElementById('copyVisibility').value=a.results_visibility||'score_only';
-    document.getElementById('copyModal').classList.add('active');
-  }
-  window.openCopyModal=openCopyModal;
-
-  function closeCopyModal(){document.getElementById('copyModal').classList.remove('active');copyingFrom=null;}
-  window.closeCopyModal=closeCopyModal;
-  document.getElementById('copyModal').addEventListener('click',e=>{if(e.target.id==='copyModal')closeCopyModal();});
-
-  document.getElementById('copySubmitBtn').addEventListener('click',async()=>{
-    if(!copyingFrom)return;
-    const btn=document.getElementById('copySubmitBtn');
-    const from=new Date(document.getElementById('copyFrom').value);
-    const until=new Date(document.getElementById('copyUntil').value);
-    if(until<=from){showToast('"Until" must be after "From"','error');return;}
-    btn.disabled=true;btn.textContent='Creating…';
-    const year=parseInt(document.getElementById('copyYear').value,10);
-    const quarter=document.getElementById('copyQuarter').value;
-    let newCode=null;
-    for(let i=0;i<5;i++){
-      const candidate=`${year}${QUARTER_CODES[quarter]}-AS${generateRandomSuffix()}`;
-      const {data}=await db.from('assessments').select('code').eq('code',candidate).maybeSingle();
-      if(!data){newCode=candidate;break;}
-    }
-    if(!newCode){showToast('Could not generate code. Try again.','error');btn.disabled=false;btn.textContent='Create Copy';return;}
-    let teacherId=copyingFrom.teacher_id;
-    if(currentProfile.role==='academic')teacherId=document.getElementById('copyTeacherId').value||teacherId;
-    if(currentProfile.role==='teacher')teacherId=currentProfile.id;
-    try{
-      const {error}=await db.from('assessments').insert({code:newCode,title:document.getElementById('copyTitle').value.trim()||null,class_id:document.getElementById('copyClassId').value,level_id:document.getElementById('copyLevelId').value,teacher_id:teacherId,year,quarter,type:'ASSESSMENT',results_visibility:document.getElementById('copyVisibility').value,available_from:from.toISOString(),available_until:until.toISOString(),status:'draft',notes:copyingFrom.notes||null,created_by:currentProfile.id,assessment_definition:copyingFrom.assessment_definition||null});
-      if(error)throw error;
-      closeCopyModal();showToast(`Copy created: ${newCode}`,'success');await loadData();
-    }catch(err){showToast('Failed: '+err.message,'error');}
-    finally{btn.disabled=false;btn.textContent='Create Copy';}
-  });
-
-  function buildEntryUrl(code){const url=new URL('assessment-enter-code.html',window.location.href);url.searchParams.set('code',code);return url.toString();}
-  function openShareModal(id){
-    const a=allAssessments.find(x=>x.id===id);if(!a)return;
-    const url=buildEntryUrl(a.code);
-    document.getElementById('shareModalTitle').textContent=a.title||`${a._class_name} — Assessment`;
-    document.getElementById('shareCodeBig').innerHTML=a.code.split('-').join('<br>-<br>');
-    document.getElementById('shareUrl').textContent=url.replace(/\?.*$/,'');
-    document.getElementById('shareWindow').innerHTML=`Open <strong>${formatDate(a.available_from)}</strong> &nbsp;→&nbsp; <strong>${formatDate(a.available_until)}</strong>`;
-    const qrBox=document.getElementById('shareQrBox');qrBox.innerHTML='';
-    if(typeof QRCode!=='undefined')new QRCode(qrBox,{text:url,width:260,height:260,colorDark:'#0c2340',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
-    document.getElementById('shareModal').classList.add('active');
-  }
-  window.openShareModal=openShareModal;
-  function closeShareModal(){document.getElementById('shareModal').classList.remove('active');document.getElementById('shareQrBox').innerHTML='';}
-  window.closeShareModal=closeShareModal;
-  document.getElementById('shareModal').addEventListener('click',e=>{if(e.target.id==='shareModal')closeShareModal();});
-  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('shareModal').classList.contains('active'))closeShareModal();});
-
-  (async()=>{if(!(await checkAuth()))return;await loadData();})();
-</script>
+<script type="module" src="../js/pages/assessment-dashboard.js"></script>
 </body>
 </html>

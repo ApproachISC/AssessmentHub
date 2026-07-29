@@ -4,483 +4,166 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>New Assessment — Approach International Student Center</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../css/styles.css">
 </head>
 <body>
 
-<div class="brand-bar">
-  <div class="brand-bar-logo">
-    <img src="images/gold-logo.png" alt="Approach International Student Center" class="brand-logo">
-  </div>
-  <div class="brand-bar-right">
-    <a href="assessment-dashboard.html" class="nav-link">Assessments</a>
-    <a href="dashboard.html" class="nav-link">Exams</a>
-    <div class="user-menu">
-      <button class="user-menu-trigger" id="userMenuTrigger">
-        <span class="user-info">
-          <strong id="userName">—</strong>
-          <span id="userRole"></span>
-        </span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ae9142" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-icon lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-        <span style="font-size: 0.9em;">▼</span>
-      </button>
-      <div class="user-menu-dropdown" id="userMenuDropdown">
-        <a href="qr-generator.html" target="_blank">QR Code Generator ➚</a>
-        <a href="tasgac_session_log.html" target="_blank">TAs Session Log Report ➚</a>
-        <a href="admin-dashboard.html" id="adminLink" style="display:none;">Administration</a>
-        <a href="profile.html">Profile</a>
-        <button id="signoutBtn">Sign Out</button>
-      </div>
-    </div>
-  </div>
-</div>
+<div id="navbarContainer"></div>
 
 <div class="auth-loading" id="authLoading">
   <div class="spinner"></div>
-  <p style="font-family: var(--font-display); font-style: italic;">Loading…</p>
+  <p style="font-family:var(--serif);font-style:italic;">Loading…</p>
 </div>
 
-<div id="content" style="display: none;">
+<main class="page" id="content" style="display:none;">
   <div class="breadcrumb">
-    <a href="assessment-dashboard.html">Assessments</a>
+    <a href="dashboard.html">Assessments</a>
     <span>›</span>
     New Assessment
   </div>
 
-  <div class="page" style="max-width: 1200px; margin: 0 auto; padding: 2rem;">
-    <div class="page-header">
-      <div>
-        <div class="page-stamp">New Assessment</div>
-        <h1 style="font-family: var(--font-display); font-size: 2.4rem; font-weight: 600; color: var(--nd-blue); margin-bottom: 0.4rem;">
-          Create an <em style="color: var(--nd-gold); font-style: italic; font-weight: 500;">Assessment</em>
-        </h1>
-        <p class="page-sub">Configure a new assessment and generate its access code</p>
-      </div>
-    </div>
-
-    <div style="display: grid; grid-template-columns: 1fr 320px; gap: 2rem; align-items: start;">
-
-      <!-- ===== FORM ===== -->
-      <div class="form-card">
-        <form id="assessmentForm">
-          <div class="form-grid">
-
-            <div class="field full">
-              <label for="title">Title <span class="required">*</span></label>
-              <input type="text" id="title" required placeholder="e.g. Unit 3 Vocabulary Quiz, Midterm Grammar Practice">
-              <span class="field-help">A descriptive name to identify this assessment on the dashboard.</span>
-            </div>
-
-            <div class="field">
-              <label for="year">Year <span class="required">*</span></label>
-              <input type="number" id="year" required min="2020" max="2099" value="2026">
-            </div>
-
-            <div class="field">
-              <label for="quarter">Quarter <span class="required">*</span></label>
-              <select id="quarter" required>
-                <option value="">— select quarter —</option>
-                <option value="WINTER">Winter</option>
-                <option value="SPRING">Spring</option>
-                <option value="SUMMER">Summer</option>
-                <option value="FALL">Fall</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <label for="classId">Class <span class="required">*</span></label>
-              <select id="classId" required>
-                <option value="">— select class —</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <label for="levelId">Level <span class="required">*</span></label>
-              <select id="levelId" required>
-                <option value="">— select level —</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <label for="teacherId">Teacher <span class="required">*</span></label>
-              <select id="teacherId" required>
-                <option value="">— select teacher —</option>
-              </select>
-              <span class="field-help" id="teacherHelp"></span>
-            </div>
-
-            <div class="field">
-              <label for="resultsVisibility">Results Visibility <span class="required">*</span></label>
-              <select id="resultsVisibility" required>
-                <option value="score_only" selected>Score only</option>
-                <option value="full_breakdown">Full breakdown</option>
-                <option value="none">No results shown</option>
-              </select>
-              <span class="field-help">What students see immediately after submitting.</span>
-            </div>
-
-            <div class="field">
-              <label for="availableFrom">Available From <span class="required">*</span></label>
-              <input type="datetime-local" id="availableFrom" required>
-            </div>
-
-            <div class="field">
-              <label for="availableUntil">Available Until <span class="required">*</span></label>
-              <input type="datetime-local" id="availableUntil" required>
-            </div>
-
-            <div class="field full">
-              <label for="notes">Notes (optional)</label>
-              <textarea id="notes" rows="2" placeholder="Internal notes — not visible to students"></textarea>
-            </div>
-
-            <div class="form-actions">
-              <a href="assessment-dashboard.html" class="btn-secondary">Cancel</a>
-              <button type="submit" class="btn-primary" id="submitBtn" disabled>Create Assessment</button>
-            </div>
-
-          </div>
-        </form>
-      </div>
-
-      <!-- ===== PREVIEW PANEL ===== -->
-      <div class="preview-card">
-        <div class="preview-label">Access Code</div>
-        <div class="preview-title">Code Preview</div>
-
-        <div class="code-display placeholder" id="codeDisplay">Fill in Year &amp; Quarter</div>
-        <div class="code-status" id="codeStatus" style="display: none;"></div>
-
-        <button type="button" class="regenerate-btn" id="regenerateBtn" disabled>
-          Regenerate Random Suffix
-        </button>
-
-        <p style="margin-top: 1.25rem; font-family: var(--font-display); font-style: italic; font-size: 0.9rem; color: var(--medium-blue); line-height: 1.5;">
-          Format: <strong style="font-style: normal; font-family: monospace; color: var(--nd-blue);">YYYYQQ-ASXXXX</strong><br>
-          <strong style="font-style: normal; color: var(--nd-blue);">AS</strong> is fixed — identifies this as an assessment.
-          <strong style="font-style: normal; color: var(--nd-blue);">XXXX</strong> is a random suffix verified for uniqueness.
-        </p>
-
-        <div style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--dark-sky-blue);">
-          <div class="preview-label" style="margin-bottom: 0.5rem;">Results Visibility</div>
-          <div id="visibilityPreview" style="font-family: var(--font-display); font-style: italic; color: var(--medium-blue); font-size: 0.9rem; line-height: 1.5;">
-            Students will see their score after submitting.
-          </div>
-        </div>
-      </div>
-
+  <div class="page-header">
+    <div>
+      <div class="page-stamp">New Assessment</div>
+      <h1>Create an <em>Assessment</em></h1>
+      <p class="page-sub">Configure a new assessment and generate its access code</p>
     </div>
   </div>
-</div>
+
+  <div style="display:grid;grid-template-columns:1fr 320px;gap:2rem;align-items:start;">
+
+    <!-- ===== FORM ===== -->
+    <div class="form-card">
+      <form id="assessmentForm">
+        <div class="form-grid">
+
+          <div class="field full">
+            <label for="title">Title <span class="required">*</span></label>
+            <input type="text" id="title" required placeholder="e.g. Unit 3 Vocabulary Quiz, Midterm Grammar Practice">
+            <span class="field-help">A descriptive name to identify this assessment on the dashboard.</span>
+          </div>
+
+          <div class="field">
+            <label for="year">Year <span class="required">*</span></label>
+            <input type="number" id="year" required min="2020" max="2099" value="2026">
+          </div>
+
+          <div class="field">
+            <label for="quarter">Quarter <span class="required">*</span></label>
+            <select id="quarter" required>
+              <option value="">— select quarter —</option>
+              <option value="WINTER">Winter</option>
+              <option value="SPRING">Spring</option>
+              <option value="SUMMER">Summer</option>
+              <option value="FALL">Fall</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="classId">Class <span class="required">*</span></label>
+            <select id="classId" required>
+              <option value="">— select class —</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="levelId">Level <span class="required">*</span></label>
+            <select id="levelId" required>
+              <option value="">— select level —</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="teacherId">Teacher <span class="required">*</span></label>
+            <select id="teacherId" required>
+              <option value="">— select teacher —</option>
+            </select>
+            <span class="field-help" id="teacherHelp"></span>
+          </div>
+
+          <div class="field">
+            <label for="resultsVisibility">Results Visibility <span class="required">*</span></label>
+            <select id="resultsVisibility" required>
+              <option value="score_only" selected>Score only</option>
+              <option value="full_breakdown">Full breakdown</option>
+              <option value="none">No results shown</option>
+            </select>
+            <span class="field-help">What students see immediately after submitting.</span>
+          </div>
+
+          <div class="field">
+            <label for="availableFrom">Available From <span class="required">*</span></label>
+            <input type="datetime-local" id="availableFrom" required>
+          </div>
+
+          <div class="field">
+            <label for="availableUntil">Available Until <span class="required">*</span></label>
+            <input type="datetime-local" id="availableUntil" required>
+          </div>
+
+          <div class="field full">
+            <label for="notes">Notes (optional)</label>
+            <textarea id="notes" rows="2" placeholder="Internal notes — not visible to students"></textarea>
+          </div>
+
+          <div class="form-actions">
+            <a href="dashboard.html" class="btn btn--secondary">Cancel</a>
+            <button type="submit" class="btn btn--primary" id="submitBtn" disabled>Create Assessment</button>
+          </div>
+
+        </div>
+      </form>
+    </div>
+
+    <!-- ===== PREVIEW PANEL ===== -->
+    <div class="preview-card">
+      <div class="preview-label">Access Code</div>
+      <div class="preview-title">Code Preview</div>
+
+      <div class="code-display placeholder" id="codeDisplay">Fill in Year &amp; Quarter</div>
+      <div class="code-status" id="codeStatus" style="display:none;"></div>
+
+      <button type="button" class="regenerate-btn" id="regenerateBtn" disabled>
+        Regenerate Random Suffix
+      </button>
+
+      <p style="margin-top:1.25rem;font-family:var(--serif);font-style:italic;font-size:0.9rem;color:var(--navy-l);line-height:1.5;">
+        Format: <strong style="font-style:normal;font-family:var(--mono);color:var(--navy);">YYYYQQ-ASXXXX</strong><br>
+        <strong style="font-style:normal;color:var(--navy);">AS</strong> is fixed — identifies this as an assessment.
+        <strong style="font-style:normal;color:var(--navy);">XXXX</strong> is a random suffix verified for uniqueness.
+      </p>
+
+      <div style="margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--line);">
+        <div class="preview-label" style="margin-bottom:0.5rem;">Results Visibility</div>
+        <div id="visibilityPreview" style="font-family:var(--serif);font-style:italic;color:var(--navy-l);font-size:0.9rem;line-height:1.5;">
+          Students will see their score after submitting.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
 
 <!-- ===== SUCCESS OVERLAY ===== -->
 <div class="success-overlay" id="successOverlay">
   <div class="success-card">
     <div class="check">✓</div>
     <h2 id="successTitle">Assessment Created</h2>
-    <p style="color: var(--medium-blue); font-family: var(--font-display); font-style: italic; margin-bottom: 0.5rem;">
+    <p style="color:var(--navy-l);font-family:var(--serif);font-style:italic;margin-bottom:0.5rem;">
       Your access code is ready. Add your questions on the next page.
     </p>
     <div class="saved-code" id="savedCode">—</div>
     <div class="success-actions">
-      <button type="button" class="btn-secondary" onclick="copyCode()">Copy Code</button>
-      <a id="editLink" href="#" class="btn-primary">Edit Questions →</a>
+      <button type="button" class="btn btn--secondary" id="copyCodeBtn">Copy Code</button>
+      <a id="editLink" href="#" class="btn btn--primary">Edit Questions →</a>
     </div>
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
 <div class="copyright">
   Copyright © 2026 Approach International Student Center, Inc. — All rights reserved.
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  const SUPABASE_URL = 'https://okyauyzdensuvuoyphds.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9reWF1eXpkZW5zdXZ1b3lwaGRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1NTgwOTUsImV4cCI6MjA5MzEzNDA5NX0.NZUclCDHecS9bcZOLHj1ZXBFf5b5k9klRwTMfJrglfI';
-  const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-  const QUARTER_CODES = { WINTER: 'WT', SPRING: 'SP', SUMMER: 'SM', FALL: 'FA' };
-  const ALPHANUM = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-
-  let currentUser = null;
-  let currentProfile = null;
-  let currentCode = null;
-  let codeIsAvailable = false;
-
-  const classIdEl     = document.getElementById('classId');
-  const levelIdEl     = document.getElementById('levelId');
-  const teacherIdEl   = document.getElementById('teacherId');
-  const teacherHelpEl = document.getElementById('teacherHelp');
-  const yearEl        = document.getElementById('year');
-  const quarterEl     = document.getElementById('quarter');
-  const codeDisplay   = document.getElementById('codeDisplay');
-  const codeStatus    = document.getElementById('codeStatus');
-  const regenerateBtn = document.getElementById('regenerateBtn');
-  const submitBtn     = document.getElementById('submitBtn');
-  const toast         = document.getElementById('toast');
-  const form          = document.getElementById('assessmentForm');
-  const resultsVisEl  = document.getElementById('resultsVisibility');
-
-  // ===== HELPERS =====
-  function showToast(msg, type = '') {
-    toast.textContent = msg;
-    toast.className = 'toast show ' + type;
-    setTimeout(() => toast.classList.remove('show'), 4000);
-  }
-
-  function escapeHtml(s) {
-    if (s == null) return '';
-    return String(s).replace(/[&<>"']/g, c => ({
-      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-    }[c]));
-  }
-
-  function generateRandomSuffix() {
-    let s = '';
-    for (let i = 0; i < 4; i++) s += ALPHANUM[Math.floor(Math.random() * ALPHANUM.length)];
-    return s;
-  }
-
-  // Format: YYYYQQ-ASXXXX  (AS is always fixed for assessments)
-  function buildCode(year, quarter, suffix) {
-    return `${year}${QUARTER_CODES[quarter]}-AS${suffix}`;
-  }
-
-  function setStatus(state, message) {
-    codeStatus.style.display = 'flex';
-    codeStatus.className = 'code-status ' + state;
-    codeStatus.textContent = message;
-  }
-
-  function clearCode() {
-    currentCode = null;
-    codeIsAvailable = false;
-    codeDisplay.textContent = 'Fill in Year & Quarter';
-    codeDisplay.className = 'code-display placeholder';
-    codeStatus.style.display = 'none';
-    regenerateBtn.disabled = true;
-    updateSubmitState();
-  }
-
-  // ===== RESULTS VISIBILITY PREVIEW =====
-  const visibilityLabels = {
-    score_only:     'Students will see their total score after submitting.',
-    full_breakdown: 'Students will see their score and a full per-question breakdown after submitting.',
-    none:           'Students will see a confirmation message only. Results are not shown.'
-  };
-
-  function updateVisibilityPreview() {
-    document.getElementById('visibilityPreview').textContent =
-      visibilityLabels[resultsVisEl.value] || '';
-  }
-  resultsVisEl.addEventListener('change', updateVisibilityPreview);
-  updateVisibilityPreview();
-
-  // ===== AUTH GUARD =====
-  async function checkAuth() {
-    const { data: { session } } = await db.auth.getSession();
-    if (!session) { window.location.href = 'login.html'; return false; }
-    currentUser = session.user;
-    const { data: profile } = await db.from('profiles').select('*').eq('id', session.user.id).single();
-    if (!profile || !profile.is_active) {
-      await db.auth.signOut();
-      window.location.href = 'login.html';
-      return false;
-    }
-    currentProfile = profile;
-    document.getElementById('userName').textContent = profile.full_name || session.user.email;
-    if (profile.role === 'academic') document.getElementById('adminLink').style.display = 'inline-block';
-    return true;
-  }
-
-  document.getElementById('userMenuTrigger').addEventListener('click', () => {
-    document.getElementById('userMenuDropdown').classList.toggle('show');
-  });
-  document.addEventListener('click', (e) => {
-    const menu = document.querySelector('.user-menu');
-    if (menu && !menu.contains(e.target)) document.getElementById('userMenuDropdown').classList.remove('show');
-  });
-  document.getElementById('signoutBtn').addEventListener('click', async () => {
-    await db.auth.signOut();
-    window.location.href = 'login.html';
-  });
-
-  // ===== LOAD LOOKUP DATA =====
-  async function loadLookupData() {
-    try {
-      const [classesRes, levelsRes, teachersRes] = await Promise.all([
-        db.from('classes').select('*').eq('is_active', true).order('name'),
-        db.from('levels').select('*').eq('is_active', true).order('display_order'),
-        db.from('profiles').select('id, full_name, email, role, is_active').eq('is_active', true).order('full_name')
-      ]);
-      if (classesRes.error) throw classesRes.error;
-      if (levelsRes.error) throw levelsRes.error;
-
-      classIdEl.innerHTML = '<option value="">— select class —</option>' +
-        (classesRes.data || []).map(c => `<option value="${c.id}">${escapeHtml(c.name)}</option>`).join('');
-
-      levelIdEl.innerHTML = '<option value="">— select level —</option>' +
-        (levelsRes.data || []).map(l => `<option value="${l.id}">${escapeHtml(l.name)}</option>`).join('');
-
-      if (currentProfile.role === 'academic') {
-        teacherIdEl.innerHTML = '<option value="">— select teacher —</option>' +
-          (teachersRes.data || []).map(t =>
-            `<option value="${t.id}">${escapeHtml(t.full_name || t.email)}${t.role === 'academic' ? ' (Academic)' : ''}</option>`
-          ).join('');
-        teacherHelpEl.textContent = 'You can assign this assessment to any active user.';
-      } else {
-        teacherIdEl.innerHTML = `<option value="${currentProfile.id}" selected>${escapeHtml(currentProfile.full_name || currentProfile.email)}</option>`;
-        teacherIdEl.disabled = true;
-        teacherHelpEl.textContent = 'Teachers can only create assessments assigned to themselves.';
-        teacherHelpEl.classList.add('locked');
-      }
-
-      document.getElementById('authLoading').style.display = 'none';
-      document.getElementById('content').style.display = 'block';
-    } catch (err) {
-      console.error('Failed to load lookup data:', err);
-      showToast('Could not load form data: ' + err.message, 'error');
-    }
-  }
-
-  // ===== UNIQUENESS CHECK =====
-  // Checks against assessments table only — separate namespace from exams
-  async function checkCodeUnique(code) {
-    const { data, error } = await db.from('assessments').select('code').eq('code', code).maybeSingle();
-    if (error) throw error;
-    return !data;
-  }
-
-  // ===== CODE GENERATION =====
-  async function generateAndVerifyCode() {
-    const year    = yearEl.value;
-    const quarter = quarterEl.value;
-    if (!year || !quarter) { clearCode(); return; }
-
-    setStatus('checking', 'Generating and verifying code…');
-    codeDisplay.className = 'code-display';
-    regenerateBtn.disabled = true;
-
-    for (let attempt = 0; attempt < 5; attempt++) {
-      const suffix = generateRandomSuffix();
-      const code   = buildCode(year, quarter, suffix);
-      codeDisplay.textContent = code;
-      try {
-        const isUnique = await checkCodeUnique(code);
-        if (isUnique) {
-          currentCode = code;
-          codeIsAvailable = true;
-          setStatus('available', '✓ Code is available');
-          regenerateBtn.disabled = false;
-          updateSubmitState();
-          return;
-        }
-      } catch (err) {
-        setStatus('taken', '⚠ Could not verify code. Check connection.');
-        regenerateBtn.disabled = false;
-        codeIsAvailable = false;
-        updateSubmitState();
-        return;
-      }
-    }
-    setStatus('taken', '⚠ Could not generate a unique code. Try again.');
-    regenerateBtn.disabled = false;
-    codeIsAvailable = false;
-    updateSubmitState();
-  }
-
-  // ===== VALIDATION =====
-  function updateSubmitState() {
-    const allFilled =
-      document.getElementById('title').value.trim() &&
-      classIdEl.value && levelIdEl.value && teacherIdEl.value &&
-      yearEl.value && quarterEl.value && resultsVisEl.value &&
-      document.getElementById('availableFrom').value &&
-      document.getElementById('availableUntil').value &&
-      codeIsAvailable;
-    submitBtn.disabled = !allFilled;
-  }
-
-  [yearEl, quarterEl].forEach(el => el.addEventListener('change', generateAndVerifyCode));
-  form.querySelectorAll('input, select, textarea').forEach(el => {
-    el.addEventListener('input', updateSubmitState);
-    el.addEventListener('change', updateSubmitState);
-  });
-  regenerateBtn.addEventListener('click', generateAndVerifyCode);
-
-  // ===== SUBMIT =====
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    if (!codeIsAvailable || !currentCode) {
-      showToast('Code is not yet verified. Please wait or regenerate.', 'error');
-      return;
-    }
-    const from  = new Date(document.getElementById('availableFrom').value);
-    const until = new Date(document.getElementById('availableUntil').value);
-    if (until <= from) {
-      showToast('"Available Until" must be after "Available From".', 'error');
-      return;
-    }
-
-    let teacherId = teacherIdEl.value;
-    if (currentProfile.role === 'teacher') teacherId = currentProfile.id;
-
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Saving…';
-
-    const payload = {
-      code:               currentCode,
-      title:              document.getElementById('title').value.trim(),
-      class_id:           classIdEl.value,
-      level_id:           levelIdEl.value,
-      teacher_id:         teacherId,
-      year:               parseInt(yearEl.value, 10),
-      quarter:            quarterEl.value,
-      type:               'ASSESSMENT',
-      results_visibility: resultsVisEl.value,
-      available_from:     from.toISOString(),
-      available_until:    until.toISOString(),
-      status:             'draft',
-      notes:              document.getElementById('notes').value.trim() || null,
-      created_by:         currentProfile.id
-    };
-
-    try {
-      const { data, error } = await db.from('assessments').insert(payload).select().single();
-      if (error) throw error;
-      document.getElementById('savedCode').textContent = data.code;
-      document.getElementById('successTitle').textContent = data.title || 'Assessment Created';
-      document.getElementById('editLink').href = `assessment-edit.html?id=${data.id}&new=true`;
-      document.getElementById('successOverlay').classList.add('active');
-    } catch (err) {
-      console.error('Insert failed:', err);
-      if (err.code === '23505') {
-        showToast('That code was just taken. Generating a new one…', 'error');
-        await generateAndVerifyCode();
-      } else {
-        showToast('Failed to save: ' + (err.message || 'Unknown error'), 'error');
-      }
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Create Assessment';
-    }
-  });
-
-  function copyCode() {
-    navigator.clipboard.writeText(document.getElementById('savedCode').textContent)
-      .then(() => showToast('Code copied to clipboard', 'success'));
-  }
-  window.copyCode = copyCode;
-
-  // ===== INIT =====
-  (async () => {
-    if (!(await checkAuth())) return;
-    await loadLookupData();
-  })();
-</script>
-
+<script type="module" src="../js/pages/assessment-create.js"></script>
 </body>
 </html>

@@ -4,1003 +4,134 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Create Exam — Approach International Student Center</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
-<style>
-  :root {
-    --nd-blue: #0c2340;
-    --nd-gold: #ae9142;
-    --medium-blue: #143865;
-    --bright-blue: #1c4f8f;
-    --dark-sky-blue: #c1cddd;
-    --medium-sky-blue: #e1e8f2;
-    --light-sky-blue: #edf2f9;
-    --dark-gold: #8c7535;
-    --bright-gold: #d39f10;
-    --warm-white: #efe9d9;
-    --light-warm-white: #f8f4ec;
-    --accent-red: #ab100b;
-    --success-green: #3a6b3a;
-    --font-display: 'Cormorant Garamond', 'Times New Roman', serif;
-    --font-body: 'Montserrat', system-ui, sans-serif;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: var(--font-body);
-    background: var(--light-warm-white);
-    color: var(--nd-blue);
-    min-height: 100vh;
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  .brand-bar {
-    background: var(--nd-blue);
-    color: var(--light-warm-white);
-    padding: 0.7rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    border-bottom: 3px solid var(--nd-gold);
-  }
-  .brand-bar-logo { display: flex; align-items: center; gap: 0.6rem; }
-  .brand-monogram {
-    font-family: var(--font-display);
-    font-size: 1.3rem; font-weight: 600;
-    color: var(--nd-gold); line-height: 1;
-  }
-  .brand-bar-right { display: flex; align-items: center; gap: 1.5rem; }
-  .user-info {
-    font-size: 0.7rem;
-    color: var(--dark-sky-blue);
-    text-transform: none;
-    letter-spacing: 0.05em;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-  }
-  .user-info strong { color: var(--nd-gold); font-weight: 600; }
-  .nav-link {
-    color: var(--dark-sky-blue);
-    text-decoration: none;
-    font-size: 0.65rem;
-    font-weight: 600;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    padding: 0.4rem 0.85rem;
-    border: 1px solid transparent;
-    transition: all 0.15s;
-  }
-  .nav-link:hover { color: var(--nd-gold); border-color: var(--nd-gold); }
-
-  .user-menu {
-    position: relative;
-  }
-  .user-menu-trigger {
-    background: transparent;
-    border: none;
-    color: var(--light-warm-white);
-    font-family: var(--font-body);
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    padding: 0.7rem 1rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: color 0.15s;
-  }
-  .user-menu-trigger:hover {
-    color: var(--nd-gold);
-  }
-  .user-menu-dropdown {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background: white;
-    border: 1px solid var(--dark-sky-blue);
-    border-top: 3px solid var(--nd-gold);
-    box-shadow: 0 4px 12px rgba(12, 35, 64, 0.15);
-    border-radius: 2px;
-    min-width: 160px;
-    z-index: 1000;
-    display: none;
-    margin-top: 0.5rem;
-  }
-  .user-menu-dropdown.show {
-    display: block;
-  }
-  .user-menu-dropdown a,
-  .user-menu-dropdown button {
-    display: block;
-    width: 100%;
-    padding: 0.9rem 1.2rem;
-    text-align: left;
-    border: none;
-    background: transparent;
-    color: var(--nd-blue);
-    text-decoration: none;
-    font-family: var(--font-body);
-    font-size: 0.85rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.15s, color 0.15s;
-  }
-  .user-menu-dropdown a:hover,
-  .user-menu-dropdown button:hover {
-    background: var(--light-sky-blue);
-    color: var(--bright-blue);
-  }
-  .user-menu-dropdown a:first-child {
-    border-top: 1px solid var(--medium-sky-blue);
-  }
-  .user-menu-dropdown button {
-    border-top: 1px solid var(--medium-sky-blue);
-    color: var(--accent-red);
-  }
-  .user-menu-dropdown button:hover {
-    background: rgba(171, 16, 11, 0.08);
-  }
-
-  .breadcrumb {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 1.5rem 2rem 0;
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--medium-blue);
-  }
-  .breadcrumb a { color: var(--medium-blue); text-decoration: none; }
-  .breadcrumb a:hover { color: var(--nd-gold); }
-  .breadcrumb span { margin: 0 0.5rem; color: var(--dark-sky-blue); }
-
-  .page {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 1.5rem 2rem 5rem;
-    display: grid;
-    grid-template-columns: 1fr 380px;
-    gap: 3rem;
-    align-items: start;
-  }
-
-  .page-header {
-    grid-column: 1 / -1;
-    margin-bottom: 1rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid var(--dark-sky-blue);
-  }
-  .page-stamp {
-    font-size: 0.65rem;
-    font-weight: 600;
-    letter-spacing: 0.25em;
-    color: var(--nd-gold);
-    text-transform: uppercase;
-    margin-bottom: 0.5rem;
-  }
-  h1 {
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: clamp(2rem, 4vw, 2.8rem);
-    line-height: 1.05;
-    color: var(--nd-blue);
-    margin-bottom: 0.4rem;
-  }
-  h1 em { font-style: italic; color: var(--nd-gold); font-weight: 500; }
-  .page-sub {
-    font-family: var(--font-display);
-    font-style: italic;
-    font-size: 1.1rem;
-    color: var(--medium-blue);
-  }
-
-  .form-card {
-    background: #fff;
-    border-top: 4px solid var(--nd-gold);
-    box-shadow: 0 2px 8px rgba(12, 35, 64, 0.05);
-    padding: 2.5rem;
-  }
-  .form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem 1.25rem;
-  }
-  .field { display: flex; flex-direction: column; gap: 0.5rem; }
-  .field.full { grid-column: 1 / -1; }
-  .field label {
-    font-size: 0.65rem;
-    font-weight: 600;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--medium-blue);
-  }
-  .field label .required { color: var(--accent-red); margin-left: 0.2rem; }
-  .field input[type="text"],
-  .field input[type="number"],
-  .field input[type="datetime-local"],
-  .field select,
-  .field textarea {
-    font-family: var(--font-body);
-    font-size: 1rem;
-    padding: 0.7rem 0.9rem;
-    border: 1px solid var(--dark-sky-blue);
-    background: var(--light-sky-blue);
-    color: var(--nd-blue);
-    transition: all 0.2s;
-  }
-  .field textarea {
-    min-height: 90px;
-    resize: vertical;
-    font-family: var(--font-body);
-  }
-  .field input:focus, .field select:focus, .field textarea:focus {
-    outline: none;
-    border-color: var(--nd-gold);
-    background: #fff;
-    box-shadow: 0 0 0 3px rgba(174, 145, 66, 0.15);
-  }
-  .field input:disabled, .field select:disabled {
-    background: var(--medium-sky-blue);
-    color: var(--medium-blue);
-    cursor: not-allowed;
-  }
-  .field-help {
-    font-size: 0.78rem;
-    color: var(--medium-blue);
-    font-style: italic;
-    font-family: var(--font-display);
-  }
-  .field-help.locked {
-    color: var(--dark-gold);
-  }
-
-  .preview-card {
-    background: #fff;
-    border-top: 4px solid var(--nd-gold);
-    box-shadow: 0 2px 8px rgba(12, 35, 64, 0.05);
-    padding: 2rem;
-    position: sticky;
-    top: 5rem;
-  }
-  .preview-label {
-    font-size: 0.65rem;
-    font-weight: 600;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--nd-gold);
-    margin-bottom: 0.5rem;
-  }
-  .preview-title {
-    font-family: var(--font-display);
-    font-size: 1.4rem;
-    font-weight: 600;
-    color: var(--nd-blue);
-    margin-bottom: 1.5rem;
-  }
-  .code-display {
-    background: var(--nd-blue);
-    color: var(--nd-gold);
-    padding: 1.5rem 1rem;
-    text-align: center;
-    font-family: 'JetBrains Mono', monospace, var(--font-body);
-    font-size: 1.4rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    border: 2px solid var(--nd-gold);
-    margin-bottom: 1rem;
-    word-break: break-all;
-    min-height: 4.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .code-display.placeholder {
-    color: var(--dark-sky-blue);
-    font-style: italic;
-    font-family: var(--font-display);
-    font-size: 1rem;
-    letter-spacing: normal;
-    font-weight: 400;
-  }
-  .code-status {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    font-size: 0.75rem;
-    padding: 0.6rem;
-    background: var(--light-sky-blue);
-    border-left: 3px solid var(--medium-blue);
-    margin-bottom: 1rem;
-    color: var(--medium-blue);
-    font-weight: 500;
-  }
-  .code-status.checking { background: var(--light-sky-blue); border-left-color: var(--medium-blue); color: var(--medium-blue); }
-  .code-status.available { background: rgba(58, 107, 58, 0.1); border-left-color: var(--success-green); color: var(--success-green); }
-  .code-status.taken { background: rgba(171, 16, 11, 0.08); border-left-color: var(--accent-red); color: var(--accent-red); }
-
-  .regenerate-btn {
-    width: 100%;
-    background: transparent;
-    color: var(--medium-blue);
-    border: 1px solid var(--medium-blue);
-    padding: 0.7rem;
-    font-family: var(--font-body);
-    font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .regenerate-btn:hover { background: var(--medium-blue); color: var(--light-warm-white); }
-  .regenerate-btn:disabled { border-color: var(--dark-sky-blue); color: var(--dark-sky-blue); cursor: not-allowed; }
-
-  .form-actions {
-    grid-column: 1 / -1;
-    display: flex;
-    gap: 1rem;
-    margin-top: 1rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--dark-sky-blue);
-  }
-  .btn-primary, .btn-secondary {
-    font-family: var(--font-body);
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    padding: 1rem 2rem;
-    cursor: pointer;
-    transition: all 0.2s;
-    border: none;
-  }
-  .btn-primary {
-    background: var(--nd-gold);
-    color: var(--nd-blue);
-    border-bottom: 3px solid var(--nd-blue);
-    flex: 1;
-  }
-  .btn-primary:hover:not(:disabled) { background: var(--bright-gold); }
-  .btn-primary:disabled {
-    background: var(--dark-sky-blue);
-    color: var(--medium-blue);
-    cursor: not-allowed;
-    border-bottom-color: var(--medium-blue);
-  }
-  .btn-secondary {
-    background: transparent;
-    color: var(--medium-blue);
-    border: 1px solid var(--medium-blue);
-    text-decoration: none;
-    text-align: center;
-    display: inline-block;
-  }
-  .btn-secondary:hover { background: var(--medium-blue); color: var(--light-warm-white); }
-
-  .toast {
-    position: fixed;
-    top: 5rem;
-    right: 2rem;
-    background: var(--nd-blue);
-    color: var(--light-warm-white);
-    padding: 1rem 1.4rem;
-    border-left: 3px solid var(--nd-gold);
-    font-size: 0.85rem;
-    transform: translateX(120%);
-    transition: transform 0.3s;
-    z-index: 50;
-    max-width: 380px;
-    box-shadow: 0 4px 20px rgba(12, 35, 64, 0.2);
-  }
-  .toast.show { transform: translateX(0); }
-  .toast.error { border-left-color: var(--accent-red); }
-  .toast.success { border-left-color: var(--success-green); }
-
-  .success-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(12, 35, 64, 0.85);
-    z-index: 100;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-  }
-  .success-overlay.active { display: flex; }
-  .success-card {
-    background: #fff;
-    max-width: 520px;
-    width: 100%;
-    border-top: 6px solid var(--nd-gold);
-    padding: 3rem;
-    text-align: center;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  }
-  .success-card .check {
-    width: 60px;
-    height: 60px;
-    border: 2px solid var(--success-green);
-    border-radius: 50%;
-    margin: 0 auto 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--font-display);
-    font-size: 2rem;
-    color: var(--success-green);
-  }
-  .success-card h2 {
-    font-family: var(--font-display);
-    font-size: 1.9rem;
-    font-weight: 600;
-    color: var(--nd-blue);
-    margin-bottom: 0.5rem;
-  }
-  .success-card .saved-code {
-    background: var(--nd-blue);
-    color: var(--nd-gold);
-    padding: 1.25rem;
-    margin: 1.5rem 0;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 1.4rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    border: 2px solid var(--nd-gold);
-  }
-  .success-actions { display: flex; gap: 0.75rem; margin-top: 1.5rem; }
-  .success-actions button, .success-actions a { flex: 1; }
-
-  .copyright {
-    text-align: center;
-    padding: 1.5rem 2rem;
-    background: var(--nd-blue);
-    color: var(--dark-sky-blue);
-    font-size: 0.7rem;
-    letter-spacing: 0.15em;
-    border-top: 2px solid var(--nd-gold);
-  }
-
-  .auth-loading {
-    text-align: center;
-    padding: 6rem 2rem;
-    color: var(--medium-blue);
-  }
-  .auth-loading .spinner {
-    display: inline-block;
-    width: 40px; height: 40px;
-    border: 3px solid var(--dark-sky-blue);
-    border-top-color: var(--nd-gold);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    margin-bottom: 1rem;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  @media (max-width: 900px) {
-    .page { grid-template-columns: 1fr; }
-    .preview-card { position: static; }
-  }
-  @media (max-width: 600px) {
-    .form-grid { grid-template-columns: 1fr; }
-    .form-card { padding: 1.5rem; }
-    .form-actions { flex-direction: column; }
-  }
-</style>
+<link rel="stylesheet" href="../css/styles.css">
 </head>
 <body>
 
-<div class="brand-bar">
-  <div class="brand-bar-logo">
-    <img src="images/gold-logo.png" alt="Approach International Student Center" class="brand-logo">
-  </div>
-  <div class="brand-bar-right">
-    <!--<a href="assessment-dashboard.html" class="nav-link">Assessments</a>-->
-    <a href="dashboard.html" class="nav-link">Exams</a>
-    <div class="user-menu">
-      <button class="user-menu-trigger" id="userMenuTrigger">
-        <span class="user-info">
-          <strong id="userName">—</strong>
-          <span id="userRole"></span>
-        </span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ae9142" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-icon lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-        <span style="font-size: 0.9em;">▼</span>
-      </button>
-      <div class="user-menu-dropdown" id="userMenuDropdown">
-        <a href="qr-generator.html" target="_blank">QR Code Generator ➚</a>
-        <a href="tasgac_session_log.html" target="_blank">TAs Session Log Report ➚</a>
-        <a href="admin-dashboard.html" id="adminLink" style="display:none;">Administration</a>
-        <a href="profile.html">Profile</a>
-        <button id="signoutBtn">Sign Out</button>
-      </div>
-    </div>
-  </div>
-</div>
+<div id="navbarContainer"></div>
 
 <div class="auth-loading" id="authLoading">
   <div class="spinner"></div>
-  <p style="font-family: var(--font-display); font-style: italic;">Verifying access…</p>
+  <p style="font-family:var(--serif);font-style:italic;">Verifying access…</p>
 </div>
 
-<div id="content" style="display: none;">
+<main class="page" id="content" style="display:none;">
   <div class="breadcrumb">
-    <a href="dashboard.html">Exams</a> <span>›</span> <span>New Exam</span>
+    <a href="dashboard.html">Exams</a> <span>›</span> New Exam
   </div>
 
-  <div class="page">
-    <div class="page-header">
+  <div class="page-header">
+    <div>
       <div class="page-stamp">Exam Administration · Create</div>
       <h1>New <em>Exam</em></h1>
       <p class="page-sub">Configure a new exam and generate its access code</p>
     </div>
+  </div>
 
-    <form class="form-card" id="examForm">
-      <div class="form-grid">
-        <div class="field full">
-          <label for="classId">Class <span class="required">*</span></label>
-          <select id="classId" required>
-            <option value="">— select class —</option>
-          </select>
-          <span class="field-help">Manage the list of classes from the Administration page.</span>
-        </div>
+  <div style="display:grid;grid-template-columns:1fr 320px;gap:2rem;align-items:start;">
 
-        <div class="field">
-          <label for="levelId">Level <span class="required">*</span></label>
-          <select id="levelId" required>
-            <option value="">— select level —</option>
-          </select>
-        </div>
+    <div class="form-card">
+      <form id="examForm">
+        <div class="form-grid">
 
-        <div class="field">
-          <label for="teacherId">Teacher <span class="required">*</span></label>
-          <select id="teacherId" required>
-            <option value="">— select teacher —</option>
-          </select>
-          <span class="field-help" id="teacherHelp"></span>
-        </div>
+          <div class="field full">
+            <label for="classId">Class <span class="required">*</span></label>
+            <select id="classId" required><option value="">— select class —</option></select>
+            <span class="field-help">Manage the list of classes from the Administration page.</span>
+          </div>
 
-        <div class="field">
-          <label for="year">Year <span class="required">*</span></label>
-          <input type="number" id="year" required min="2020" max="2099" value="2026">
-        </div>
+          <div class="field">
+            <label for="levelId">Level <span class="required">*</span></label>
+            <select id="levelId" required><option value="">— select level —</option></select>
+          </div>
 
-        <div class="field">
-          <label for="quarter">Quarter <span class="required">*</span></label>
-          <select id="quarter" required>
-            <option value="">— select quarter —</option>
-            <option value="WINTER">Winter</option>
-            <option value="SPRING">Spring</option>
-            <option value="SUMMER">Summer</option>
-            <option value="FALL">Fall</option>
-          </select>
-        </div>
+          <div class="field">
+            <label for="teacherId">Teacher <span class="required">*</span></label>
+            <select id="teacherId" required><option value="">— select teacher —</option></select>
+            <span class="field-help" id="teacherHelp"></span>
+          </div>
 
-        <div class="field full">
-          <label for="type">Type <span class="required">*</span></label>
-          <select id="type" required>
-            <option value="">— select type —</option>
-            <option value="MIDTERM">Midterm</option>
-            <option value="FINAL EXAM">Final Exam</option>
-          </select>
-        </div>
+          <div class="field">
+            <label for="year">Year <span class="required">*</span></label>
+            <input type="number" id="year" required min="2020" max="2099" value="2026">
+          </div>
 
-        <div class="field">
-          <label for="availableFrom">Available From <span class="required">*</span></label>
-          <input type="datetime-local" id="availableFrom" required>
-        </div>
+          <div class="field">
+            <label for="quarter">Quarter <span class="required">*</span></label>
+            <select id="quarter" required>
+              <option value="">— select quarter —</option>
+              <option value="WINTER">Winter</option>
+              <option value="SPRING">Spring</option>
+              <option value="SUMMER">Summer</option>
+              <option value="FALL">Fall</option>
+            </select>
+          </div>
 
-        <div class="field">
-          <label for="availableUntil">Available Until <span class="required">*</span></label>
-          <input type="datetime-local" id="availableUntil" required>
-        </div>
+          <div class="field full">
+            <label for="type">Type <span class="required">*</span></label>
+            <select id="type" required>
+              <option value="">— select type —</option>
+              <option value="MIDTERM">Midterm</option>
+              <option value="FINAL EXAM">Final Exam</option>
+            </select>
+          </div>
 
-        <div class="field">
-          <label for="status">Status <span class="required">*</span></label>
-          <select id="status" required>
-            <option value="active">Active</option>
-            <option value="draft">Draft</option>
-            <option value="archived">Archived</option>
-          </select>
-        </div>
+          <div class="field">
+            <label for="availableFrom">Available From <span class="required">*</span></label>
+            <input type="datetime-local" id="availableFrom" required>
+          </div>
 
-        <div class="field">
-          <label>Code Format</label>
-          <div style="font-family: monospace; padding: 0.7rem 0.9rem; background: var(--light-sky-blue); border: 1px solid var(--dark-sky-blue); color: var(--medium-blue); font-size: 0.9rem; letter-spacing: 0.05em;">
-            YYYY · QQ · TT-XXXX
+          <div class="field">
+            <label for="availableUntil">Available Until <span class="required">*</span></label>
+            <input type="datetime-local" id="availableUntil" required>
+          </div>
+
+          <div class="field">
+            <label for="status">Status <span class="required">*</span></label>
+            <select id="status" required>
+              <option value="active">Active</option>
+              <option value="draft">Draft</option>
+              <option value="archived">Archived</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Code Format</label>
+            <div style="font-family:var(--mono);padding:0.6rem 0.75rem;background:var(--sky);border:1.5px solid var(--line);color:var(--navy-l);font-size:0.9rem;letter-spacing:0.05em;border-radius:5px;">YYYY · QQ · TT-XXXX</div>
+          </div>
+
+          <div class="field full">
+            <label for="notes">Notes</label>
+            <textarea id="notes" placeholder="Optional internal notes (e.g. section, special instructions)"></textarea>
+          </div>
+
+          <div class="form-actions">
+            <a href="dashboard.html" class="btn btn--secondary">Cancel</a>
+            <button type="submit" class="btn btn--primary" id="submitBtn" disabled>Create Exam</button>
           </div>
         </div>
+      </form>
+    </div>
 
-        <div class="field full">
-          <label for="notes">Notes</label>
-          <textarea id="notes" placeholder="Optional internal notes (e.g. section, special instructions)"></textarea>
-        </div>
-
-        <div class="form-actions">
-          <a href="dashboard.html" class="btn-secondary">Cancel</a>
-          <button type="submit" class="btn-primary" id="submitBtn" disabled>Create Exam</button>
-        </div>
-      </div>
-    </form>
-
-    <aside class="preview-card">
+    <div class="preview-card">
       <div class="preview-label">Generated Code</div>
       <div class="preview-title">Access Code</div>
 
-      <div class="code-display placeholder" id="codeDisplay">
-        Fill in Year, Quarter, and Type
-      </div>
+      <div class="code-display placeholder" id="codeDisplay">Fill in Year, Quarter, and Type</div>
+      <div class="code-status" id="codeStatus" style="display:none;"></div>
 
-      <div class="code-status" id="codeStatus" style="display: none;">
-        Checking availability…
-      </div>
+      <button type="button" class="regenerate-btn" id="regenerateBtn" disabled>Regenerate Random Suffix</button>
 
-      <button type="button" class="regenerate-btn" id="regenerateBtn" disabled>
-        Regenerate Random Suffix
-      </button>
-
-      <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--dark-sky-blue); font-size: 0.8rem; color: var(--medium-blue); font-family: var(--font-display); font-style: italic;">
-        The code follows <strong style="font-family: monospace; font-style: normal; color: var(--nd-blue);">YYYYQQ-TTXXXX</strong> and is verified for uniqueness against the database.
-      </div>
-    </aside>
-  </div>
-</div>
-
-<div class="toast" id="toast"></div>
-
-<div class="success-overlay" id="successOverlay">
-  <div class="success-card">
-    <div class="check">✓</div>
-    <h2>Exam Created</h2>
-    <p style="color: var(--medium-blue); font-style: italic; font-family: var(--font-display); font-size: 1.05rem;">
-      The exam is saved and the access code is ready to share.
-    </p>
-    <div class="saved-code" id="savedCode">—</div>
-    <div class="success-actions">
-      <button type="button" class="btn-secondary" onclick="copyCode()">Copy Code</button>
-      <a href="dashboard.html" class="btn-primary" style="text-decoration: none; text-align: center;">Done</a>
+      <p style="margin-top:1.25rem;font-family:var(--serif);font-style:italic;font-size:0.9rem;color:var(--navy-l);line-height:1.5;">
+        The code follows <strong style="font-style:normal;font-family:var(--mono);color:var(--navy);">YYYYQQ-TTXXXX</strong> and is verified for uniqueness against the database.
+      </p>
     </div>
-    <div style="margin-top: 0.75rem;">
-      <a href="create-exam.html" style="color: var(--medium-blue); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none;">+ Create Another</a>
-    </div>
+
   </div>
-</div>
+</main>
 
-<div class="copyright">
-  Copyright © 2026 Approach International Student Center, Inc. — All rights reserved.
-</div>
+<div class="copyright">Copyright © 2026 Approach International Student Center, Inc. — All rights reserved.</div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  const SUPABASE_URL = 'https://okyauyzdensuvuoyphds.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9reWF1eXpkZW5zdXZ1b3lwaGRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1NTgwOTUsImV4cCI6MjA5MzEzNDA5NX0.NZUclCDHecS9bcZOLHj1ZXBFf5b5k9klRwTMfJrglfI';
-  
-  const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-  const QUARTER_CODES = { WINTER: 'WT', SPRING: 'SP', SUMMER: 'SM', FALL: 'FA' };
-  const TYPE_CODES = { 'MIDTERM': 'MT', 'FINAL EXAM': 'FE' };
-  const ALPHANUM = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-
-  // ===== STATE =====
-  let currentUser = null;
-  let currentProfile = null;
-  let currentCode = null;
-  let codeIsAvailable = false;
-
-  // ===== ELEMENTS =====
-  const classIdEl = document.getElementById('classId');
-  const levelIdEl = document.getElementById('levelId');
-  const teacherIdEl = document.getElementById('teacherId');
-  const teacherHelpEl = document.getElementById('teacherHelp');
-  const yearEl = document.getElementById('year');
-  const quarterEl = document.getElementById('quarter');
-  const typeEl = document.getElementById('type');
-  const codeDisplay = document.getElementById('codeDisplay');
-  const codeStatus = document.getElementById('codeStatus');
-  const regenerateBtn = document.getElementById('regenerateBtn');
-  const submitBtn = document.getElementById('submitBtn');
-  const toast = document.getElementById('toast');
-  const form = document.getElementById('examForm');
-
-  // ===== HELPERS =====
-  function showToast(msg, type = '') {
-    toast.textContent = msg;
-    toast.className = 'toast show ' + type;
-    setTimeout(() => toast.classList.remove('show'), 4000);
-  }
-
-  function escapeHtml(s) {
-    if (s == null) return '';
-    return String(s).replace(/[&<>"']/g, c => ({
-      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-    }[c]));
-  }
-
-  function generateRandomSuffix() {
-    let s = '';
-    for (let i = 0; i < 4; i++) {
-      s += ALPHANUM[Math.floor(Math.random() * ALPHANUM.length)];
-    }
-    return s;
-  }
-
-  function buildCode(year, quarter, type, suffix) {
-    return `${year}${QUARTER_CODES[quarter]}-${TYPE_CODES[type]}${suffix}`;
-  }
-
-  function setStatus(state, message) {
-    codeStatus.style.display = 'flex';
-    codeStatus.className = 'code-status ' + state;
-    codeStatus.textContent = message;
-  }
-
-  function clearCode() {
-    currentCode = null;
-    codeIsAvailable = false;
-    codeDisplay.textContent = 'Fill in Year, Quarter, and Type';
-    codeDisplay.className = 'code-display placeholder';
-    codeStatus.style.display = 'none';
-    regenerateBtn.disabled = true;
-    updateSubmitState();
-  }
-
-  // ===== AUTH GUARD =====
-  async function checkAuth() {
-    const { data: { session } } = await db.auth.getSession();
-    if (!session) {
-      window.location.href = 'login.html';
-      return false;
-    }
-    currentUser = session.user;
-    const { data: profile, error } = await db.from('profiles')
-      .select('*').eq('id', session.user.id).single();
-    if (error || !profile) {
-      showToast('Could not load your profile. Signing out.', 'error');
-      await db.auth.signOut();
-      setTimeout(() => window.location.href = 'login.html', 1500);
-      return false;
-    }
-    if (!profile.is_active) {
-      showToast('Your account has been deactivated.', 'error');
-      await db.auth.signOut();
-      setTimeout(() => window.location.href = 'login.html', 1500);
-      return false;
-    }
-    currentProfile = profile;
-    document.getElementById('userName').textContent = profile.full_name || session.user.email;
-    document.getElementById('userRole').textContent = (profile.role === 'academic' ? 'Academic Team' : 'Teacher');
-    if (profile.role === 'academic') {
-      document.getElementById('adminLink').style.display = 'inline-block';
-    }
-    return true;
-  }
-
-  document.getElementById('userMenuTrigger').addEventListener('click', () => {
-    const dropdown = document.getElementById('userMenuDropdown');
-    dropdown.classList.toggle('show');
-  });
-
-  // Close dropdown when clicking outside
-  document.addEventListener('click', (e) => {
-    const userMenu = document.querySelector('.user-menu');
-    if (!userMenu.contains(e.target)) {
-      document.getElementById('userMenuDropdown').classList.remove('show');
-    }
-  });
-
-  document.getElementById('signoutBtn').addEventListener('click', async () => {
-    await db.auth.signOut();
-    window.location.href = 'login.html';
-  });
-
-  // ===== LOAD LOOKUP DATA =====
-  async function loadLookupData() {
-    try {
-      const [classesRes, levelsRes, teachersRes] = await Promise.all([
-        db.from('classes').select('*').eq('is_active', true).order('name'),
-        db.from('levels').select('*').eq('is_active', true).order('display_order'),
-        db.from('profiles').select('id, full_name, email, role, is_active').eq('is_active', true).order('full_name')
-      ]);
-
-      if (classesRes.error) throw classesRes.error;
-      if (levelsRes.error) throw levelsRes.error;
-      // teachersRes might fail for teacher role due to RLS, that's fine
-
-      // Populate classes
-      classIdEl.innerHTML = '<option value="">— select class —</option>' +
-        (classesRes.data || []).map(c =>
-          `<option value="${c.id}">${escapeHtml(c.name)}</option>`).join('');
-
-      // Populate levels
-      levelIdEl.innerHTML = '<option value="">— select level —</option>' +
-        (levelsRes.data || []).map(l =>
-          `<option value="${l.id}">${escapeHtml(l.name)}</option>`).join('');
-
-      // Populate teachers — academic gets all, teacher gets only themselves
-      if (currentProfile.role === 'academic') {
-        const teachers = (teachersRes.data || []);
-        teacherIdEl.innerHTML = '<option value="">— select teacher —</option>' +
-          teachers.map(t =>
-            `<option value="${t.id}">${escapeHtml(t.full_name || t.email)}${t.role === 'academic' ? ' (Academic)' : ''}</option>`).join('');
-        teacherHelpEl.textContent = 'You can assign this exam to any active user.';
-      } else {
-        // Teacher — locked to themselves
-        teacherIdEl.innerHTML =
-          `<option value="${currentProfile.id}" selected>${escapeHtml(currentProfile.full_name || currentProfile.email)}</option>`;
-        teacherIdEl.disabled = true;
-        teacherHelpEl.textContent = 'Teachers can only create exams assigned to themselves.';
-        teacherHelpEl.classList.add('locked');
-      }
-
-      document.getElementById('authLoading').style.display = 'none';
-      document.getElementById('content').style.display = 'block';
-    } catch (err) {
-      console.error('Failed to load lookup data:', err);
-      showToast('Could not load form data: ' + err.message, 'error');
-    }
-  }
-
-  // ===== UNIQUENESS CHECK =====
-  async function checkCodeUnique(code) {
-    const { data, error } = await db.from('exams')
-      .select('code').eq('code', code).maybeSingle();
-    if (error) throw error;
-    return !data;
-  }
-
-  // ===== CODE GENERATION =====
-  async function generateAndVerifyCode() {
-    const year = yearEl.value;
-    const quarter = quarterEl.value;
-    const type = typeEl.value;
-
-    if (!year || !quarter || !type) {
-      clearCode();
-      return;
-    }
-
-    setStatus('checking', 'Generating and verifying code…');
-    codeDisplay.className = 'code-display';
-    regenerateBtn.disabled = true;
-
-    for (let attempt = 0; attempt < 5; attempt++) {
-      const suffix = generateRandomSuffix();
-      const code = buildCode(year, quarter, type, suffix);
-      codeDisplay.textContent = code;
-
-      try {
-        const isUnique = await checkCodeUnique(code);
-        if (isUnique) {
-          currentCode = code;
-          codeIsAvailable = true;
-          setStatus('available', '✓ Code is available');
-          regenerateBtn.disabled = false;
-          updateSubmitState();
-          return;
-        }
-      } catch (err) {
-        setStatus('taken', '⚠ Could not verify code. Check connection.');
-        regenerateBtn.disabled = false;
-        codeIsAvailable = false;
-        updateSubmitState();
-        return;
-      }
-    }
-
-    setStatus('taken', '⚠ Could not generate a unique code. Try again.');
-    regenerateBtn.disabled = false;
-    codeIsAvailable = false;
-    updateSubmitState();
-  }
-
-  // ===== VALIDATION =====
-  function updateSubmitState() {
-    const allFilled =
-      classIdEl.value &&
-      levelIdEl.value &&
-      teacherIdEl.value &&
-      yearEl.value &&
-      quarterEl.value &&
-      typeEl.value &&
-      document.getElementById('availableFrom').value &&
-      document.getElementById('availableUntil').value &&
-      codeIsAvailable;
-    submitBtn.disabled = !allFilled;
-  }
-
-  // ===== EVENT LISTENERS =====
-  [yearEl, quarterEl, typeEl].forEach(el => {
-    el.addEventListener('change', generateAndVerifyCode);
-  });
-  form.querySelectorAll('input, select, textarea').forEach(el => {
-    el.addEventListener('input', updateSubmitState);
-    el.addEventListener('change', updateSubmitState);
-  });
-  regenerateBtn.addEventListener('click', generateAndVerifyCode);
-
-  // ===== SUBMIT =====
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    if (!codeIsAvailable || !currentCode) {
-      showToast('Code is not yet verified. Please wait or regenerate.', 'error');
-      return;
-    }
-
-    const from = new Date(document.getElementById('availableFrom').value);
-    const until = new Date(document.getElementById('availableUntil').value);
-    if (until <= from) {
-      showToast('"Available Until" must be after "Available From".', 'error');
-      return;
-    }
-
-    // Safety: if teacher, force teacher_id to themselves regardless of any tampering
-    let teacherId = teacherIdEl.value;
-    if (currentProfile.role === 'teacher') {
-      teacherId = currentProfile.id;
-    }
-
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Saving…';
-
-    const payload = {
-      code: currentCode,
-      class_id: classIdEl.value,
-      level_id: levelIdEl.value,
-      teacher_id: teacherId,
-      year: parseInt(yearEl.value, 10),
-      quarter: quarterEl.value,
-      type: typeEl.value,
-      available_from: from.toISOString(),
-      available_until: until.toISOString(),
-      status: document.getElementById('status').value,
-      notes: document.getElementById('notes').value.trim() || null,
-      created_by: currentProfile.id
-    };
-
-    try {
-      const { data, error } = await db.from('exams').insert(payload).select().single();
-      if (error) throw error;
-
-      document.getElementById('savedCode').textContent = data.code;
-      // Redirect to edit-exam page so the teacher can upload the JSON content
-      window.location.href = `edit-exam.html?id=${data.id}&new=true`;
-    } catch (err) {
-      console.error('Insert failed:', err);
-      if (err.code === '23505') {
-        showToast('That code was just taken. Generating a new one…', 'error');
-        await generateAndVerifyCode();
-      } else {
-        showToast('Failed to save: ' + (err.message || 'Unknown error'), 'error');
-      }
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Create Exam';
-    }
-  });
-
-  function copyCode() {
-    const code = document.getElementById('savedCode').textContent;
-    navigator.clipboard.writeText(code).then(() => {
-      showToast('Code copied to clipboard', 'success');
-    });
-  }
-  window.copyCode = copyCode;
-
-  // ===== INIT =====
-  (async () => {
-    if (!(await checkAuth())) return;
-    await loadLookupData();
-  })();
-</script>
-
+<script type="module" src="../js/pages/exam-create.js"></script>
 </body>
 </html>

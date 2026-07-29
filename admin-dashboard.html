@@ -4,653 +4,79 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Administration — Approach International Student Center</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
-<style>
-  :root {
-    --nd-blue: #0c2340;
-    --nd-gold: #ae9142;
-    --medium-blue: #143865;
-    --bright-blue: #1c4f8f;
-    --dark-sky-blue: #c1cddd;
-    --medium-sky-blue: #e1e8f2;
-    --light-sky-blue: #edf2f9;
-    --dark-gold: #8c7535;
-    --bright-gold: #d39f10;
-    --warm-white: #efe9d9;
-    --light-warm-white: #f8f4ec;
-    --accent-red: #ab100b;
-    --success-green: #3a6b3a;
-    --font-display: 'Cormorant Garamond', 'Times New Roman', serif;
-    --font-body: 'Montserrat', system-ui, sans-serif;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: var(--font-body);
-    background: var(--light-warm-white);
-    color: var(--nd-blue);
-    min-height: 100vh;
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  /* ===== BRAND BAR ===== */
-  .brand-bar {
-    background: var(--nd-blue);
-    color: var(--light-warm-white);
-    padding: 0.7rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    border-bottom: 3px solid var(--nd-gold);
-  }
-  .brand-bar-logo { display: flex; align-items: center; gap: 0.6rem; }
-  .brand-monogram {
-    font-family: var(--font-display);
-    font-size: 1.3rem; font-weight: 600;
-    color: var(--nd-gold); line-height: 1;
-  }
-  .brand-bar-right { display: flex; align-items: center; gap: 1.5rem; }
-  .user-info {
-    font-size: 0.7rem;
-    color: var(--dark-sky-blue);
-    text-transform: none;
-    letter-spacing: 0.05em;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-  }
-  .user-info strong {
-    color: var(--nd-gold);
-    font-weight: 600;
-  }
-  .signout-btn {
-    background: transparent;
-    border: 1px solid var(--nd-gold);
-    color: var(--nd-gold);
-    font-family: var(--font-body);
-    font-size: 0.65rem;
-    font-weight: 600;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    padding: 0.4rem 0.85rem;
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-  .signout-btn:hover { background: var(--nd-gold); color: var(--nd-blue); }
-
-  .user-menu {
-    position: relative;
-  }
-  .user-menu-trigger {
-    background: transparent;
-    border: none;
-    color: var(--light-warm-white);
-    font-family: var(--font-body);
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    padding: 0.7rem 1rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: color 0.15s;
-  }
-  .user-menu-trigger:hover {
-    color: var(--nd-gold);
-  }
-  .user-menu-dropdown {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background: white;
-    border: 1px solid var(--dark-sky-blue);
-    border-top: 3px solid var(--nd-gold);
-    box-shadow: 0 4px 12px rgba(12, 35, 64, 0.15);
-    border-radius: 2px;
-    min-width: 160px;
-    z-index: 1000;
-    display: none;
-    margin-top: 0.5rem;
-  }
-  .user-menu-dropdown.show {
-    display: block;
-  }
-  .user-menu-dropdown a,
-  .user-menu-dropdown button {
-    display: block;
-    width: 100%;
-    padding: 0.9rem 1.2rem;
-    text-align: left;
-    border: none;
-    background: transparent;
-    color: var(--nd-blue);
-    text-decoration: none;
-    font-family: var(--font-body);
-    font-size: 0.85rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.15s, color 0.15s;
-  }
-  .user-menu-dropdown a:hover,
-  .user-menu-dropdown button:hover {
-    background: var(--light-sky-blue);
-    color: var(--bright-blue);
-  }
-  .user-menu-dropdown a:first-child {
-    border-top: 1px solid var(--medium-sky-blue);
-  }
-  .user-menu-dropdown button {
-    border-top: 1px solid var(--medium-sky-blue);
-    color: var(--accent-red);
-  }
-  .user-menu-dropdown button:hover {
-    background: rgba(171, 16, 11, 0.08);
-  }
-
-  /* ===== PAGE LAYOUT ===== */
-  .page {
-    max-width: 1300px;
-    margin: 0 auto;
-    padding: 2.5rem 2rem 5rem;
-    min-height: calc(100vh - 143px);
-  }
-
-  .page-header {
-    margin-bottom: 2rem;
-    padding-bottom: 1.25rem;
-    border-bottom: 1px solid var(--dark-sky-blue);
-  }
-  .page-stamp {
-    font-size: 0.65rem;
-    font-weight: 600;
-    letter-spacing: 0.25em;
-    color: var(--nd-gold);
-    text-transform: uppercase;
-    margin-bottom: 0.5rem;
-  }
-  h1 {
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: clamp(2rem, 4vw, 2.8rem);
-    line-height: 1.05;
-    color: var(--nd-blue);
-    margin-bottom: 0.4rem;
-  }
-  h1 em { font-style: italic; color: var(--nd-gold); font-weight: 500; }
-  .page-sub {
-    font-family: var(--font-display);
-    font-style: italic;
-    font-size: 1.1rem;
-    color: var(--medium-blue);
-  }
-
-  /* ===== TABS ===== */
-  .tabs {
-    display: flex;
-    gap: 0.25rem;
-    border-bottom: 2px solid var(--nd-blue);
-    margin-bottom: 2rem;
-    overflow-x: auto;
-  }
-  .tab {
-    background: transparent;
-    border: none;
-    padding: 0.85rem 1.5rem;
-    font-family: var(--font-body);
-    font-size: 0.8rem;
-    font-weight: 600;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--medium-blue);
-    cursor: pointer;
-    transition: all 0.15s;
-    position: relative;
-    white-space: nowrap;
-  }
-  .tab:hover { color: var(--nd-blue); }
-  .tab.active {
-    color: var(--nd-gold);
-    background: var(--nd-blue);
-  }
-  .tab .count {
-    display: inline-block;
-    margin-left: 0.4rem;
-    padding: 0.1rem 0.4rem;
-    background: var(--medium-sky-blue);
-    color: var(--medium-blue);
-    font-size: 0.65rem;
-    font-weight: 600;
-    border-radius: 2px;
-  }
-  .tab.active .count {
-    background: var(--nd-gold);
-    color: var(--nd-blue);
-  }
-
-  /* ===== TAB PANEL ===== */
-  .tab-panel { display: none; }
-  .tab-panel.active { display: block; }
-
-  /* ===== SECTION HEADER ===== */
-  .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-  .section-title {
-    font-family: var(--font-display);
-    font-size: 1.6rem;
-    font-weight: 600;
-    color: var(--nd-blue);
-  }
-  .section-sub {
-    font-family: var(--font-display);
-    font-style: italic;
-    font-size: 0.95rem;
-    color: var(--medium-blue);
-    margin-top: 0.2rem;
-  }
-
-  /* ===== BUTTONS ===== */
-  .btn-primary, .btn-secondary, .btn-tertiary, .btn-danger {
-    font-family: var(--font-body);
-    font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    padding: 0.85rem 1.5rem;
-    cursor: pointer;
-    transition: all 0.2s;
-    border: none;
-    text-decoration: none;
-    display: inline-block;
-  }
-  .btn-primary {
-    background: var(--nd-gold);
-    color: var(--nd-blue);
-    border-bottom: 3px solid var(--nd-blue);
-  }
-  .btn-primary:hover:not(:disabled) { background: var(--bright-gold); }
-  .btn-primary:disabled {
-    background: var(--dark-sky-blue);
-    cursor: not-allowed;
-    border-bottom-color: var(--medium-blue);
-  }
-  .btn-secondary {
-    background: transparent;
-    color: var(--medium-blue);
-    border: 1px solid var(--medium-blue);
-  }
-  .btn-secondary:hover {
-    background: var(--medium-blue);
-    color: var(--light-warm-white);
-  }
-  .btn-tertiary {
-    background: var(--nd-blue);
-    color: var(--nd-gold);
-    border-bottom: 3px solid var(--nd-gold);
-  }
-  .btn-tertiary:hover { background: var(--medium-blue); }
-  .btn-danger {
-    background: transparent;
-    color: var(--accent-red);
-    border: 1px solid var(--accent-red);
-  }
-  .btn-danger:hover { background: var(--accent-red); color: #fff; }
-
-  /* ===== INVITE FORM ===== */
-  .invite-form {
-    background: #fff;
-    border-top: 3px solid var(--nd-gold);
-    padding: 1.5rem 1.75rem;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 2px 8px rgba(12, 35, 64, 0.04);
-  }
-  .invite-form h3 {
-    font-family: var(--font-display);
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: var(--nd-blue);
-    margin-bottom: 1rem;
-  }
-  .invite-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr auto;
-    gap: 0.75rem;
-    align-items: center;
-  }
-  .field { display: flex; flex-direction: column; gap: 0.4rem; }
-  .field label {
-    font-size: 0.6rem;
-    font-weight: 600;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--medium-blue);
-  }
-  .field input, .field select {
-    font-family: var(--font-body);
-    font-size: 0.95rem;
-    padding: 0.7rem 0.85rem;
-    border: 1px solid var(--dark-sky-blue);
-    background: var(--light-sky-blue);
-    color: var(--nd-blue);
-    transition: all 0.2s;
-  }
-  .field input:focus, .field select:focus {
-    outline: none;
-    border-color: var(--nd-gold);
-    background: #fff;
-    box-shadow: 0 0 0 3px rgba(174, 145, 66, 0.15);
-  }
-
-  /* ===== TABLE ===== */
-  .table-wrap {
-    background: #fff;
-    border-top: 3px solid var(--nd-gold);
-    box-shadow: 0 2px 8px rgba(12, 35, 64, 0.04);
-    overflow-x: auto;
-  }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.875rem;
-  }
-  thead th {
-    background: var(--nd-blue);
-    color: var(--nd-gold);
-    text-align: left;
-    padding: 0.85rem 1rem;
-    font-size: 0.65rem;
-    font-weight: 600;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    white-space: nowrap;
-  }
-  tbody tr {
-    border-bottom: 1px solid var(--medium-sky-blue);
-    transition: background 0.15s;
-  }
-  tbody tr:hover { background: var(--light-sky-blue); }
-  tbody tr:last-child { border-bottom: none; }
-  tbody td {
-    padding: 0.85rem 1rem;
-    vertical-align: middle;
-    color: var(--nd-blue);
-  }
-  tbody tr.inactive { opacity: 0.55; }
-
-  /* ===== EDITABLE CELL ===== */
-  .editable-row td:first-child {
-    font-weight: 500;
-  }
-
-  /* ===== CHIP ===== */
-  .chip {
-    display: inline-block;
-    padding: 0.2rem 0.6rem;
-    font-size: 0.65rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    white-space: nowrap;
-    border: 1px solid;
-  }
-  .chip.active {
-    background: rgba(58, 107, 58, 0.1);
-    color: var(--success-green);
-    border-color: var(--success-green);
-  }
-  .chip.pending {
-    background: rgba(211, 159, 16, 0.1);
-    color: var(--dark-gold);
-    border-color: var(--bright-gold);
-  }
-  .chip.deactivated {
-    background: var(--medium-sky-blue);
-    color: var(--medium-blue);
-    border-color: var(--medium-blue);
-  }
-  .chip.role {
-    background: var(--nd-blue);
-    color: var(--nd-gold);
-    border-color: var(--nd-gold);
-  }
-  .chip.role.teacher {
-    background: var(--medium-sky-blue);
-    color: var(--medium-blue);
-    border-color: var(--medium-blue);
-  }
-
-  /* ===== ROW ACTIONS ===== */
-  .row-actions {
-    display: flex;
-    gap: 0.4rem;
-    justify-content: flex-end;
-  }
-  .row-btn {
-    background: transparent;
-    border: 1px solid var(--medium-blue);
-    color: var(--medium-blue);
-    font-family: var(--font-body);
-    font-size: 0.65rem;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    padding: 0.4rem 0.7rem;
-    cursor: pointer;
-    transition: all 0.15s;
-    white-space: nowrap;
-  }
-  .row-btn:hover {
-    background: var(--medium-blue);
-    color: var(--light-warm-white);
-  }
-  .row-btn.danger { border-color: var(--accent-red); color: var(--accent-red); }
-  .row-btn.danger:hover { background: var(--accent-red); color: #fff; }
-  .row-btn.success { border-color: var(--success-green); color: var(--success-green); }
-  .row-btn.success:hover { background: var(--success-green); color: #fff; }
-
-  /* ===== EMPTY STATE ===== */
-  .empty-state {
-    text-align: center;
-    padding: 4rem 2rem;
-    color: var(--medium-blue);
-  }
-  .empty-state .icon {
-    font-family: var(--font-display);
-    font-size: 3rem;
-    color: var(--dark-sky-blue);
-    margin-bottom: 0.5rem;
-  }
-  .empty-state h3 {
-    font-family: var(--font-display);
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--nd-blue);
-    margin-bottom: 0.5rem;
-  }
-  .empty-state p {
-    font-style: italic;
-    font-family: var(--font-display);
-    font-size: 1.05rem;
-  }
-
-  /* ===== MODAL ===== */
-  .modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(12, 35, 64, 0.85);
-    z-index: 100;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-  }
-  .modal-overlay.active { display: flex; }
-  .modal {
-    background: #fff;
-    max-width: 480px;
-    width: 100%;
-    border-top: 6px solid var(--nd-gold);
-    padding: 2.25rem;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  }
-  .modal h2 {
-    font-family: var(--font-display);
-    font-size: 1.7rem;
-    font-weight: 600;
-    color: var(--nd-blue);
-    margin-bottom: 0.5rem;
-  }
-  .modal-sub {
-    font-family: var(--font-display);
-    font-style: italic;
-    font-size: 1rem;
-    color: var(--medium-blue);
-    margin-bottom: 1.5rem;
-  }
-  .modal-actions {
-    display: flex;
-    gap: 0.75rem;
-    margin-top: 1.5rem;
-    padding-top: 1.25rem;
-    border-top: 1px solid var(--dark-sky-blue);
-    justify-content: flex-end;
-  }
-
-  /* ===== TOAST ===== */
-  .toast {
-    position: fixed;
-    top: 5rem;
-    right: 2rem;
-    background: var(--nd-blue);
-    color: var(--light-warm-white);
-    padding: 1rem 1.4rem;
-    border-left: 3px solid var(--nd-gold);
-    font-size: 0.85rem;
-    transform: translateX(120%);
-    transition: transform 0.3s;
-    z-index: 200;
-    max-width: 380px;
-    box-shadow: 0 4px 20px rgba(12, 35, 64, 0.2);
-  }
-  .toast.show { transform: translateX(0); }
-  .toast.error { border-left-color: var(--accent-red); }
-  .toast.success { border-left-color: var(--success-green); }
-
-  /* ===== LOADING ===== */
-  .loading {
-    text-align: center;
-    padding: 3rem;
-    color: var(--medium-blue);
-    font-family: var(--font-display);
-    font-style: italic;
-  }
-
-  /* ===== FOOTER ===== */
-  .copyright {
-    text-align: center;
-    padding: 1.5rem 2rem;
-    background: var(--nd-blue);
-    color: var(--dark-sky-blue);
-    font-size: 0.7rem;
-    letter-spacing: 0.15em;
-    border-top: 2px solid var(--nd-gold);
-  }
-
-  @media (max-width: 700px) {
-    .invite-grid { grid-template-columns: 1fr; }
-    .tabs { font-size: 0.7rem; }
-  }
-</style>
+<link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
-<div class="brand-bar">
-  <div class="brand-bar-logo">
-    <img src="images/gold-logo.png" alt="Approach International Student Center" class="brand-logo">
-  </div>
-  <div class="brand-bar-right">
-    <!--<a href="assessment-dashboard.html" class="nav-link">Assessments</a>-->
-    <a href="dashboard.html" class="nav-link">Exams</a>
-    <div class="user-menu">
-      <button class="user-menu-trigger" id="userMenuTrigger">
-        <span class="user-info">
-          <strong id="userName">—</strong>
-          <span id="userRole"></span>
-        </span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ae9142" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-icon lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-        <span style="font-size: 0.9em;">▼</span>
-      </button>
-      <div class="user-menu-dropdown" id="userMenuDropdown">
-        <a href="qr-generator.html" target="_blank">QR Code Generator ➚</a>
-        <a href="tasgac_session_log.html" target="_blank">TAs Session Log Report ➚</a>
-        <a href="admin-dashboard.html" id="adminLink" style="display:none;">Administration</a>
-        <a href="profile.html">Profile</a>
-        <button id="signoutBtn">Sign Out</button>
-      </div>
-    </div>
-  </div>
+<div id="navbarContainer"></div>
+
+<div class="auth-loading" id="authLoading">
+  <div class="spinner"></div>
+  <p style="font-family:var(--serif);font-style:italic;">Loading…</p>
 </div>
 
-<div class="page">
+<main class="page" id="page" style="display:none;">
   <div class="page-header">
-    <div class="page-stamp">Administration</div>
-    <h1>Academic <em>Dashboard</em></h1>
-    <p class="page-sub">Manage exams, classes, levels, and user accounts</p>
+    <div>
+      <div class="page-stamp">Administration</div>
+      <h1>Academic <em>Dashboard</em></h1>
+      <p class="page-sub">Manage exams, assessments, classes, levels, and user accounts</p>
+    </div>
   </div>
 
-  <!-- ===== TABS ===== -->
-  <div class="tabs">
-    <button class="tab active" data-tab="exams">Exams <span class="count" id="countExams">—</span></button>
-    <button class="tab" data-tab="classes">Classes <span class="count" id="countClasses">—</span></button>
-    <button class="tab" data-tab="levels">Levels <span class="count" id="countLevels">—</span></button>
-    <button class="tab" data-tab="users">Teachers & Staff <span class="count" id="countUsers">—</span></button>
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-panel="panel-exams">Exams <span class="tab-count" id="countExams">—</span></button>
+    <button class="tab" data-panel="panel-assessments">Assessments <span class="tab-count" id="countAssessments">—</span></button>
+    <button class="tab" data-panel="panel-classes">Classes <span class="tab-count" id="countClasses">—</span></button>
+    <button class="tab" data-panel="panel-levels">Levels <span class="tab-count" id="countLevels">—</span></button>
+    <button class="tab" data-panel="panel-users">Teachers &amp; Staff <span class="tab-count" id="countUsers">—</span></button>
   </div>
 
   <!-- ===== EXAMS TAB ===== -->
   <div class="tab-panel active" id="panel-exams">
-    <div class="section-header">
+    <div class="section-header-row" style="margin-bottom:1.5rem;">
       <div>
-        <div class="section-title">Exams</div>
-        <div class="section-sub">All exams across the institution</div>
+        <h2>Exams</h2>
+        <p class="section-instructions">All exams across the institution</p>
       </div>
-      <a href="dashboard.html" class="btn-primary">Manage Exams</a>
+      <a href="exam/dashboard.html" class="btn btn--primary">Manage Exams</a>
     </div>
-    <div style="background: var(--light-sky-blue); border-left: 3px solid var(--medium-blue); padding: 1.5rem; font-family: var(--font-display); font-style: italic; color: var(--medium-blue); font-size: 1rem;">
-      Detailed exam management is on the dedicated exams dashboard. Click <strong style="color: var(--nd-blue); font-style: normal; font-family: var(--font-body); font-weight: 600;">Manage Exams</strong> above to view, filter, edit, archive, or create new exams.
+    <div class="modal-notice">
+      Detailed exam management is on the dedicated exams dashboard. Click <strong>Manage Exams</strong> above to view, filter, edit, archive, or create new exams.
+    </div>
+  </div>
+
+  <!-- ===== ASSESSMENTS TAB ===== -->
+  <div class="tab-panel" id="panel-assessments">
+    <div class="section-header-row" style="margin-bottom:1.5rem;">
+      <div>
+        <h2>Assessments</h2>
+        <p class="section-instructions">All assessments across the institution</p>
+      </div>
+      <a href="assessment/dashboard.html" class="btn btn--primary">Manage Assessments</a>
+    </div>
+    <div class="modal-notice">
+      Detailed assessment management is on the dedicated assessments dashboard. Click <strong>Manage Assessments</strong> above to view, filter, edit, archive, or create new assessments.
     </div>
   </div>
 
   <!-- ===== CLASSES TAB ===== -->
   <div class="tab-panel" id="panel-classes">
-    <div class="section-header">
+    <div class="section-header-row" style="margin-bottom:1.5rem;">
       <div>
-        <div class="section-title">Classes</div>
-        <div class="section-sub">Course names used when creating exams</div>
+        <h2>Classes</h2>
+        <p class="section-instructions">Course names used when creating exams</p>
       </div>
     </div>
 
     <div class="invite-form">
       <h3>Add New Class</h3>
-      <div class="invite-grid" style="grid-template-columns: 1fr auto;">
+      <div class="invite-grid invite-grid--2">
         <div class="field">
           <label for="newClassName">Class Name</label>
           <input type="text" id="newClassName" placeholder="e.g. Integrated Skills 1B">
         </div>
-        <button class="btn-primary" id="addClassBtn">Add Class</button>
+        <button class="btn btn--primary" id="addClassBtn">Add Class</button>
       </div>
     </div>
 
@@ -665,7 +91,7 @@
           </tr>
         </thead>
         <tbody id="classesBody">
-          <tr><td colspan="4"><div class="loading">Loading…</div></td></tr>
+          <tr><td colspan="4"><div class="empty-state"><p>Loading…</p></div></td></tr>
         </tbody>
       </table>
     </div>
@@ -673,16 +99,16 @@
 
   <!-- ===== LEVELS TAB ===== -->
   <div class="tab-panel" id="panel-levels">
-    <div class="section-header">
+    <div class="section-header-row" style="margin-bottom:1.5rem;">
       <div>
-        <div class="section-title">Levels</div>
-        <div class="section-sub">Proficiency levels available across the system</div>
+        <h2>Levels</h2>
+        <p class="section-instructions">Proficiency levels available across the system</p>
       </div>
     </div>
 
     <div class="invite-form">
       <h3>Add New Level</h3>
-      <div class="invite-grid" style="grid-template-columns: 2fr 1fr auto;">
+      <div class="invite-grid">
         <div class="field">
           <label for="newLevelName">Level Name</label>
           <input type="text" id="newLevelName" placeholder="e.g. ADVANCED">
@@ -691,7 +117,7 @@
           <label for="newLevelOrder">Display Order</label>
           <input type="number" id="newLevelOrder" placeholder="5" min="0">
         </div>
-        <button class="btn-primary" id="addLevelBtn">Add Level</button>
+        <button class="btn btn--primary" id="addLevelBtn">Add Level</button>
       </div>
     </div>
 
@@ -706,7 +132,7 @@
           </tr>
         </thead>
         <tbody id="levelsBody">
-          <tr><td colspan="4"><div class="loading">Loading…</div></td></tr>
+          <tr><td colspan="4"><div class="empty-state"><p>Loading…</p></div></td></tr>
         </tbody>
       </table>
     </div>
@@ -714,18 +140,16 @@
 
   <!-- ===== USERS TAB ===== -->
   <div class="tab-panel" id="panel-users">
-    <div class="section-header">
+    <div class="section-header-row" style="margin-bottom:1.5rem;">
       <div>
-        <div class="section-title">Teachers &amp; Staff</div>
-        <div class="section-sub">Invite new users and manage existing accounts</div>
+        <h2>Teachers &amp; Staff</h2>
+        <p class="section-instructions">Invite new users and manage existing accounts</p>
       </div>
     </div>
 
     <div class="invite-form">
       <h3>Send Invitation</h3>
-      <p style="font-family: var(--font-display); font-style: italic; color: var(--medium-blue); font-size: 0.95rem; margin-bottom: 1.25rem;">
-        The invitee will receive an email with a magic link. They will set their own password and full name when they accept.
-      </p>
+      <p class="invite-hint">The invitee will receive an email with a magic link. They will set their own password and full name when they accept.</p>
       <div class="invite-grid">
         <div class="field">
           <label for="inviteEmail">Email Address</label>
@@ -738,7 +162,7 @@
             <option value="academic">Academic Team</option>
           </select>
         </div>
-        <button class="btn-primary" id="inviteBtn">Send Invite</button>
+        <button class="btn btn--primary" id="inviteBtn">Send Invite</button>
       </div>
     </div>
 
@@ -755,536 +179,30 @@
           </tr>
         </thead>
         <tbody id="usersBody">
-          <tr><td colspan="6"><div class="loading">Loading…</div></td></tr>
+          <tr><td colspan="6"><div class="empty-state"><p>Loading…</p></div></td></tr>
         </tbody>
       </table>
     </div>
   </div>
-</div>
+</main>
 
 <!-- ===== EDIT MODAL ===== -->
 <div class="modal-overlay" id="editModal">
-  <div class="modal">
+  <div class="modal-box">
     <h2 id="editModalTitle">Edit</h2>
     <p class="modal-sub" id="editModalSub">—</p>
     <form id="editForm">
       <div id="editFields"></div>
       <div class="modal-actions">
-        <button type="button" class="btn-secondary" onclick="closeEditModal()">Cancel</button>
-        <button type="submit" class="btn-primary">Save</button>
+        <button type="button" class="btn btn--secondary" id="editCancelBtn">Cancel</button>
+        <button type="submit" class="btn btn--primary">Save</button>
       </div>
     </form>
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<div class="copyright">Copyright © 2026 Approach International Student Center, Inc. — All rights reserved.</div>
 
-<div class="copyright">
-  Copyright © 2026 Approach International Student Center, Inc. — All rights reserved.
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  // ============================================
-  // CONFIGURE YOUR SUPABASE CREDENTIALS HERE
-  // ============================================
-  const SUPABASE_URL = 'https://okyauyzdensuvuoyphds.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9reWF1eXpkZW5zdXZ1b3lwaGRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1NTgwOTUsImV4cCI6MjA5MzEzNDA5NX0.NZUclCDHecS9bcZOLHj1ZXBFf5b5k9klRwTMfJrglfI';
-  // ============================================
-
-  const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-  // ===== STATE =====
-  let currentUser = null;
-  let currentProfile = null;
-  let allClasses = [];
-  let allLevels = [];
-  let allUsers = [];
-  let editContext = null;
-
-  const toast = document.getElementById('toast');
-
-  function showToast(msg, type = '') {
-    toast.textContent = msg;
-    toast.className = 'toast show ' + type;
-    setTimeout(() => toast.classList.remove('show'), 4000);
-  }
-
-  function escapeHtml(s) {
-    if (s == null) return '';
-    return String(s).replace(/[&<>"']/g, c => ({
-      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-    }[c]));
-  }
-
-  function formatDate(iso) {
-    if (!iso) return '—';
-    const d = new Date(iso);
-    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-  }
-
-  // ===== AUTH GUARD =====
-  async function checkAuth() {
-    const { data: { session }, error } = await db.auth.getSession();
-
-    if (!session) {
-      window.location.href = 'login.html';
-      return false;
-    }
-
-    currentUser = session.user;
-
-    const { data: profile, error: profErr } = await db.from('profiles')
-      .select('*').eq('id', session.user.id).single();
-
-    if (profErr || !profile) {
-      showToast('Could not load your profile. Signing out.', 'error');
-      await db.auth.signOut();
-      setTimeout(() => window.location.href = 'login.html', 1500);
-      return false;
-    }
-
-    if (profile.role !== 'academic' || !profile.is_active) {
-      showToast('Access denied — academic role required.', 'error');
-      await db.auth.signOut();
-      setTimeout(() => window.location.href = 'login.html', 1500);
-      return false;
-    }
-
-    currentProfile = profile;
-    document.getElementById('userName').textContent = profile.full_name || session.user.email;
-    document.getElementById('userRole').textContent = (profile.role === 'academic' ? 'Academic Team' : 'Teacher');
-    return true;
-  }
-
-  document.getElementById('userMenuTrigger').addEventListener('click', () => {
-    const dropdown = document.getElementById('userMenuDropdown');
-    dropdown.classList.toggle('show');
-  });
-
-  // Close dropdown when clicking outside
-  document.addEventListener('click', (e) => {
-    const userMenu = document.querySelector('.user-menu');
-    if (!userMenu.contains(e.target)) {
-      document.getElementById('userMenuDropdown').classList.remove('show');
-    }
-  });
-
-  document.getElementById('signoutBtn').addEventListener('click', async () => {
-    await db.auth.signOut();
-    window.location.href = 'login.html';
-  });
-
-  // ===== TABS =====
-  document.querySelectorAll('.tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-      tab.classList.add('active');
-      document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
-    });
-  });
-
-  // ===========================================================
-  // CLASSES
-  // ===========================================================
-  async function loadClasses() {
-    const { data, error } = await db.from('classes').select('*').order('name');
-    if (error) {
-      document.getElementById('classesBody').innerHTML =
-        `<tr><td colspan="4"><div class="empty-state"><h3>Could not load</h3><p>${escapeHtml(error.message)}</p></div></td></tr>`;
-      return;
-    }
-    allClasses = data || [];
-    document.getElementById('countClasses').textContent = allClasses.filter(c => c.is_active).length;
-    renderClasses();
-  }
-
-  function renderClasses() {
-    const body = document.getElementById('classesBody');
-    if (allClasses.length === 0) {
-      body.innerHTML = `<tr><td colspan="4"><div class="empty-state">
-        <div class="icon">⌗</div><h3>No classes yet</h3>
-        <p>Add your first class using the form above.</p>
-      </div></td></tr>`;
-      return;
-    }
-    body.innerHTML = allClasses.map(c => `
-      <tr class="${c.is_active ? '' : 'inactive'} editable-row">
-        <td>${escapeHtml(c.name)}</td>
-        <td><span class="chip ${c.is_active ? 'active' : 'deactivated'}">${c.is_active ? 'Active' : 'Inactive'}</span></td>
-        <td>${formatDate(c.created_at)}</td>
-        <td>
-          <div class="row-actions">
-            <button class="row-btn" onclick="editClass('${c.id}')">Edit</button>
-            ${c.is_active
-              ? `<button class="row-btn danger" onclick="toggleClass('${c.id}', false)">Deactivate</button>`
-              : `<button class="row-btn success" onclick="toggleClass('${c.id}', true)">Activate</button>`}
-          </div>
-        </td>
-      </tr>`).join('');
-  }
-
-  document.getElementById('addClassBtn').addEventListener('click', async () => {
-    const name = document.getElementById('newClassName').value.trim();
-    if (!name) return showToast('Class name is required', 'error');
-    const btn = document.getElementById('addClassBtn');
-    btn.disabled = true;
-    try {
-      const { error } = await db.from('classes').insert({ name });
-      if (error) throw error;
-      document.getElementById('newClassName').value = '';
-      showToast('Class added', 'success');
-      await loadClasses();
-    } catch (err) {
-      showToast(err.code === '23505' ? 'A class with that name already exists' : err.message, 'error');
-    } finally {
-      btn.disabled = false;
-    }
-  });
-
-  async function editClass(id) {
-    const cls = allClasses.find(c => c.id === id);
-    if (!cls) return;
-    openEditModal({
-      title: 'Edit Class',
-      sub: 'Update the class name',
-      fields: [{ name: 'name', label: 'Class Name', type: 'text', value: cls.name, required: true }],
-      onSave: async (values) => {
-        const { error } = await db.from('classes').update({ name: values.name.trim() }).eq('id', id);
-        if (error) throw error;
-        await loadClasses();
-        showToast('Class updated', 'success');
-      }
-    });
-  }
-  window.editClass = editClass;
-
-  async function toggleClass(id, active) {
-    try {
-      const { error } = await db.from('classes').update({ is_active: active }).eq('id', id);
-      if (error) throw error;
-      showToast(active ? 'Class activated' : 'Class deactivated', 'success');
-      await loadClasses();
-    } catch (err) {
-      showToast(err.message, 'error');
-    }
-  }
-  window.toggleClass = toggleClass;
-
-  // ===========================================================
-  // LEVELS
-  // ===========================================================
-  async function loadLevels() {
-    const { data, error } = await db.from('levels').select('*').order('display_order');
-    if (error) {
-      document.getElementById('levelsBody').innerHTML =
-        `<tr><td colspan="4"><div class="empty-state"><h3>Could not load</h3><p>${escapeHtml(error.message)}</p></div></td></tr>`;
-      return;
-    }
-    allLevels = data || [];
-    document.getElementById('countLevels').textContent = allLevels.filter(l => l.is_active).length;
-    renderLevels();
-  }
-
-  function renderLevels() {
-    const body = document.getElementById('levelsBody');
-    if (allLevels.length === 0) {
-      body.innerHTML = `<tr><td colspan="4"><div class="empty-state">
-        <div class="icon">⌗</div><h3>No levels yet</h3><p>Add your first level using the form above.</p>
-      </div></td></tr>`;
-      return;
-    }
-    body.innerHTML = allLevels.map(l => `
-      <tr class="${l.is_active ? '' : 'inactive'}">
-        <td style="font-family: 'JetBrains Mono', monospace; color: var(--medium-blue);">${l.display_order}</td>
-        <td style="font-weight: 500;">${escapeHtml(l.name)}</td>
-        <td><span class="chip ${l.is_active ? 'active' : 'deactivated'}">${l.is_active ? 'Active' : 'Inactive'}</span></td>
-        <td>
-          <div class="row-actions">
-            <button class="row-btn" onclick="editLevel('${l.id}')">Edit</button>
-            ${l.is_active
-              ? `<button class="row-btn danger" onclick="toggleLevel('${l.id}', false)">Deactivate</button>`
-              : `<button class="row-btn success" onclick="toggleLevel('${l.id}', true)">Activate</button>`}
-          </div>
-        </td>
-      </tr>`).join('');
-  }
-
-  document.getElementById('addLevelBtn').addEventListener('click', async () => {
-    const name = document.getElementById('newLevelName').value.trim();
-    const order = parseInt(document.getElementById('newLevelOrder').value, 10) || 0;
-    if (!name) return showToast('Level name is required', 'error');
-    const btn = document.getElementById('addLevelBtn');
-    btn.disabled = true;
-    try {
-      const { error } = await db.from('levels').insert({ name, display_order: order });
-      if (error) throw error;
-      document.getElementById('newLevelName').value = '';
-      document.getElementById('newLevelOrder').value = '';
-      showToast('Level added', 'success');
-      await loadLevels();
-    } catch (err) {
-      showToast(err.code === '23505' ? 'A level with that name already exists' : err.message, 'error');
-    } finally {
-      btn.disabled = false;
-    }
-  });
-
-  async function editLevel(id) {
-    const lvl = allLevels.find(l => l.id === id);
-    if (!lvl) return;
-    openEditModal({
-      title: 'Edit Level',
-      sub: 'Update the level name and display order',
-      fields: [
-        { name: 'name', label: 'Level Name', type: 'text', value: lvl.name, required: true },
-        { name: 'display_order', label: 'Display Order', type: 'number', value: lvl.display_order, required: true }
-      ],
-      onSave: async (values) => {
-        const { error } = await db.from('levels').update({
-          name: values.name.trim(),
-          display_order: parseInt(values.display_order, 10) || 0
-        }).eq('id', id);
-        if (error) throw error;
-        await loadLevels();
-        showToast('Level updated', 'success');
-      }
-    });
-  }
-  window.editLevel = editLevel;
-
-  async function toggleLevel(id, active) {
-    try {
-      const { error } = await db.from('levels').update({ is_active: active }).eq('id', id);
-      if (error) throw error;
-      showToast(active ? 'Level activated' : 'Level deactivated', 'success');
-      await loadLevels();
-    } catch (err) {
-      showToast(err.message, 'error');
-    }
-  }
-  window.toggleLevel = toggleLevel;
-
-  // ===========================================================
-  // USERS / TEACHERS
-  // ===========================================================
-  async function loadUsers() {
-    const { data, error } = await db.from('profiles')
-      .select('*').order('created_at', { ascending: false });
-    if (error) {
-      document.getElementById('usersBody').innerHTML =
-        `<tr><td colspan="6"><div class="empty-state"><h3>Could not load</h3><p>${escapeHtml(error.message)}</p></div></td></tr>`;
-      return;
-    }
-    allUsers = data || [];
-    document.getElementById('countUsers').textContent = allUsers.filter(u => u.is_active).length;
-    renderUsers();
-  }
-
-  function renderUsers() {
-    const body = document.getElementById('usersBody');
-    if (allUsers.length === 0) {
-      body.innerHTML = `<tr><td colspan="6"><div class="empty-state">
-        <div class="icon">⌗</div><h3>No users yet</h3>
-        <p>Send your first invitation using the form above.</p>
-      </div></td></tr>`;
-      return;
-    }
-    body.innerHTML = allUsers.map(u => {
-      let statusChip;
-      if (!u.is_active) {
-        statusChip = '<span class="chip deactivated">Deactivated</span>';
-      } else if (!u.first_login_at) {
-        statusChip = '<span class="chip pending">Pending</span>';
-      } else {
-        statusChip = '<span class="chip active">Active</span>';
-      }
-      const isPending = !u.first_login_at && u.is_active;
-      const isSelf = u.id === currentUser.id;
-
-      let actions = '';
-      if (!isSelf) {
-        if (isPending) {
-          actions += `<button class="row-btn" onclick="resendInvite('${u.id}', '${escapeHtml(u.email)}')">Resend</button>`;
-          actions += `<button class="row-btn danger" onclick="deletePending('${u.id}', '${escapeHtml(u.email)}')">Delete</button>`;
-        } else {
-          if (u.is_active) {
-            actions += `<button class="row-btn danger" onclick="toggleUser('${u.id}', false)">Deactivate</button>`;
-          } else {
-            actions += `<button class="row-btn success" onclick="toggleUser('${u.id}', true)">Reactivate</button>`;
-          }
-        }
-      } else {
-        actions = '<span style="font-family: var(--font-display); font-style: italic; color: var(--medium-blue); font-size: 0.85rem;">that&rsquo;s you</span>';
-      }
-
-      return `
-        <tr class="${u.is_active ? '' : 'inactive'}">
-          <td style="font-weight: 500;">${escapeHtml(u.full_name || '—')}</td>
-          <td>${escapeHtml(u.email)}</td>
-          <td><span class="chip role ${u.role}">${u.role === 'academic' ? 'Academic' : 'Teacher'}</span></td>
-          <td>${statusChip}</td>
-          <td>${formatDate(u.invited_at)}</td>
-          <td><div class="row-actions">${actions}</div></td>
-        </tr>`;
-    }).join('');
-  }
-
-  // ===== INVITE =====
-  document.getElementById('inviteBtn').addEventListener('click', async () => {
-    const email = document.getElementById('inviteEmail').value.trim();
-    const role = document.getElementById('inviteRole').value;
-    if (!email) return showToast('Email is required', 'error');
-
-    const btn = document.getElementById('inviteBtn');
-    btn.disabled = true;
-    btn.textContent = 'Sending…';
-
-    try {
-      const { data: { session } } = await db.auth.getSession();
-      const res = await fetch(`${SUPABASE_URL}/functions/v1/invite-user`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${session.access_token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email, role })
-      });
-      const result = await res.json();
-      if (!res.ok) throw new Error(result.error || 'Invite failed');
-
-      document.getElementById('inviteEmail').value = '';
-      showToast(`Invitation sent to ${email}`, 'success');
-      await loadUsers();
-    } catch (err) {
-      showToast(err.message || 'Invite failed', 'error');
-    } finally {
-      btn.disabled = false;
-      btn.textContent = 'Send Invite';
-    }
-  });
-
-  async function resendInvite(userId, email) {
-    if (!confirm(`Resend the invitation email to ${email}?`)) return;
-    try {
-      const { data: { session } } = await db.auth.getSession();
-      const res = await fetch(`${SUPABASE_URL}/functions/v1/manage-user`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${session.access_token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ action: 'resend_invite', email })
-      });
-      const result = await res.json();
-      if (!res.ok) throw new Error(result.error || 'Resend failed');
-      showToast(`Invitation resent to ${email}`, 'success');
-      await loadUsers();
-    } catch (err) {
-      showToast(err.message, 'error');
-    }
-  }
-  window.resendInvite = resendInvite;
-
-  async function deletePending(userId, email) {
-    if (!confirm(`Delete the pending invitation for ${email}?\n\nThis cannot be undone.`)) return;
-    try {
-      const { data: { session } } = await db.auth.getSession();
-      const res = await fetch(`${SUPABASE_URL}/functions/v1/manage-user`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${session.access_token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ action: 'delete_pending', user_id: userId })
-      });
-      const result = await res.json();
-      if (!res.ok) throw new Error(result.error || 'Delete failed');
-      showToast('Invitation deleted', 'success');
-      await loadUsers();
-    } catch (err) {
-      showToast(err.message, 'error');
-    }
-  }
-  window.deletePending = deletePending;
-
-  async function toggleUser(id, active) {
-    const verb = active ? 'reactivate' : 'deactivate';
-    const user = allUsers.find(u => u.id === id);
-    if (!confirm(`${verb.charAt(0).toUpperCase() + verb.slice(1)} ${user?.full_name || user?.email}?`)) return;
-    try {
-      const { error } = await db.from('profiles').update({ is_active: active }).eq('id', id);
-      if (error) throw error;
-      showToast(`User ${verb}d`, 'success');
-      await loadUsers();
-    } catch (err) {
-      showToast(err.message, 'error');
-    }
-  }
-  window.toggleUser = toggleUser;
-
-  // ===========================================================
-  // EXAMS COUNT
-  // ===========================================================
-  async function loadExamsCount() {
-    const { count } = await db.from('exams').select('*', { count: 'exact', head: true });
-    document.getElementById('countExams').textContent = count ?? '—';
-  }
-
-  // ===========================================================
-  // GENERIC EDIT MODAL
-  // ===========================================================
-  function openEditModal({ title, sub, fields, onSave }) {
-    editContext = { onSave };
-    document.getElementById('editModalTitle').textContent = title;
-    document.getElementById('editModalSub').textContent = sub;
-    const fieldsContainer = document.getElementById('editFields');
-    fieldsContainer.innerHTML = fields.map(f => `
-      <div class="field" style="margin-bottom: 1rem;">
-        <label for="edit_${f.name}">${escapeHtml(f.label)}</label>
-        <input type="${f.type}" id="edit_${f.name}" name="${f.name}" value="${escapeHtml(f.value)}" ${f.required ? 'required' : ''}>
-      </div>
-    `).join('');
-    document.getElementById('editModal').classList.add('active');
-  }
-
-  function closeEditModal() {
-    document.getElementById('editModal').classList.remove('active');
-    editContext = null;
-  }
-  window.closeEditModal = closeEditModal;
-
-  document.getElementById('editForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    if (!editContext) return;
-    const values = {};
-    e.target.querySelectorAll('input').forEach(i => values[i.name] = i.value);
-    try {
-      await editContext.onSave(values);
-      closeEditModal();
-    } catch (err) {
-      showToast(err.message || 'Save failed', 'error');
-    }
-  });
-
-  document.getElementById('editModal').addEventListener('click', (e) => {
-    if (e.target.id === 'editModal') closeEditModal();
-  });
-
-  // ===========================================================
-  // INIT
-  // ===========================================================
-  (async () => {
-    if (!(await checkAuth())) return;
-    await Promise.all([
-      loadClasses(),
-      loadLevels(),
-      loadUsers(),
-      loadExamsCount()
-    ]);
-  })();
-</script>
-
+<script type="module" src="js/pages/admin-dashboard.js"></script>
 </body>
 </html>

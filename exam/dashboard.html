@@ -4,46 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Exam Dashboard — Approach International Student Center</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../css/styles.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
 
-<div class="brand-bar">
-  <div class="brand-bar-logo">
-    <img src="images/gold-logo.png" alt="Approach International Student Center" class="brand-logo">
-  </div>
-  <div class="brand-bar-right">
-    <!--<a href="assessment-dashboard.html" class="nav-link">Assessments</a>-->
-    <a href="dashboard.html" class="nav-link">Exams</a>
-    <div class="user-menu">
-      <button class="user-menu-trigger" id="userMenuTrigger">
-        <span class="user-info">
-          <strong id="userName">—</strong>
-          <span id="userRole"></span>
-        </span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ae9142" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-icon lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-        <span style="font-size: 0.9em;">▼</span>
-      </button>
-      <div class="user-menu-dropdown" id="userMenuDropdown">
-        <a href="qr-generator.html" target="_blank">QR Code Generator ➚</a>
-        <a href="tasgac_session_log.html" target="_blank">TAs Session Log Report ➚</a>
-        <a href="admin-dashboard.html" id="adminLink" style="display:none;">Administration</a>
-        <a href="profile.html">Profile</a>
-        <button id="signoutBtn">Sign Out</button>
-      </div>
-    </div>
-  </div>
-</div>
+<div id="navbarContainer"></div>
 
 <div class="auth-loading" id="authLoading">
   <div class="spinner"></div>
-  <p style="font-family: var(--font-display); font-style: italic;">Verifying access…</p>
+  <p style="font-family:var(--serif);font-style:italic;">Verifying access…</p>
 </div>
 
-<div class="page" id="page" style="display: none;">
+<main class="page" id="page" style="display:none;">
   <div class="page-header">
     <div>
       <div class="page-stamp" id="pageStamp">Exams</div>
@@ -51,36 +24,20 @@
       <p class="page-sub" id="pageSub">Manage, edit, and archive your created exams</p>
     </div>
     <div class="header-actions">
-      <a href="create-exam.html" class="btn-primary">+ New Exam</a>
+      <a href="create.html" class="btn btn--primary">+ New Exam</a>
     </div>
   </div>
 
   <div class="stats-row">
-    <div class="stat-card total">
-      <div class="stat-label">Total</div>
-      <div class="stat-value" id="statTotal">—</div>
-    </div>
-    <div class="stat-card live">
-      <div class="stat-label">Live Now</div>
-      <div class="stat-value" id="statLive">—</div>
-    </div>
-    <div class="stat-card upcoming">
-      <div class="stat-label">Upcoming</div>
-      <div class="stat-value" id="statUpcoming">—</div>
-    </div>
-    <div class="stat-card archived">
-      <div class="stat-label">Archived</div>
-      <div class="stat-value" id="statArchived">—</div>
-    </div>
+    <div class="stat-card total"><div class="stat-label">Total</div><div class="stat-value" id="statTotal">—</div></div>
+    <div class="stat-card live"><div class="stat-label">Live Now</div><div class="stat-value" id="statLive">—</div></div>
+    <div class="stat-card upcoming"><div class="stat-label">Upcoming</div><div class="stat-value" id="statUpcoming">—</div></div>
+    <div class="stat-card archived"><div class="stat-label">Archived</div><div class="stat-value" id="statArchived">—</div></div>
   </div>
 
   <div class="filters" id="filtersContainer">
-    <div class="filter-field">
-      <label for="search">Search</label>
-      <input type="text" id="search" placeholder="Code, class, or teacher…">
-    </div>
-    <div class="filter-field">
-      <label for="filterStatus">Status</label>
+    <div class="filter-field"><label for="search">Search</label><input type="text" id="search" placeholder="Code, class, or teacher…"></div>
+    <div class="filter-field"><label for="filterStatus">Status</label>
       <select id="filterStatus">
         <option value="">All statuses</option>
         <option value="active">Active</option>
@@ -88,14 +45,8 @@
         <option value="archived">Archived</option>
       </select>
     </div>
-    <div class="filter-field">
-      <label for="filterLevel">Level</label>
-      <select id="filterLevel">
-        <option value="">All levels</option>
-      </select>
-    </div>
-    <div class="filter-field">
-      <label for="filterQuarter">Quarter</label>
+    <div class="filter-field"><label for="filterLevel">Level</label><select id="filterLevel"><option value="">All levels</option></select></div>
+    <div class="filter-field"><label for="filterQuarter">Quarter</label>
       <select id="filterQuarter">
         <option value="">All quarters</option>
         <option value="WINTER">Winter</option>
@@ -104,17 +55,10 @@
         <option value="FALL">Fall</option>
       </select>
     </div>
-    <div class="filter-field">
-      <label for="filterYear">Year</label>
-      <select id="filterYear">
-        <option value="">All years</option>
-      </select>
-    </div>
-    <div class="filter-field" id="teacherFilterField" style="display: none;">
+    <div class="filter-field"><label for="filterYear">Year</label><select id="filterYear"><option value="">All years</option></select></div>
+    <div class="filter-field" id="teacherFilterField" style="display:none;">
       <label for="filterTeacher">Teacher</label>
-      <select id="filterTeacher">
-        <option value="">All teachers</option>
-      </select>
+      <select id="filterTeacher"><option value="">All teachers</option></select>
     </div>
   </div>
 
@@ -127,7 +71,7 @@
           <th data-sort="teacher_name" id="thTeacher">Teacher <span class="sort-arrow">↕</span></th>
           <th data-sort="available_from">Window <span class="sort-arrow">↕</span></th>
           <th data-sort="status" class="sorted">Status <span class="sort-arrow">↓</span></th>
-          <th style="text-align: right;">Actions</th>
+          <th style="text-align:right;">Actions</th>
         </tr>
       </thead>
       <tbody id="examsBody">
@@ -136,21 +80,17 @@
     </table>
   </div>
 
-  <div class="pagination" id="paginationContainer" style="display: none;">
-    <button class="pagination-btn" id="prevBtn" onclick="previousPage()">← Previous</button>
-    <div class="pagination-separator"></div>
-    <div class="pagination-info">
-      Page <span id="currentPageNum">1</span> of <span id="totalPageNum">1</span>
-    </div>
+  <div class="pagination" id="paginationContainer" style="display:none;">
+    <button class="pagination-btn" id="prevBtn">← Previous</button>
+    <div class="pagination-info">Page <span id="currentPageNum">1</span> of <span id="totalPageNum">1</span></div>
     <span class="pagination-info" id="rowsInfo">Showing 1–10 of 10</span>
-    <div class="pagination-separator"></div>
-    <button class="pagination-btn" id="nextBtn" onclick="nextPage()">Next →</button>
+    <button class="pagination-btn" id="nextBtn">Next →</button>
   </div>
-</div>
+</main>
 
 <div class="modal-overlay" id="shareModal">
   <div class="share-modal">
-    <div class="share-modal-stamp">Share with Class</div>
+    <div class="page-stamp">Share with Class</div>
     <h2 id="shareModalTitle">Exam</h2>
     <div class="share-modal-sub" id="shareModalSub">Project this screen so students can scan or type</div>
 
@@ -168,519 +108,12 @@
     </div>
 
     <div class="share-window" id="shareWindow">—</div>
-
-    <div class="share-actions">
-      <button class="btn-secondary" onclick="closeShareModal()">Close</button>
-    </div>
+    <div class="share-actions"><button class="btn btn--secondary" id="shareCloseBtn">Close</button></div>
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<div class="copyright">Copyright © 2026 Approach International Student Center, Inc. — All rights reserved.</div>
 
-<div class="copyright">
-  Copyright © 2026 Approach International Student Center, Inc. — All rights reserved.
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  const SUPABASE_URL = 'https://okyauyzdensuvuoyphds.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9reWF1eXpkZW5zdXZ1b3lwaGRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1NTgwOTUsImV4cCI6MjA5MzEzNDA5NX0.NZUclCDHecS9bcZOLHj1ZXBFf5b5k9klRwTMfJrglfI';
-  
-  const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-  let currentUser = null;
-  let currentProfile = null;
-  let allExams = [];
-  let allClasses = [];
-  let allLevels = [];
-  let allTeachers = [];
-  let sortBy = 'created_at';
-  let sortDir = 'desc';
-  let currentPage = 1;
-  const ROWS_PER_PAGE = 20;
-
-  const examsBody = document.getElementById('examsBody');
-  const searchEl = document.getElementById('search');
-  const filterStatus = document.getElementById('filterStatus');
-  const filterLevel = document.getElementById('filterLevel');
-  const filterQuarter = document.getElementById('filterQuarter');
-  const filterYear = document.getElementById('filterYear');
-  const filterTeacher = document.getElementById('filterTeacher');
-  const toast = document.getElementById('toast');
-
-  function showToast(msg, type = '') {
-    toast.textContent = msg;
-    toast.className = 'toast show ' + type;
-    setTimeout(() => toast.classList.remove('show'), 4000);
-  }
-
-  function escapeHtml(s) {
-    if (s == null) return '';
-    return String(s).replace(/[&<>"']/g, c => ({
-      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-    }[c]));
-  }
-
-  function formatDate(iso) {
-    if (!iso) return '—';
-    const d = new Date(iso);
-    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) +
-      ', ' + d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
-  }
-
-  function getWindowStatus(exam) {
-    const now = new Date();
-    const from = new Date(exam.available_from);
-    const until = new Date(exam.available_until);
-    if (now < from) return 'upcoming';
-    if (now > until) return 'closed';
-    return 'live';
-  }
-
-  async function checkAuth() {
-    const { data: { session } } = await db.auth.getSession();
-
-    if (!session) {
-      window.location.href = 'login.html';
-      return false;
-    }
-    currentUser = session.user;
-    const { data: profile, error } = await db.from('profiles')
-      .select('*').eq('id', session.user.id).single();
-    if (error || !profile) {
-      showToast('Could not load your profile. Signing out.', 'error');
-      await db.auth.signOut();
-      setTimeout(() => window.location.href = 'login.html', 1500);
-      return false;
-    }
-    if (!profile.is_active) {
-      showToast('Your account has been deactivated.', 'error');
-      await db.auth.signOut();
-      setTimeout(() => window.location.href = 'login.html', 1500);
-      return false;
-    }
-    currentProfile = profile;
-    if (!profile.full_name) {
-      window.location.href = 'setup-account.html';
-      return false;
-    }
-    document.getElementById('userName').textContent = profile.full_name || session.user.email;
-    document.getElementById('userRole').textContent = (profile.role === 'academic' ? 'Academic Team' : 'Teacher');
-
-    if (profile.role === 'academic') {
-      document.getElementById('adminLink').style.display = 'inline-block';
-    }
-
-    if (profile.role === 'teacher') {
-      document.getElementById('pageStamp').textContent = 'My Exams';
-      document.getElementById('pageTitle').innerHTML = 'My <em>Exams</em>';
-      document.getElementById('pageSub').textContent = 'Manage, edit, and archive the exams you have created';
-      document.getElementById('teacherFilterField').style.display = 'none';
-      document.getElementById('filtersContainer').classList.add('no-teacher');
-      document.getElementById('thTeacher').style.display = 'none';
-    } else {
-      document.getElementById('teacherFilterField').style.display = 'flex';
-    }
-    return true;
-  }
-
-  document.getElementById('userMenuTrigger').addEventListener('click', () => {
-    const dropdown = document.getElementById('userMenuDropdown');
-    dropdown.classList.toggle('show');
-  });
-
-  // Close dropdown when clicking outside
-  document.addEventListener('click', (e) => {
-    const userMenu = document.querySelector('.user-menu');
-    if (!userMenu.contains(e.target)) {
-      document.getElementById('userMenuDropdown').classList.remove('show');
-    }
-  });
-
-  document.getElementById('signoutBtn').addEventListener('click', async () => {
-    await db.auth.signOut();
-    window.location.href = 'login.html';
-  });
-
-  async function loadAllData() {
-    try {
-      const [classesRes, levelsRes, teachersRes, examsRes] = await Promise.all([
-        db.from('classes').select('*').order('name'),
-        db.from('levels').select('*').order('display_order'),
-        db.from('profiles').select('id, full_name, email, role, is_active').order('full_name'),
-        db.from('exams').select('*').order('created_at', { ascending: false })
-      ]);
-
-      if (classesRes.error) throw classesRes.error;
-      if (levelsRes.error) throw levelsRes.error;
-      if (examsRes.error) throw examsRes.error;
-
-      allClasses = classesRes.data || [];
-      allLevels = levelsRes.data || [];
-      allTeachers = (teachersRes.data || []).filter(t => t.is_active);
-      allExams = examsRes.data || [];
-
-      allExams.forEach(e => {
-        const cls = allClasses.find(c => c.id === e.class_id);
-        const lvl = allLevels.find(l => l.id === e.level_id);
-        const tch = allTeachers.find(t => t.id === e.teacher_id);
-        e.class_name = cls?.name || '—';
-        e.level_name = lvl?.name || '—';
-        e.teacher_name = tch?.full_name || tch?.email || '—';
-      });
-
-      filterLevel.innerHTML = '<option value="">All levels</option>' +
-        allLevels.filter(l => l.is_active).map(l =>
-          `<option value="${l.id}">${escapeHtml(l.name)}</option>`).join('');
-
-      const years = [...new Set(allExams.map(e => e.year))].sort((a, b) => b - a);
-      filterYear.innerHTML = '<option value="">All years</option>' +
-        years.map(y => `<option value="${y}">${y}</option>`).join('');
-
-      if (currentProfile.role === 'academic') {
-        filterTeacher.innerHTML = '<option value="">All teachers</option>' +
-          allTeachers.map(t =>
-            `<option value="${t.id}">${escapeHtml(t.full_name || t.email)}</option>`).join('');
-      }
-
-      // Restore saved filters now that all dropdowns are populated
-      restoreFilterState();
-
-      updateStats();
-      renderTable();
-
-      document.getElementById('authLoading').style.display = 'none';
-      document.getElementById('page').style.display = 'block';
-    } catch (err) {
-      console.error('Failed to load:', err);
-      examsBody.innerHTML = `
-        <tr><td colspan="5"><div class="empty-state">
-          <h3>Could not load exams</h3>
-          <p>${escapeHtml(err.message || 'Check your connection.')}</p>
-        </div></td></tr>`;
-      document.getElementById('authLoading').style.display = 'none';
-      document.getElementById('page').style.display = 'block';
-    }
-  }
-
-  function updateStats() {
-    const now = new Date();
-    let live = 0, upcoming = 0, archived = 0;
-    allExams.forEach(e => {
-      if (e.status === 'archived') { archived++; return; }
-      if (e.status !== 'active') return;
-      const from = new Date(e.available_from);
-      const until = new Date(e.available_until);
-      if (now >= from && now <= until) live++;
-      else if (now < from) upcoming++;
-    });
-    document.getElementById('statTotal').textContent = allExams.length;
-    document.getElementById('statLive').textContent = live;
-    document.getElementById('statUpcoming').textContent = upcoming;
-    document.getElementById('statArchived').textContent = archived;
-  }
-
-  function getFilteredExams() {
-    const search = searchEl.value.toLowerCase().trim();
-    const status = filterStatus.value;
-    const levelId = filterLevel.value;
-    const quarter = filterQuarter.value;
-    const year = filterYear.value;
-    const teacherId = currentProfile.role === 'academic' ? filterTeacher.value : '';
-
-    let filtered = allExams.filter(e => {
-      if (status && e.status !== status) return false;
-      if (levelId && e.level_id !== levelId) return false;
-      if (quarter && e.quarter !== quarter) return false;
-      if (year && String(e.year) !== year) return false;
-      if (teacherId && e.teacher_id !== teacherId) return false;
-      if (search) {
-        const hay = `${e.code} ${e.class_name} ${e.teacher_name}`.toLowerCase();
-        if (!hay.includes(search)) return false;
-      }
-      return true;
-    });
-
-    filtered.sort((a, b) => {
-      let av = a[sortBy], bv = b[sortBy];
-      if (av == null) av = '';
-      if (bv == null) bv = '';
-      if (typeof av === 'string') {
-        return sortDir === 'asc' ? av.localeCompare(bv) : bv.localeCompare(av);
-      }
-      return sortDir === 'asc' ? (av > bv ? 1 : -1) : (bv > av ? 1 : -1);
-    });
-    return filtered;
-  }
-
-  function renderTable() {
-    const exams = getFilteredExams();
-    const isTeacher = currentProfile.role === 'teacher';
-    const colspan = isTeacher ? 4 : 5;
-    const paginationContainer = document.getElementById('paginationContainer');
-
-    if (exams.length === 0) {
-      examsBody.innerHTML = `
-        <tr><td colspan="${colspan}"><div class="empty-state">
-          <div class="icon">⌗</div>
-          <h3>No exams found</h3>
-          <p>${allExams.length === 0 ? 'Create your first exam to get started.' : 'Try adjusting your filters.'}</p>
-          ${allExams.length === 0 ? '<a href="create-exam.html" class="btn-primary">+ Create Exam</a>' : ''}
-        </div></td></tr>`;
-      paginationContainer.style.display = 'none';
-      return;
-    }
-
-    // Calculate pagination
-    const totalPages = Math.ceil(exams.length / ROWS_PER_PAGE);
-    if (currentPage > totalPages) currentPage = totalPages;
-    if (currentPage < 1) currentPage = 1;
-
-    const start = (currentPage - 1) * ROWS_PER_PAGE;
-    const end = start + ROWS_PER_PAGE;
-    const pageExams = exams.slice(start, end);
-
-    examsBody.innerHTML = pageExams.map(exam => {
-      const windowState = getWindowStatus(exam);
-      const isArchived = exam.status === 'archived';
-      const teacherCell = isTeacher ? '' : `<td>${escapeHtml(exam.teacher_name)}</td>`;
-
-      return `
-        <tr>
-          <td>
-            <div class="code-cell">
-              <span>${exam.code}</span>
-              <button class="copy-icon-btn" onclick="copyToClipboard('${exam.code}')" title="Copy code">⎘</button>
-              ${exam.status === 'active'
-                ? `<button class="copy-icon-btn share-icon-btn" onclick="openShareModal('${exam.id}')" title="Share with class">⤢</button>`
-                : ''
-              }
-            </div>
-          </td>
-          <td>
-            <div style="font-weight:500;color:var(--nd-blue);margin-bottom:0.2rem;">${escapeHtml(exam.class_name)}</div>
-            <div style="font-size:0.78rem;color:var(--medium-blue);">${escapeHtml(exam.level_name)} · ${escapeHtml(exam.type)}</div>
-          </td>
-          ${teacherCell}
-          <td>
-            <span class="chip ${windowState}" style="display:inline-block;margin-bottom:0.3rem;">${windowState === 'live' ? 'Live Now' : windowState}</span>
-            <div style="font-size:0.78rem;color:var(--medium-blue);">${formatDate(exam.available_from)}</div>
-            <div style="font-size:0.78rem;color:var(--medium-blue);opacity:0.75;">→ ${formatDate(exam.available_until)}</div>
-          </td>
-          <td><span class="chip ${exam.status}">${exam.status}</span></td>
-          <td>
-            <div class="row-actions">
-              <a href="submissions.html?id=${exam.id}" class="row-btn">Submissions</a>
-              <a href="edit-exam.html?id=${exam.id}" class="row-btn">Edit</a>
-              ${isArchived
-                ? `<button class="row-btn unarchive" onclick="quickStatusChange('${exam.id}', 'active')">Restore</button>`
-                : `<button class="row-btn archive" onclick="quickStatusChange('${exam.id}', 'archived')">Archive</button>`
-              }
-            </div>
-          </td>
-        </tr>`;
-    }).join('');
-
-    // Update pagination controls
-    if (exams.length > ROWS_PER_PAGE) {
-      paginationContainer.style.display = 'flex';
-      document.getElementById('currentPageNum').textContent = currentPage;
-      document.getElementById('totalPageNum').textContent = totalPages;
-      document.getElementById('rowsInfo').textContent =
-        `Showing ${start + 1}–${Math.min(end, exams.length)} of ${exams.length}`;
-      document.getElementById('prevBtn').disabled = currentPage === 1;
-      document.getElementById('nextBtn').disabled = currentPage === totalPages;
-    } else {
-      paginationContainer.style.display = 'none';
-    }
-  }
-
-  function copyToClipboard(text) {
-    navigator.clipboard.writeText(text).then(() => {
-      showToast(`Code ${text} copied to clipboard`, 'success');
-    });
-  }
-  window.copyToClipboard = copyToClipboard;
-
-  function previousPage() {
-    if (currentPage > 1) {
-      currentPage--;
-      renderTable();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  }
-  window.previousPage = previousPage;
-
-  function nextPage() {
-    const exams = getFilteredExams();
-    const totalPages = Math.ceil(exams.length / ROWS_PER_PAGE);
-    if (currentPage < totalPages) {
-      currentPage++;
-      renderTable();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  }
-  window.nextPage = nextPage;
-
-  // ===== SHARE MODAL =====
-  // Builds the URL to the enter-code page relative to where the dashboard is
-  // hosted, so there's no hardcoded host to maintain. The code is passed as a
-  // query parameter; once enter-code.html is updated to read it, scanning the
-  // QR will pre-fill the code. Until then, the QR still lands on the entry page.
-  function buildEntryUrl(code) {
-    const url = new URL('enter-code.html', window.location.href);
-    url.searchParams.set('code', code);
-    return url.toString();
-  }
-
-  function openShareModal(examId) {
-    const exam = allExams.find(e => e.id === examId);
-    if (!exam) return;
-
-    const entryUrl = buildEntryUrl(exam.code);
-
-    document.getElementById('shareModalTitle').textContent =
-      `${exam.class_name} — ${exam.type}`;
-    document.getElementById('shareModalSub').textContent =
-      'Project this screen so students can scan or type';
-    document.getElementById('shareCodeBig').innerHTML = exam.code.split('-').join('<br>-<br>');
-    document.getElementById('shareUrl').textContent =
-      entryUrl.replace(/\?.*$/, ''); // show the bare page URL, not the long query string
-    document.getElementById('shareWindow').innerHTML =
-      `Open <strong>${formatDate(exam.available_from)}</strong> &nbsp;→&nbsp; <strong>${formatDate(exam.available_until)}</strong>`;
-
-    // Render the QR code fresh each time
-    const qrBox = document.getElementById('shareQrBox');
-    qrBox.innerHTML = '';
-    if (typeof QRCode !== 'undefined') {
-      new QRCode(qrBox, {
-        text: entryUrl,
-        width: 260,
-        height: 260,
-        colorDark: '#0c2340',
-        colorLight: '#ffffff',
-        correctLevel: QRCode.CorrectLevel.M
-      });
-    } else {
-      qrBox.innerHTML = '<div style="padding: 2rem; color: var(--accent-red); font-family: var(--font-display); font-style: italic;">QR code library could not be loaded. Students can still enter the code manually.</div>';
-    }
-
-    document.getElementById('shareModal').classList.add('active');
-  }
-  window.openShareModal = openShareModal;
-
-  function closeShareModal() {
-    document.getElementById('shareModal').classList.remove('active');
-    document.getElementById('shareQrBox').innerHTML = '';
-  }
-  window.closeShareModal = closeShareModal;
-
-  // Close share modal when clicking the dark overlay
-  document.getElementById('shareModal').addEventListener('click', (e) => {
-    if (e.target.id === 'shareModal') closeShareModal();
-  });
-
-  // Close share modal on Escape
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && document.getElementById('shareModal').classList.contains('active')) {
-      closeShareModal();
-    }
-  });
-
-  async function quickStatusChange(id, newStatus) {
-    const exam = allExams.find(e => e.id === id);
-    if (!exam) return;
-    const verb = newStatus === 'archived' ? 'archive' : 'restore';
-    if (!confirm(`Are you sure you want to ${verb} "${exam.class_name}" (${exam.code})?`)) return;
-
-    try {
-      const { error } = await db.from('exams').update({ status: newStatus }).eq('id', id);
-      if (error) throw error;
-      exam.status = newStatus;
-      updateStats();
-      renderTable();
-      showToast(`Exam ${verb}d successfully`, 'success');
-    } catch (err) {
-      console.error(err);
-      showToast(`Failed to ${verb}: ${err.message}`, 'error');
-    }
-  }
-  window.quickStatusChange = quickStatusChange;
-
-
-  // ===== FILTER PERSISTENCE =====
-  const FILTER_STORAGE_KEY = 'examDashboardFilters';
-
-  function saveFilterState() {
-    const state = {
-      search: searchEl.value,
-      status: filterStatus.value,
-      level: filterLevel.value,
-      quarter: filterQuarter.value,
-      year: filterYear.value,
-      teacher: filterTeacher?.value || '',
-      sortBy, sortDir
-    };
-    try { localStorage.setItem(FILTER_STORAGE_KEY, JSON.stringify(state)); }
-    catch (e) { /* localStorage may be unavailable; ignore */ }
-  }
-
-  function restoreFilterState() {
-    try {
-      const raw = localStorage.getItem(FILTER_STORAGE_KEY);
-      if (!raw) return;
-      const s = JSON.parse(raw);
-      if (s.search != null) searchEl.value = s.search;
-      if (s.status != null) filterStatus.value = s.status;
-      if (s.level != null) filterLevel.value = s.level;
-      if (s.quarter != null) filterQuarter.value = s.quarter;
-      if (s.year != null) filterYear.value = s.year;
-      if (s.teacher != null && filterTeacher) filterTeacher.value = s.teacher;
-      if (s.sortBy) sortBy = s.sortBy;
-      if (s.sortDir) sortDir = s.sortDir;
-      currentPage = 1;
-      // Update sort arrows
-      document.querySelectorAll('th[data-sort]').forEach(t => {
-        if (t.dataset.sort === sortBy) {
-          t.classList.add('sorted');
-          t.querySelector('.sort-arrow').textContent = sortDir === 'asc' ? '↑' : '↓';
-        } else {
-          t.classList.remove('sorted');
-          t.querySelector('.sort-arrow').textContent = '↕';
-        }
-      });
-    } catch (e) { /* ignore */ }
-  }
-
-  [searchEl, filterStatus, filterLevel, filterQuarter, filterYear, filterTeacher].forEach(el => {
-    if (!el) return;
-    el.addEventListener('input', () => { currentPage = 1; saveFilterState(); renderTable(); });
-    el.addEventListener('change', () => { currentPage = 1; saveFilterState(); renderTable(); });
-  });
-
-  document.querySelectorAll('th[data-sort]').forEach(th => {
-    th.addEventListener('click', () => {
-      const col = th.dataset.sort;
-      if (sortBy === col) sortDir = sortDir === 'asc' ? 'desc' : 'asc';
-      else { sortBy = col; sortDir = 'asc'; }
-      document.querySelectorAll('th[data-sort]').forEach(t => {
-        t.classList.remove('sorted');
-        t.querySelector('.sort-arrow').textContent = '↕';
-      });
-      th.classList.add('sorted');
-      th.querySelector('.sort-arrow').textContent = sortDir === 'asc' ? '↑' : '↓';
-      currentPage = 1;
-      saveFilterState();
-      renderTable();
-    });
-  });
-
-  (async () => {
-    if (!(await checkAuth())) return;
-    await loadAllData();
-  })();
-</script>
-
+<script type="module" src="../js/pages/exam-dashboard.js"></script>
 </body>
 </html>
