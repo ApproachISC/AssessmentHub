@@ -480,7 +480,7 @@ th.no-sort { cursor: default; }
   display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem 1rem;
 }
 .entry-card { background: var(--paper); border-top: 6px solid var(--gold); padding: 3rem 2.5rem 2.5rem; max-width: 520px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.25); text-align: center; }
-.entry-crest { display: inline-block; width: 54px; height: 54px; border: 2px solid var(--navy); border-radius: 50%; line-height: 50px; font-family: var(--serif); font-size: 1.7rem; font-weight: 700; color: var(--navy); margin-bottom: 0.6rem; position: relative; }
+.entry-crest { display: inline-block; width: 54px; height: 54px; border: 2px solid var(--navy); border-radius: 50%; line-height: 50px; font-family: var(--serif); font-size: 1.7rem; font-weight: 700; color: var(--navy); margin-bottom: 0.6rem; position: relative; text-align: center; }
 .entry-crest::after { content: ''; position: absolute; inset: 4px; border: 1px solid var(--gold); border-radius: 50%; }
 .entry-inst-name { font-family: var(--serif); font-size: 1.3rem; font-weight: 700; color: var(--navy); }
 .entry-inst-sub { font-size: 0.6rem; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: var(--muted); margin-top: 0.25rem; margin-bottom: 1.5rem; }
