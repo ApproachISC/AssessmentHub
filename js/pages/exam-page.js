@@ -975,15 +975,16 @@ document.getElementById('confirmSubmitBtn').addEventListener('click', async () =
   const blanks = findUnansweredQuestions();
 
   try {
-    const { error } = await db.from('submissions').update({
-      status: 'submitted',
-      submitted_at: submittedAt.toISOString(),
-      time_taken_seconds: timeTakenSec,
-      answers,
-      proctoring: state.proctor.buildPayload(),
-    }).eq('id', state.submissionId);
+    const { data: ok, error } = await db.rpc('submit_exam_submission', {
+      p_id: state.submissionId,
+      p_session_id: state.sessionId,
+      p_answers: answers,
+      p_time_taken_seconds: timeTakenSec,
+      p_proctoring: state.proctor.buildPayload(),
+    });
 
     if (error) throw error;
+    if (!ok) throw new Error('Submission record not found — it may have been deleted. Please contact your teacher.');
 
     localStorage.setItem(submittedFlagKey(state.examCode, state.student), submittedAt.toISOString());
     localStorage.removeItem(lsKey('session'));

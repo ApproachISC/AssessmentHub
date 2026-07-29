@@ -473,19 +473,18 @@ async function handleSubmit() {
   const { autoScore, maxScore } = scoreDefinition(state.def, state.answers);
 
   try {
-    const update = {
-      status: 'submitted',
-      submitted_at: submittedAt.toISOString(),
-      time_taken_seconds: timeSec,
-      answers: state.answers,
-      auto_score: autoScore,
-      total_score: autoScore,
-      max_score: maxScore,
-      results_shown: state.assessment.results_visibility !== 'none',
-    };
-    if (state.proctor) update.proctoring = state.proctor.buildPayload();
-    const { error } = await db.from('assessment_submissions').update(update).eq('id', state.submissionId);
+    const { data: ok, error } = await db.rpc('submit_assessment_submission', {
+      p_id: state.submissionId,
+      p_session_id: state.sessionId,
+      p_answers: state.answers,
+      p_auto_score: autoScore,
+      p_max_score: maxScore,
+      p_time_taken_seconds: timeSec,
+      p_results_shown: state.assessment.results_visibility !== 'none',
+      p_proctoring: state.proctor ? state.proctor.buildPayload() : null,
+    });
     if (error) throw error;
+    if (!ok) throw new Error('Submission record not found — it may have been deleted. Please contact your teacher.');
 
     localStorage.setItem(submittedKey(state.code, state.student), submittedAt.toISOString());
     localStorage.removeItem(lsKey('session'));
