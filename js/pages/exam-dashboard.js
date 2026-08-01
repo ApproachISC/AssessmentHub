@@ -31,11 +31,16 @@ function getWindowStatus(exam) {
 
 async function loadAllData() {
   try {
+    let examsQuery = db.from('exams').select('*').order('created_at', { ascending: false });
+    if (currentProfile.role === 'teacher') {
+      examsQuery = examsQuery.eq('teacher_id', currentProfile.id);
+    }
+
     const [classesRes, levelsRes, teachersRes, examsRes] = await Promise.all([
       db.from('classes').select('*').order('name'),
       db.from('levels').select('*').order('display_order'),
       db.from('profiles').select('id, full_name, email, role, is_active').order('full_name'),
-      db.from('exams').select('*').order('created_at', { ascending: false }),
+      examsQuery,
     ]);
     if (classesRes.error) throw classesRes.error;
     if (levelsRes.error) throw levelsRes.error;

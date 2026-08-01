@@ -275,7 +275,8 @@ async function loadExam() {
 
     if (!currentExam.proctoring_settings) currentExam.proctoring_settings = { ...DEFAULT_PROCTORING };
 
-    examDef = currentExam.exam_definition || null;
+    const loadedDef = currentExam.exam_definition;
+    examDef = (loadedDef && Array.isArray(loadedDef.sections) && loadedDef.sections.length > 0) ? loadedDef : null;
     document.getElementById('sharedToggle').checked = !!currentExam.shared;
     renderMetadata();
     renderProctoring();
@@ -1541,6 +1542,59 @@ document.getElementById('archiveBtn').addEventListener('click', async () => {
     showToast('Archive failed: ' + err.message, 'error');
   }
 });
+
+// ===== DELETE EXAM =====
+function openDeleteExamModal() {
+  document.getElementById('deleteExamSub').textContent = `${currentExam._class_name} · ${currentExam.code}`;
+  document.getElementById('deleteExamCodeLabel').textContent = currentExam.code;
+  document.getElementById('deleteExamConfirmInput').value = '';
+  document.getElementById('confirmDeleteExamBtn').disabled = true;
+  openModal('deleteExamModal');
+}
+
+function closeDeleteExamModal() { closeModal('deleteExamModal'); }
+
+document.getElementById('deleteExamBtn').addEventListener('click', openDeleteExamModal);
+document.getElementById('cancelDeleteExamBtn').addEventListener('click', closeDeleteExamModal);
+document.getElementById('deleteExamModal').addEventListener('click', e => { if (e.target.id === 'deleteExamModal') closeDeleteExamModal(); });
+
+document.getElementById('deleteExamConfirmInput').addEventListener('input', (e) => {
+  document.getElementById('confirmDeleteExamBtn').disabled = e.target.value !== currentExam.code;
+});
+
+document.getElementById('confirmDeleteExamBtn').addEventListener('click', async () => {
+  if (document.getElementById('deleteExamConfirmInput').value !== currentExam.code) return;
+  const btn = document.getElementById('confirmDeleteExamBtn');
+  btn.disabled = true;
+  btn.textContent = 'Deleting…';
+  try {
+    await deleteExamCompletely();
+    isDirty = false;
+    showToast('Exam deleted', 'success');
+    window.location.href = 'dashboard.html';
+  } catch (err) {
+    console.error(err);
+    showToast('Delete failed: ' + err.message, 'error');
+    btn.disabled = false;
+    btn.textContent = 'Delete Exam';
+  }
+});
+
+async function deleteExamCompletely() {
+  const { error: subErr } = await db.from('submissions').delete().eq('exam_id', currentExam.id);
+  if (subErr) throw subErr;
+
+  const { data: files, error: listErr } = await db.storage.from(STORAGE_BUCKET).list(currentExam.code);
+  if (listErr) throw listErr;
+  if (files && files.length) {
+    const paths = files.map(f => `${currentExam.code}/${f.name}`);
+    const { error: rmErr } = await db.storage.from(STORAGE_BUCKET).remove(paths);
+    if (rmErr) throw rmErr;
+  }
+
+  const { error: examErr } = await db.from('exams').delete().eq('id', currentExam.id);
+  if (examErr) throw examErr;
+}
 
 document.getElementById('previewBtn').addEventListener('click', () => {
   if (!currentExam) return;

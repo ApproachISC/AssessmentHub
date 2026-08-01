@@ -972,7 +972,7 @@ th.no-sort { cursor: default; }
 .manual-grade label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--navy); }
 .manual-grade input { width: 80px; font-size: 0.9rem; padding: 0.4rem 0.6rem; border: 1.5px solid var(--line); border-radius: 4px; }
 .manual-grade input:focus { outline: none; border-color: var(--gold-b); }
-.manual-grade .max-points { font-size: 0.82rem; color: var(--muted); }
+.manual-grade .max-points { font-size: 0.82rem; color: var(--muted); width: 30px; }
 .manual-grade .rubric, .rubric-box { flex-basis: 100%; background: var(--sky); border-left: 3px solid var(--gold-b); padding: 0.6rem 0.8rem; margin-top: 0.5rem; font-size: 0.85rem; color: var(--ink-s); border-radius: 0 4px 4px 0; }
 .manual-grade .rubric strong, .rubric-box strong { display: block; font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gold-b); margin-bottom: 0.2rem; }
 

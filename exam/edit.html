@@ -151,6 +151,16 @@
             Drafts are saved but not visible to students. Publishing makes the exam available within its scheduled window.
           </p>
         </div>
+
+        <div class="panel">
+          <div class="panel-title">Danger Zone</div>
+          <div class="action-stack">
+            <button type="button" class="btn btn--danger" id="deleteExamBtn">Delete Exam</button>
+          </div>
+          <p class="panel-hint">
+            Permanently deletes this exam, all student submissions, and all uploaded question images. This cannot be undone.
+          </p>
+        </div>
       </aside>
 
     </div>
@@ -266,6 +276,34 @@
         <button type="submit" class="btn btn--primary" id="metaEditSaveBtn">Save Changes</button>
       </div>
     </form>
+  </div>
+</div>
+
+<!-- ===== DELETE EXAM MODAL ===== -->
+<div class="modal-overlay" id="deleteExamModal">
+  <div class="modal-box">
+    <div class="page-stamp">Delete Exam</div>
+    <h2>Delete this exam permanently?</h2>
+    <p class="modal-sub" id="deleteExamSub">—</p>
+
+    <div class="modal-notice">
+      <strong>This cannot be undone.</strong> Deleting this exam will permanently remove:
+      <ul style="margin:0.5rem 0 0 1.25rem;">
+        <li>The exam itself</li>
+        <li>All student submissions for this exam</li>
+        <li>All uploaded question images for this exam</li>
+      </ul>
+    </div>
+
+    <div class="field">
+      <label>Type the exam code <strong id="deleteExamCodeLabel">—</strong> to confirm</label>
+      <input type="text" id="deleteExamConfirmInput" autocomplete="off" placeholder="Enter exam code">
+    </div>
+
+    <div class="modal-actions">
+      <button type="button" class="btn btn--secondary" id="cancelDeleteExamBtn">Cancel</button>
+      <button type="button" class="btn btn--danger" id="confirmDeleteExamBtn" disabled>Delete Exam</button>
+    </div>
   </div>
 </div>
 

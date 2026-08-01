@@ -44,6 +44,10 @@ async function loadSubmission() {
 
     manualGrades = submission.manual_grades || {};
 
+    const backUrl = `submissions.html?id=${encodeURIComponent(submission.exam_id)}`;
+    document.getElementById('bcSubmissionsLink').href = backUrl;
+    document.getElementById('backToListLink').href = backUrl;
+
     renderMeta();
     renderProctoring();
     renderSections();
