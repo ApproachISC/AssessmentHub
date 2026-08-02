@@ -42,6 +42,8 @@ export function createProctor({ settings = {}, onStateChange } = {}) {
     fullscreenExits: 0,
     rightClicksBlocked: 0,
     devtoolsAttempts: 0,
+    pasteBlocked: 0,
+    copyBlocked: 0,
     eventLog: [],
   };
 
@@ -111,13 +113,43 @@ export function createProctor({ settings = {}, onStateChange } = {}) {
     notify();
   }
 
-  // Right-click and devtools-shortcut blocking are always-on anti-cheat
-  // measures, independent of the three configurable monitor toggles.
+  // Right-click, devtools-shortcut, paste, and copy/cut blocking are all
+  // always-on anti-cheat measures, independent of the three configurable
+  // monitor toggles.
   function onContextMenu(e) {
     if (!state.active) return;
     e.preventDefault();
     state.rightClicksBlocked++;
     logEvent('right_click_blocked');
+    notify();
+  }
+
+  // Pasting into any answer field is blocked as an always-on anti-cheat
+  // measure, same tier as right-click/devtools blocking above.
+  function onPaste(e) {
+    if (!state.active) return;
+    const target = e.target;
+    const isEditable = target?.matches?.('input, textarea') || target?.isContentEditable;
+    if (!isEditable) return;
+    e.preventDefault();
+    state.pasteBlocked++;
+    logEvent('paste_blocked', `count: ${state.pasteBlocked}`);
+    notify();
+  }
+
+  const COPY_BLOCK_MESSAGE = 'No copying allowed from this page.';
+
+  // Copy/cut still succeed (browsers don't let a page fully cancel the OS
+  // clipboard write), but we overwrite the clipboard's contents with a
+  // warning message so nothing useful ends up pasted elsewhere.
+  function onCopyOrCut(e) {
+    if (!state.active) return;
+    if (e.clipboardData) {
+      e.clipboardData.setData('text/plain', COPY_BLOCK_MESSAGE);
+      e.preventDefault();
+    }
+    state.copyBlocked++;
+    logEvent(e.type === 'cut' ? 'cut_blocked' : 'copy_blocked', `count: ${state.copyBlocked}`);
     notify();
   }
 
@@ -164,6 +196,9 @@ export function createProctor({ settings = {}, onStateChange } = {}) {
     if (fullscreenActive) document.addEventListener('fullscreenchange', onFullscreenChange);
     document.addEventListener('contextmenu', onContextMenu);
     document.addEventListener('keydown', onKeyDown);
+    document.addEventListener('paste', onPaste, true);
+    document.addEventListener('copy', onCopyOrCut, true);
+    document.addEventListener('cut', onCopyOrCut, true);
     requestWakeLock();
   }
 
@@ -174,6 +209,9 @@ export function createProctor({ settings = {}, onStateChange } = {}) {
     document.removeEventListener('fullscreenchange', onFullscreenChange);
     document.removeEventListener('contextmenu', onContextMenu);
     document.removeEventListener('keydown', onKeyDown);
+    document.removeEventListener('paste', onPaste, true);
+    document.removeEventListener('copy', onCopyOrCut, true);
+    document.removeEventListener('cut', onCopyOrCut, true);
     releaseWakeLock();
   }
 
@@ -187,6 +225,8 @@ export function createProctor({ settings = {}, onStateChange } = {}) {
       fullscreen_exits: state.fullscreenExits,
       right_clicks_blocked: state.rightClicksBlocked,
       devtools_attempts: state.devtoolsAttempts,
+      paste_blocked: state.pasteBlocked,
+      copy_blocked: state.copyBlocked,
       event_log: state.eventLog.slice(),
     };
   }
@@ -198,6 +238,8 @@ export function createProctor({ settings = {}, onStateChange } = {}) {
     state.fullscreenExits = p?.fullscreen_exits || 0;
     state.rightClicksBlocked = p?.right_clicks_blocked || 0;
     state.devtoolsAttempts = p?.devtools_attempts || 0;
+    state.pasteBlocked = p?.paste_blocked || 0;
+    state.copyBlocked = p?.copy_blocked || 0;
     state.eventLog = Array.isArray(p?.event_log) ? p.event_log.slice() : [];
   }
 
@@ -210,6 +252,8 @@ export function createProctor({ settings = {}, onStateChange } = {}) {
     get fullscreenExits() { return state.fullscreenExits; },
     get rightClicksBlocked() { return state.rightClicksBlocked; },
     get devtoolsAttempts() { return state.devtoolsAttempts; },
+    get pasteBlocked() { return state.pasteBlocked; },
+    get copyBlocked() { return state.copyBlocked; },
     get isPaused() { return state.paused; },
     start,
     stop,

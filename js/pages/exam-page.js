@@ -3,6 +3,8 @@ import { showToast, esc } from '../ui.js';
 import { createProctor } from '../proctoring.js';
 
 const DEFAULT_PROCTORING = { fullscreen_lock: true, tab_switch_tracking: true, window_blur_tracking: true };
+let lastPasteBlocked = 0;
+let lastCopyBlocked = 0;
 
 // ===== STATE =====
 const state = {
@@ -275,6 +277,14 @@ function onProctorStateChange(s) {
     if (s.tabSwitches > 0 && !document.hidden) {
       showToast(`Tab switch detected (${s.tabSwitches} total)`);
     }
+  }
+  if (s.pasteBlocked > 0 && s.pasteBlocked !== lastPasteBlocked) {
+    lastPasteBlocked = s.pasteBlocked;
+    showToast('Pasting is not allowed during the exam.', 'error');
+  }
+  if (s.copyBlocked > 0 && s.copyBlocked !== lastCopyBlocked) {
+    lastCopyBlocked = s.copyBlocked;
+    showToast('Copying is not allowed during the exam.', 'error');
   }
   const statusEl = document.getElementById('statusValue');
   if (statusEl) {

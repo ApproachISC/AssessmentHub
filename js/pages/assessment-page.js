@@ -4,6 +4,8 @@ import { renderQuestionTaking, collectQuestionAnswer, restoreQuestionAnswer, sco
 import { createProctor } from '../proctoring.js';
 
 const DEFAULT_PROCTORING = { fullscreen_lock: true, tab_switch_tracking: true, window_blur_tracking: true };
+let lastPasteBlocked = 0;
+let lastCopyBlocked = 0;
 
 // ===== STATE =====
 const state = {
@@ -162,6 +164,14 @@ function onProctorStateChange(s) {
     switchCountEl.classList.toggle('alert', s.tabSwitches >= 3);
     switchCountEl.classList.toggle('warning', s.tabSwitches >= 1 && s.tabSwitches < 3);
     if (s.tabSwitches > 0) showToast(`Tab switch detected (${s.tabSwitches} total)`);
+  }
+  if (s.pasteBlocked > 0 && s.pasteBlocked !== lastPasteBlocked) {
+    lastPasteBlocked = s.pasteBlocked;
+    showToast('Pasting is not allowed during the assessment.', 'error');
+  }
+  if (s.copyBlocked > 0 && s.copyBlocked !== lastCopyBlocked) {
+    lastCopyBlocked = s.copyBlocked;
+    showToast('Copying is not allowed during the assessment.', 'error');
   }
   const statusEl = document.getElementById('fullscreenStatus');
   const lockout = document.getElementById('lockout');
