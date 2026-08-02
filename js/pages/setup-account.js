@@ -85,7 +85,9 @@ document.getElementById('form').addEventListener('submit', async (e) => {
     if (pwdErr) throw pwdErr;
 
     const { data: { user } } = await db.auth.getUser();
-    const { error: profErr } = await db.from('profiles').update({ full_name: fullNameEl.value.trim() }).eq('id', user.id);
+    const { error: profErr } = await db.from('profiles')
+      .update({ full_name: fullNameEl.value.trim(), first_login_at: new Date().toISOString() })
+      .eq('id', user.id);
     if (profErr) throw profErr;
 
     const { data: profile } = await db.from('profiles').select('role').eq('id', user.id).single();
