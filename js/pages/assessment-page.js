@@ -381,6 +381,24 @@ function updateProgress() {
 document.getElementById('prevBtn').addEventListener('click', () => { saveCurrentPageAnswer(); navigateTo(state.currentPage - 1); });
 document.getElementById('nextBtn').addEventListener('click', () => { saveCurrentPageAnswer(); navigateTo(state.currentPage + 1); });
 
+// ===== PASSAGE FONT SIZE CONTROLS =====
+const PASSAGE_FONT_MIN = 0.7;
+const PASSAGE_FONT_MAX = 1.6;
+const PASSAGE_FONT_DEFAULT = 1.1;
+const PASSAGE_FONT_STEP = 0.1;
+
+document.querySelectorAll('#passagePage .passage-font-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const content = document.getElementById('passageText');
+    const current = parseFloat(content.style.fontSize) || PASSAGE_FONT_DEFAULT;
+    let next = current;
+    if (btn.dataset.fontAction === 'increase') next = Math.min(PASSAGE_FONT_MAX, current + PASSAGE_FONT_STEP);
+    else if (btn.dataset.fontAction === 'decrease') next = Math.max(PASSAGE_FONT_MIN, current - PASSAGE_FONT_STEP);
+    else next = PASSAGE_FONT_DEFAULT;
+    content.style.fontSize = `${next.toFixed(2)}rem`;
+  });
+});
+
 // ===== PASSAGE PAGE RENDER =====
 function renderPassagePage(page) {
   const section = state.def.sections[page.sectionIdx];

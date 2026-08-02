@@ -471,8 +471,15 @@ function renderExam() {
     if (section.passage?.content) {
       html += `
         <div class="passage-box">
-          <span class="passage-label">Reading</span>
-          ${esc(section.passage.content)}
+          <div class="passage-toolbar">
+            <span class="passage-label">Reading</span>
+            <div class="passage-font-controls">
+              <button type="button" class="passage-font-btn" data-font-action="decrease" title="Smaller text" aria-label="Decrease text size">A−</button>
+              <button type="button" class="passage-font-btn" data-font-action="reset" title="Reset text size" aria-label="Reset text size">A</button>
+              <button type="button" class="passage-font-btn" data-font-action="increase" title="Larger text" aria-label="Increase text size">A+</button>
+            </div>
+          </div>
+          <div class="passage-content">${esc(section.passage.content)}</div>
         </div>
       `;
     }
@@ -854,6 +861,26 @@ document.addEventListener('change', (e) => {
   if (!e.target.closest('#examBody')) return;
   saveToLocalStorage();
   saveToSupabase(false);
+});
+
+const PASSAGE_FONT_MIN = 0.7;
+const PASSAGE_FONT_MAX = 1.6;
+const PASSAGE_FONT_DEFAULT = 1;
+const PASSAGE_FONT_STEP = 0.1;
+
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.passage-font-btn');
+  if (!btn || !btn.closest('#examBody')) return;
+  const content = btn.closest('.passage-box')?.querySelector('.passage-content');
+  if (!content) return;
+
+  const current = parseFloat(content.style.fontSize) || PASSAGE_FONT_DEFAULT;
+  let next = current;
+  if (btn.dataset.fontAction === 'increase') next = Math.min(PASSAGE_FONT_MAX, current + PASSAGE_FONT_STEP);
+  else if (btn.dataset.fontAction === 'decrease') next = Math.max(PASSAGE_FONT_MIN, current - PASSAGE_FONT_STEP);
+  else next = PASSAGE_FONT_DEFAULT;
+
+  content.style.fontSize = `${next.toFixed(2)}rem`;
 });
 
 window.addEventListener('beforeunload', e => {

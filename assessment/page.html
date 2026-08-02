@@ -72,7 +72,14 @@
   <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%;"></div></div>
   <div class="progress-label"><span id="passageProgressLabel">Reading</span> · <span id="progressText">—</span></div>
   <div class="assess-passage-content">
-    <div class="assess-passage-label" id="passageSectionLabel">—</div>
+    <div class="assess-passage-header">
+      <div class="assess-passage-label" id="passageSectionLabel">—</div>
+      <div class="passage-font-controls">
+        <button type="button" class="passage-font-btn" data-font-action="decrease" title="Smaller text" aria-label="Decrease text size">A−</button>
+        <button type="button" class="passage-font-btn" data-font-action="reset" title="Reset text size" aria-label="Reset text size">A</button>
+        <button type="button" class="passage-font-btn" data-font-action="increase" title="Larger text" aria-label="Increase text size">A+</button>
+      </div>
+    </div>
     <div class="assess-passage-title" id="passageTitle">—</div>
     <div class="assess-passage-text" id="passageText"></div>
     <p class="assess-passage-cta">Read the text above, then click <strong>Begin Questions</strong> to answer the questions for this section.</p>
