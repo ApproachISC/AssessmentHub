@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Print Exam — Approach International Student Center</title>
+<link rel="stylesheet" href="../css/styles.css">
+</head>
+<body style="background-color: white;">
+
+<div class="auth-loading" id="authLoading">
+  <div class="spinner"></div>
+  <p style="font-family:var(--serif);font-style:italic;">Preparing paper version…</p>
+</div>
+
+<div class="error-screen" id="errorScreen" style="display:none;">
+  <h2 style="font-size:1.8rem;color:var(--red);margin-bottom:0.5rem;" id="errorTitle">—</h2>
+  <p style="font-family:var(--serif);font-style:italic;color:var(--navy-l);" id="errorMessage">—</p>
+  <a href="dashboard.html" class="btn btn--secondary" style="margin-top:1.5rem;">Back to Exams</a>
+</div>
+
+<div id="content" style="display:none;">
+  <div class="no-print paper-toolbar">
+    <a href="#" id="backLink" class="btn btn--secondary btn--sm">← Back to Exam</a>
+    <button type="button" class="btn btn--primary btn--sm" id="printNowBtn">Print / Save as PDF</button>
+  </div>
+
+  <div class="paper-page" id="paperRoot"></div>
+</div>
+
+<script type="module" src="../js/pages/exam-print.js"></script>
+</body>
+</html>

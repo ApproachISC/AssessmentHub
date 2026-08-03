@@ -312,6 +312,14 @@ function renderMetadata() {
   document.getElementById('metaBadges').innerHTML = `<span class="chip ${esc(e.status)}">${esc(e.status)}</span>`;
   document.getElementById('archiveBtn').style.display =
     (e.status === 'active' || e.status === 'draft') ? 'inline-flex' : 'none';
+
+  updatePdfButtonState();
+}
+
+function updatePdfButtonState() {
+  const isPublished = currentExam?.status === 'active';
+  document.getElementById('downloadPdfBtn').disabled = !isPublished || !examDef;
+  document.getElementById('downloadPdfHint').style.display = isPublished ? 'none' : 'block';
 }
 
 function renderProctoring() {
@@ -677,6 +685,8 @@ document.getElementById('contentArea').addEventListener('click', (e) => {
 
 // ===== SIDEBAR =====
 function updateSidebar() {
+  updatePdfButtonState();
+
   if (!examDef) {
     ['sumSections', 'sumQuestions', 'sumAuto', 'sumManual', 'sumPoints', 'sumImagesNeeded', 'sumImagesUploaded']
       .forEach(id => document.getElementById(id).textContent = '—');
@@ -1999,6 +2009,12 @@ async function openQuestionBankModal() {
 document.getElementById('questionBankBtn').addEventListener('click', openQuestionBankModal);
 document.getElementById('closeBankBtn').addEventListener('click', () => closeModal('questionBankModal'));
 document.getElementById('questionBankModal').addEventListener('click', e => { if (e.target.id === 'questionBankModal') closeModal('questionBankModal'); });
+
+// ===== PAPER VERSION (opens print.html in a new tab for window.print()) =====
+document.getElementById('downloadPdfBtn').addEventListener('click', () => {
+  if (!currentExam || !examDef || currentExam.status !== 'active') return;
+  window.open(`print.html?id=${currentExam.id}`, '_blank');
+});
 
 // ===== INIT =====
 (async () => {
