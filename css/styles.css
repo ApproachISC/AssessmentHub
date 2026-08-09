@@ -1067,7 +1067,7 @@ th.no-sort { cursor: default; }
 .order-input:focus { outline: none; border-color: var(--gold-b); background: var(--paper); box-shadow: 0 0 0 3px rgba(211,159,16,0.18); }
 
 .writing-wrap { position: relative; margin-top: 0.75rem; }
-.writing-input { width: 100%; min-height: 120px; font-family: var(--sans); font-size: 1rem; padding: 0.85rem; border: 1.5px solid var(--navy-s); background: var(--sky); color: var(--navy); border-radius: 4px; resize: vertical; }
+.writing-input { width: 100%; min-height: 120px; font-family: var(--sans); font-size: 1rem; padding: 0.85rem; border: 1.5px solid var(--navy-s); background: var(--sky); color: var(--navy); border-radius: 4px; resize: none; overflow: hidden; box-sizing: border-box; }
 .writing-input:focus { outline: none; border-color: var(--gold-b); background: var(--paper); box-shadow: 0 0 0 3px rgba(211,159,16,0.18); }
 .word-count { text-align: right; font-size: 0.76rem; color: var(--muted); margin-top: 0.3rem; }
 .word-count strong { color: var(--navy); }

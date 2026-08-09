@@ -779,10 +779,17 @@ function renderImageMatch(qEl, q, numHtml) {
   `;
 }
 
+function autoResizeTextarea(textarea) {
+  textarea.style.height = 'auto';
+  textarea.style.height = `${textarea.scrollHeight}px`;
+}
+
 function setupWordCount(textarea, counterEl) {
   textarea.addEventListener('input', () => {
     counterEl.textContent = countWords(textarea.value);
+    autoResizeTextarea(textarea);
   });
+  autoResizeTextarea(textarea);
 }
 
 // ===== ANSWER COLLECTION =====
