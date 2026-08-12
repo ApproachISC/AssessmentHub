@@ -407,31 +407,35 @@ function renderBodyPoolWriting(c, q, a, manualGrades) {
     <div class="response-section"><div class="response-label">Sentences (graded individually)</div>${rows}</div>`;
 }
 
+// Types with a dedicated manual-grading body (raw response + score input, no auto ✓/✗).
+const MANUAL_BODY_TYPES = ['fill_blank', 'fill_blank_multi', 'sentence_order', 'short_answer', 'writing_prompt', 'pool_writing'];
+
 export function renderQuestionResultBody(container, q, answers, result, manualGrades = {}) {
-  // Manually-graded fill_blank(_multi) get the score-input UI instead of auto ✓/✗.
-  if (q.grading === 'manual' && (q.type === 'fill_blank' || q.type === 'fill_blank_multi')) {
-    return q.type === 'fill_blank_multi'
-      ? renderBodyFBMultiManual(container, q, answers, manualGrades)
-      : renderBodyManualSimple(container, q, answers, manualGrades);
+  if (q.grading === 'manual' && MANUAL_BODY_TYPES.includes(q.type)) {
+    if (q.type === 'fill_blank_multi') return renderBodyFBMultiManual(container, q, answers, manualGrades);
+    if (q.type === 'pool_writing') return renderBodyPoolWriting(container, q, answers, manualGrades);
+    return renderBodyManualSimple(container, q, answers, manualGrades);
   }
   switch (q.type) {
-    case 'multiple_choice': return renderBodyMC(container, q, answers);
-    case 'multiple_select': return renderBodyMS(container, q, answers);
-    case 'true_false': return renderBodyTF(container, q, answers);
-    case 'fill_blank': return renderBodyFB(container, q, answers, result);
-    case 'fill_blank_multi': return renderBodyFBM(container, q, answers);
-    case 'dropdown': return renderBodyDD(container, q, answers, result);
-    case 'inline_choice': return renderBodyInlineChoice(container, q, answers, result);
-    case 'matching': return renderBodyMatching(container, q, answers);
-    case 'drag_reorder': return renderBodyDragReorder(container, q, answers, result);
+    case 'multiple_choice': renderBodyMC(container, q, answers); break;
+    case 'multiple_select': renderBodyMS(container, q, answers); break;
+    case 'true_false': renderBodyTF(container, q, answers); break;
+    case 'fill_blank': renderBodyFB(container, q, answers, result); break;
+    case 'fill_blank_multi': renderBodyFBM(container, q, answers); break;
+    case 'dropdown': renderBodyDD(container, q, answers, result); break;
+    case 'inline_choice': renderBodyInlineChoice(container, q, answers, result); break;
+    case 'matching': renderBodyMatching(container, q, answers); break;
+    case 'drag_reorder': renderBodyDragReorder(container, q, answers, result); break;
     case 'drag_categorize':
-    case 'categorization': return renderBodyDragCategorize(container, q, answers);
-    case 'image_label': return renderBodyImageLabel(container, q, answers);
-    case 'image_match': return renderBodyImageMatch(container, q, answers);
-    case 'sentence_order':
-    case 'short_answer':
-    case 'writing_prompt': return renderBodyManualSimple(container, q, answers, manualGrades);
-    case 'pool_writing': return renderBodyPoolWriting(container, q, answers, manualGrades);
+    case 'categorization': renderBodyDragCategorize(container, q, answers); break;
+    case 'image_label': renderBodyImageLabel(container, q, answers); break;
+    case 'image_match': renderBodyImageMatch(container, q, answers); break;
+  }
+  // A normally-auto-graded type can still be flagged for manual grading (e.g. the
+  // AI exam importer sets `grading: "manual"` when it can't determine an answer
+  // key). Show the auto comparison view above for context, plus a score input.
+  if (q.grading === 'manual') {
+    container.insertAdjacentHTML('beforeend', manualGradeInputHtml(q.id, Number(q.points) || 0, manualGrades[q.id], q.rubric));
   }
 }
 
