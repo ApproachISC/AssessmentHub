@@ -1,6 +1,6 @@
 import { db } from '../supabase-client.js';
 import { requireAuth } from '../auth.js';
-import { renderNavbar, showToast, esc } from '../ui.js';
+import { renderNavbar, showToast, esc, openModal, closeModal } from '../ui.js';
 
 let currentProfile = null;
 let allSubmissions = [], allExams = [], allClasses = [];
@@ -187,7 +187,8 @@ function renderTable() {
       <td><div class="row-actions">
         ${s.status === 'submitted'
           ? `<a href="submission-detail.html?id=${s.id}" class="row-btn">Review</a>`
-          : `<button class="row-btn archive" data-delete-id="${s.id}" data-delete-name="${esc(s.student_name)}">Delete</button>`}
+          : `<button class="row-btn success" data-force-id="${s.id}" data-force-name="${esc(s.student_name)}">Force Submit</button>
+             <button class="row-btn archive" data-delete-id="${s.id}" data-delete-name="${esc(s.student_name)}">Delete</button>`}
       </div></td>
     </tr>`;
   }).join('');
@@ -219,9 +220,51 @@ async function deleteInProgress(id, studentName) {
   }
 }
 
+async function forceSubmit(id) {
+  const submission = allSubmissions.find(s => s.id === id);
+  if (!submission) return;
+  try {
+    const timeTakenSec = Math.floor((Date.now() - new Date(submission.started_at).getTime()) / 1000);
+    const { data: ok, error } = await db.rpc('submit_exam_submission', {
+      p_id: submission.id,
+      p_session_id: submission.session_id,
+      p_answers: submission.answers || {},
+      p_time_taken_seconds: timeTakenSec,
+      p_proctoring: submission.proctoring,
+    });
+    if (error) throw error;
+    if (!ok) throw new Error('Submission record not found — it may have been deleted.');
+    submission.status = 'submitted';
+    submission.submitted_at = new Date().toISOString();
+    submission.time_taken_seconds = timeTakenSec;
+    updateStats();
+    renderTable();
+    showToast('Submission force-submitted', 'success');
+  } catch (err) {
+    showToast('Could not force-submit: ' + err.message, 'error');
+  }
+}
+
+let pendingForceSubmitId = null;
+document.getElementById('cancelForceSubmitBtn').addEventListener('click', () => closeModal('forceSubmitModal'));
+document.getElementById('forceSubmitModal').addEventListener('click', (e) => {
+  if (e.target.id === 'forceSubmitModal') closeModal('forceSubmitModal');
+});
+document.getElementById('confirmForceSubmitBtn').addEventListener('click', () => {
+  closeModal('forceSubmitModal');
+  if (pendingForceSubmitId) forceSubmit(pendingForceSubmitId);
+  pendingForceSubmitId = null;
+});
+
 submissionsBody.addEventListener('click', (e) => {
-  const btn = e.target.closest('[data-delete-id]');
-  if (btn) deleteInProgress(btn.dataset.deleteId, btn.dataset.deleteName);
+  const deleteBtn = e.target.closest('[data-delete-id]');
+  if (deleteBtn) { deleteInProgress(deleteBtn.dataset.deleteId, deleteBtn.dataset.deleteName); return; }
+  const forceBtn = e.target.closest('[data-force-id]');
+  if (forceBtn) {
+    pendingForceSubmitId = forceBtn.dataset.forceId;
+    document.getElementById('forceSubmitSub').textContent = `Student: ${forceBtn.dataset.forceName}`;
+    openModal('forceSubmitModal');
+  }
 });
 
 document.getElementById('prevBtn').addEventListener('click', () => {

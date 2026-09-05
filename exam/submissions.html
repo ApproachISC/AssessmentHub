@@ -90,6 +90,24 @@
   </div>
 </main>
 
+<div class="modal-overlay" id="forceSubmitModal">
+  <div class="modal-box">
+    <div class="page-stamp">Force Submission</div>
+    <h2>Force-submit this exam?</h2>
+    <p class="modal-sub" id="forceSubmitSub">—</p>
+
+    <div class="modal-notice">
+      This submits the student's exam using their <strong>last auto-saved answers</strong>, exactly as if
+      they had clicked Submit themselves. Use this if a student forgot to submit or ran into a device issue.
+    </div>
+
+    <div class="modal-actions">
+      <button type="button" class="btn btn--secondary" id="cancelForceSubmitBtn">Cancel</button>
+      <button type="button" class="btn btn--primary" id="confirmForceSubmitBtn">Force Submit</button>
+    </div>
+  </div>
+</div>
+
 <div class="copyright">Copyright © 2026 Approach International Student Center, Inc. — All rights reserved.</div>
 
 <script type="module" src="../js/pages/exam-submissions.js"></script>
