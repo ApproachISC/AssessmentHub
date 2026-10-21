@@ -14,6 +14,7 @@ const state = {
   submissionId: null,
   sessionId: null,
   student: '',
+  studentEmail: '',
   teacherName: '',
   classLabel: '',
   startTime: null,
@@ -36,10 +37,14 @@ const startForm = document.getElementById('startForm');
 const acknowledgeBox = document.getElementById('acknowledgeBox');
 const startBtn = document.getElementById('startBtn');
 const studentNameEl = document.getElementById('studentName');
+const studentEmailEl = document.getElementById('studentEmail');
 
 // ===== HELPERS =====
 function generateSessionId() {
   return `sess_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+}
+function isValidEmail(value) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
 function lsKey(suffix) { return `exam_${state.examCode}_${suffix}`; }
@@ -324,17 +329,24 @@ function populateStartScreen() {
 
 function updateStartButton() {
   const nameReady = studentNameEl.value.trim().length >= 2;
+  const emailReady = isValidEmail(studentEmailEl.value.trim());
   const rulesShown = document.getElementById('proctorRules').style.display !== 'none';
   const ackReady = !rulesShown || acknowledgeBox.checked;
-  startBtn.disabled = !(nameReady && ackReady);
+  startBtn.disabled = !(nameReady && emailReady && ackReady);
 }
 studentNameEl.addEventListener('input', updateStartButton);
+studentEmailEl.addEventListener('input', updateStartButton);
 acknowledgeBox.addEventListener('change', updateStartButton);
 
 // ===== START EXAM =====
 startBtn.addEventListener('click', async () => {
   const name = studentNameEl.value.trim().toUpperCase();
+  const email = studentEmailEl.value.trim().toLowerCase();
   if (!name || !state.examRecord) return;
+  if (!isValidEmail(email)) {
+    alert('Please enter a valid email address.');
+    return;
+  }
 
   const flag = localStorage.getItem(submittedFlagKey(state.examCode, name));
   if (flag) {
@@ -344,8 +356,11 @@ startBtn.addEventListener('click', async () => {
   }
 
   state.student = name;
+  state.studentEmail = email;
 
-  // Try to resume an existing in-progress session.
+  // Try to resume an existing in-progress session: same-device fast path first
+  // (localStorage session_id), then fall back to an email lookup so the student
+  // can pick up an attempt started on a different device.
   const savedSessionId = localStorage.getItem(lsKey('session'));
   const savedName = localStorage.getItem(lsKey('name'));
   let resumeData = null;
@@ -365,6 +380,33 @@ startBtn.addEventListener('click', async () => {
       }
     } catch (err) {
       console.warn('Could not check resume session:', err);
+    }
+  }
+
+  if (!resumeData) {
+    try {
+      const { data: rows } = await db.rpc('resume_exam_submission_by_email', {
+        p_exam_code: state.examCode,
+        p_student_email: email,
+      });
+      const data = rows?.[0] || null;
+      if (data?.status === 'submitted') {
+        localStorage.setItem(submittedFlagKey(state.examCode, name), data.submitted_at || new Date().toISOString());
+        const submittedAt = new Date(data.submitted_at).toLocaleString();
+        showBlocked('Already submitted', `You already submitted this exam on ${submittedAt}. If this is a mistake, please contact your teacher.`);
+        return;
+      }
+      if (data?.status === 'in_progress') {
+        if (confirm('We found an unfinished exam under this email. Resume where you left off?')) {
+          resumeData = data;
+          state.submissionId = data.id;
+          state.sessionId = data.session_id;
+          state.startTime = new Date(data.started_at).getTime();
+          state.proctor.restoreCounts(data.proctoring);
+        }
+      }
+    } catch (err) {
+      console.warn('Could not check resume by email:', err);
     }
   }
 
@@ -390,6 +432,7 @@ startBtn.addEventListener('click', async () => {
         exam_id: state.examRecord.id,
         exam_code: state.examCode,
         student_name: name,
+        student_email: email,
         session_id: state.sessionId,
         status: 'in_progress',
         started_at: new Date().toISOString(),
@@ -408,9 +451,9 @@ startBtn.addEventListener('click', async () => {
       state.proctor.exitFullscreen();
       return;
     }
-    localStorage.setItem(lsKey('session'), state.sessionId);
-    localStorage.setItem(lsKey('name'), name);
   }
+  localStorage.setItem(lsKey('session'), state.sessionId);
+  localStorage.setItem(lsKey('name'), name);
 
   studentLabel.textContent = `${name} · ${state.teacherName}`;
   renderExam();
@@ -849,11 +892,16 @@ async function saveToSupabase(immediate = false) {
   isSaving = true;
   setSaveStatus('saving', 'Saving…');
   try {
-    const { error } = await db.from('submissions').update({
-      answers: collectAnswers(),
-      proctoring: state.proctor.buildPayload(),
-    }).eq('id', state.submissionId);
+    // RPC, not a plain .update(): anon has no SELECT policy on submissions, so
+    // an .update().eq('id') silently matches 0 rows (see 015_autosave_submission_rpc.sql).
+    const { data: ok, error } = await db.rpc('autosave_exam_submission', {
+      p_id: state.submissionId,
+      p_session_id: state.sessionId,
+      p_answers: collectAnswers(),
+      p_proctoring: state.proctor.buildPayload(),
+    });
     if (error) throw error;
+    if (!ok) throw new Error('Auto-save matched no in-progress submission');
     setSaveStatus('saved', 'Saved');
   } catch (err) {
     console.error('Auto-save failed:', err);

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evaluation — Approach International Student Center</title>
+<link rel="stylesheet" href="../css/styles.css">
+</head>
+<body class="eval-paper-body">
+
+<div id="navbarContainer" class="no-print"></div>
+
+<div class="auth-loading" id="authLoading">
+  <div class="spinner"></div>
+  <p style="font-family:var(--serif);font-style:italic;">Loading evaluation…</p>
+</div>
+
+<div class="error-screen" id="errorScreen" style="display:none;">
+  <h2 style="font-size:1.8rem;color:var(--red);margin-bottom:0.5rem;" id="errorTitle">—</h2>
+  <p style="font-family:var(--serif);font-style:italic;color:var(--navy-l);" id="errorMessage">—</p>
+  <a href="dashboard.html" class="btn btn--secondary" style="margin-top:1.5rem;">Back to Evaluations</a>
+</div>
+
+<div id="content" style="display:none;">
+  <div class="no-print paper-toolbar">
+    <a href="dashboard.html" class="btn btn--secondary btn--sm">← Evaluations</a>
+    <div class="eval-toolbar-actions">
+      <a href="#" class="btn btn--secondary btn--sm" id="continueBtn" style="display:none;">Continue editing</a>
+      <button type="button" class="btn btn--secondary btn--sm" id="reopenBtn" style="display:none;">Reopen</button>
+      <button type="button" class="btn btn--ghost btn--sm" id="deleteBtn" style="display:none;color:var(--red);">Delete</button>
+      <button type="button" class="btn btn--primary btn--sm" id="printBtn">Print / Save as PDF</button>
+    </div>
+  </div>
+  <div class="no-print paper-page" style="margin-bottom:0;">
+    <div class="alert success" id="finalizedNotice"><div><b>Signed and finalized</b>The teacher can now see their grade and the sections you shared, and sign it.</div></div>
+  </div>
+  <div class="paper-page" id="paperRoot"></div>
+</div>
+
+<div class="no-print copyright">Copyright © 2026 Approach International Student Center, Inc. — All rights reserved.</div>
+
+<script type="module" src="../js/pages/evaluation-view.js"></script>
+</body>
+</html>

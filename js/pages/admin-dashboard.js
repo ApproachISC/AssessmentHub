@@ -389,6 +389,42 @@ async function loadAssessmentsCount() {
 }
 
 // ===========================================================
+// EVALUATION FORMS (templates are edited on evaluation/template-edit.html)
+// ===========================================================
+async function loadEvalTemplates() {
+  const body = document.getElementById('evalTemplatesBody');
+  const { data, error } = await db.from('evaluation_templates')
+    .select('id, name, description, definition, version, is_active, updated_at').order('name');
+  if (error) {
+    body.innerHTML = `<tr><td colspan="6"><div class="empty-state"><h3>Could not load</h3><p>${esc(error.message)}</p></div></td></tr>`;
+    return;
+  }
+  const templates = data || [];
+  document.getElementById('countEvalTemplates').textContent = templates.filter(t => t.is_active).length;
+  if (!templates.length) {
+    body.innerHTML = `<tr><td colspan="6"><div class="empty-state">
+      <div class="icon">⌗</div><h3>No evaluation forms yet</h3><p>Create the first form teachers will fill in.</p>
+    </div></td></tr>`;
+    return;
+  }
+  body.innerHTML = templates.map(t => {
+    const items = (t.definition?.sections || []).reduce((n, s) => n + (s.items || []).length, 0);
+    return `
+      <tr class="${t.is_active ? '' : 'inactive'}">
+        <td><div style="font-weight:500;">${esc(t.name)}</div>${t.description ? `<div style="font-size:0.78rem;color:var(--muted);">${esc(t.description)}</div>` : ''}</td>
+        <td>${items}</td>
+        <td style="font-family: var(--mono); color: var(--navy-l);">v${t.version}</td>
+        <td><span class="chip ${t.is_active ? 'active' : 'deactivated'}">${t.is_active ? 'Active' : 'Inactive'}</span></td>
+        <td>${formatDate(t.updated_at)}</td>
+        <td><div class="row-actions">
+          <a class="row-btn" href="evaluation/template-edit.html?id=${t.id}">Edit</a>
+          <a class="row-btn" href="evaluation/template-edit.html?copy=${t.id}">Duplicate</a>
+        </div></td>
+      </tr>`;
+  }).join('');
+}
+
+// ===========================================================
 // GENERIC EDIT MODAL
 // ===========================================================
 function openEditModal({ title, sub, fields, onSave }) {
@@ -451,6 +487,7 @@ document.getElementById('editModal').addEventListener('click', (e) => {
     loadLevels(),
     loadUsers(),
     loadExamsCount(),
-    loadAssessmentsCount()
+    loadAssessmentsCount(),
+    loadEvalTemplates()
   ]);
 })();

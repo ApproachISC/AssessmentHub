@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evaluations — Approach International Student Center</title>
+<link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+
+<div id="navbarContainer"></div>
+
+<div class="auth-loading" id="authLoading">
+  <div class="spinner"></div>
+  <p style="font-family:var(--serif);font-style:italic;">Loading…</p>
+</div>
+
+<main class="page" id="page" style="display:none;">
+  <div class="page-header">
+    <div>
+      <div class="page-stamp">Evaluations</div>
+      <h1 id="pageTitle">My <em>Evaluations</em></h1>
+      <p class="page-sub" id="pageSub">Observe and evaluate teachers you co-teach with</p>
+    </div>
+    <button type="button" class="btn btn--primary" id="newEvalBtn">+ New Evaluation</button>
+  </div>
+
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-panel="panel-written" id="tabWritten">Written by me <span class="tab-count" id="countWritten">—</span></button>
+    <button class="tab" data-panel="panel-received">About me <span class="tab-count" id="countReceived">—</span></button>
+  </div>
+
+  <!-- ===== WRITTEN BY ME (academic: ALL) ===== -->
+  <div class="tab-panel active" id="panel-written">
+    <div class="stats-row" style="margin-top:1rem;">
+      <div class="stat-card total"><div class="stat-label">Total</div><div class="stat-value" id="statTotal">—</div></div>
+      <div class="stat-card upcoming"><div class="stat-label">Drafts</div><div class="stat-value" id="statDraft">—</div></div>
+      <div class="stat-card live"><div class="stat-label">Finalized</div><div class="stat-value" id="statFinal">—</div></div>
+      <div class="stat-card flagged"><div class="stat-label">Below pass mark</div><div class="stat-value" id="statBelow">—</div></div>
+    </div>
+
+    <div class="filters eval-filters" id="evalFilters">
+      <div class="filter-field field">
+        <label for="filterSearch">Search</label>
+        <input type="text" id="filterSearch" placeholder="Teacher or class…">
+      </div>
+      <div class="filter-field field">
+        <label for="filterStatus">Status</label>
+        <select id="filterStatus">
+          <option value="">All statuses</option>
+          <option value="draft">Draft</option>
+          <option value="finalized">Finalized</option>
+        </select>
+      </div>
+      <div class="filter-field field">
+        <label for="filterFrom">From</label>
+        <input type="date" id="filterFrom">
+      </div>
+      <div class="filter-field field">
+        <label for="filterTo">To</label>
+        <input type="date" id="filterTo">
+      </div>
+      <div class="filter-field field" id="filterEvaluatorField" style="display:none;">
+        <label for="filterEvaluator">Evaluator</label>
+        <select id="filterEvaluator"><option value="">All evaluators</option></select>
+      </div>
+    </div>
+
+    <div class="eval-toolbar">
+      <span class="pagination-info" id="resultInfo">—</span>
+      <button type="button" class="btn btn--secondary btn--sm" id="exportCsvBtn">Export CSV</button>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th data-sort="class_date">Class date <span class="sort-arrow">↓</span></th>
+            <th data-sort="_evaluatee_name">Teacher evaluated <span class="sort-arrow">↕</span></th>
+            <th data-sort="_class_name">Class <span class="sort-arrow">↕</span></th>
+            <th data-sort="_evaluator_name" class="academic-only" style="display:none;">Evaluator <span class="sort-arrow">↕</span></th>
+            <th data-sort="status">Status <span class="sort-arrow">↕</span></th>
+            <th data-sort="grade">Grade <span class="sort-arrow">↕</span></th>
+            <th class="no-sort" style="text-align:right;">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <tr><td colspan="7"><div class="empty-state"><p>Loading…</p></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="pagination" id="paginationBar">
+      <button class="pagination-btn" id="prevPage">← Previous</button>
+      <span class="pagination-info" id="pageInfo">—</span>
+      <button class="pagination-btn" id="nextPage">Next →</button>
+    </div>
+  </div>
+
+  <!-- ===== ABOUT ME ===== -->
+  <div class="tab-panel" id="panel-received">
+    <p class="section-instructions" style="margin:1rem 0;">Evaluations other teachers wrote about you. You see your final grade and the sections the evaluator chose to share.</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Class date</th>
+            <th>Class</th>
+            <th>Evaluator</th>
+            <th>Grade</th>
+            <th>Your signature</th>
+            <th style="text-align:right;">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="receivedBody">
+          <tr><td colspan="6"><div class="empty-state"><p>Loading…</p></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<!-- NEW EVALUATION MODAL -->
+<div class="modal-overlay" id="newModal">
+  <div class="modal-box">
+    <div class="page-stamp">New Evaluation</div>
+    <h2>New <em>Evaluation</em></h2>
+    <p class="modal-sub">Pick who you're evaluating and the class you observed. You can save it as a draft and finish later.</p>
+    <div class="modal-grid">
+      <div class="field full"><label for="newTemplate">Form <span class="required">*</span></label><select id="newTemplate"></select></div>
+      <div class="field full"><label for="newEvaluatee">Teacher being evaluated <span class="required">*</span></label><select id="newEvaluatee"></select></div>
+      <div class="field"><label for="newClass">Class <span class="required">*</span></label><select id="newClass"></select></div>
+      <div class="field"><label for="newDate">Class date <span class="required">*</span></label><input type="date" id="newDate"></div>
+    </div>
+    <div class="alert warning" id="dupWarning"><div><b>Possible duplicate</b>You already have an evaluation for this teacher, class and date. You can still create another one.</div></div>
+    <div class="modal-actions">
+      <button class="btn btn--secondary" id="newCancelBtn">Cancel</button>
+      <button class="btn btn--primary" id="newSubmitBtn">Create &amp; Start</button>
+    </div>
+  </div>
+</div>
+
+<div class="copyright">Copyright © 2026 Approach International Student Center, Inc. — All rights reserved.</div>
+
+<script type="module" src="../js/pages/evaluation-dashboard.js"></script>
+</body>
+</html>

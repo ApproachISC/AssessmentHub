@@ -15,6 +15,7 @@ const state = {
   submissionId: null,
   sessionId: null,
   student: '',
+  studentEmail: '',
   teacherName: '',
   classLabel: '',
   startTime: null,
@@ -36,6 +37,7 @@ function formatDate(iso) {
     d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
 }
 function generateSessionId() { return `sess_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`; }
+function isValidEmail(value) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value); }
 function lsKey(s) { return `assess_${state.code}_${s}`; }
 function submittedKey(code, name) { return `asubmitted_${code}_${name.toUpperCase().trim()}`; }
 function setSaveStatus(cls, text) {
@@ -200,26 +202,35 @@ function populateStartScreen() {
 }
 
 const studentNameEl = document.getElementById('studentName');
+const studentEmailEl = document.getElementById('studentEmail');
 const acknowledgeBox = document.getElementById('acknowledgeBox');
 const startBtn = document.getElementById('startBtn');
 function updateStartButton() {
   const nameReady = studentNameEl.value.trim().length >= 2;
+  const emailReady = isValidEmail(studentEmailEl.value.trim());
   const rulesShown = document.getElementById('proctorRules').style.display !== 'none';
   const ackReady = !rulesShown || acknowledgeBox.checked;
-  startBtn.disabled = !(nameReady && ackReady);
+  startBtn.disabled = !(nameReady && emailReady && ackReady);
 }
 studentNameEl.addEventListener('input', updateStartButton);
+studentEmailEl.addEventListener('input', updateStartButton);
 acknowledgeBox.addEventListener('change', updateStartButton);
 
 // ===== START =====
 startBtn.addEventListener('click', async () => {
   const name = studentNameEl.value.trim().toUpperCase();
+  const email = studentEmailEl.value.trim().toLowerCase();
   if (!name) return;
+  if (!isValidEmail(email)) {
+    alert('Please enter a valid email address.');
+    return;
+  }
   if (localStorage.getItem(submittedKey(state.code, name))) {
     showBlocked('Already submitted', 'You already submitted this assessment. Contact your teacher if this is a mistake.');
     return;
   }
   state.student = name;
+  state.studentEmail = email;
 
   const savedSession = localStorage.getItem(lsKey('session'));
   const savedName = localStorage.getItem(lsKey('name'));
@@ -229,6 +240,29 @@ startBtn.addEventListener('click', async () => {
       const { data: rows } = await db.rpc('resume_assessment_submission', { p_session_id: savedSession });
       const data = rows?.[0] || null;
       if (data && confirm('We found an unfinished attempt. Resume where you left off?')) {
+        resumeData = data;
+        state.submissionId = data.id;
+        state.sessionId = data.session_id;
+        state.startTime = new Date(data.started_at).getTime();
+        state.answers = data.answers || {};
+        state.proctor.restoreCounts(data.proctoring);
+      }
+    } catch (e) { /* ignore */ }
+  }
+
+  if (!resumeData) {
+    try {
+      const { data: rows } = await db.rpc('resume_assessment_submission_by_email', {
+        p_assessment_code: state.code,
+        p_student_email: email,
+      });
+      const data = rows?.[0] || null;
+      if (data?.status === 'submitted') {
+        localStorage.setItem(submittedKey(state.code, name), data.submitted_at || new Date().toISOString());
+        showBlocked('Already submitted', 'You already submitted this assessment. Contact your teacher if this is a mistake.');
+        return;
+      }
+      if (data?.status === 'in_progress' && confirm('We found an unfinished attempt under this email. Resume where you left off?')) {
         resumeData = data;
         state.submissionId = data.id;
         state.sessionId = data.session_id;
@@ -261,6 +295,7 @@ startBtn.addEventListener('click', async () => {
         assessment_id: state.assessment.id,
         assessment_code: state.code,
         student_name: name,
+        student_email: email,
         session_id: state.sessionId,
         status: 'in_progress',
         started_at: new Date().toISOString(),
@@ -274,9 +309,9 @@ startBtn.addEventListener('click', async () => {
       state.proctor.exitFullscreen();
       return;
     }
-    localStorage.setItem(lsKey('session'), state.sessionId);
-    localStorage.setItem(lsKey('name'), name);
   }
+  localStorage.setItem(lsKey('session'), state.sessionId);
+  localStorage.setItem(lsKey('name'), name);
 
   document.getElementById('headerTitle').textContent = state.assessment.title || 'Assessment';
   document.getElementById('headerStudent').textContent = `${name} · ${state.teacherName}`;
@@ -471,10 +506,16 @@ async function saveToSupabase() {
   if (!state.active || !state.submissionId || state.previewMode) return;
   setSaveStatus('saving', 'Saving…');
   try {
-    const update = { answers: state.answers };
-    if (state.proctor) update.proctoring = state.proctor.buildPayload();
-    const { error } = await db.from('assessment_submissions').update(update).eq('id', state.submissionId);
+    // RPC, not a plain .update(): anon has no SELECT policy on assessment_submissions,
+    // so an .update().eq('id') silently matches 0 rows (see 015_autosave_submission_rpc.sql).
+    const { data: ok, error } = await db.rpc('autosave_assessment_submission', {
+      p_id: state.submissionId,
+      p_session_id: state.sessionId,
+      p_answers: state.answers,
+      p_proctoring: state.proctor ? state.proctor.buildPayload() : null,
+    });
     if (error) throw error;
+    if (!ok) throw new Error('Auto-save matched no in-progress submission');
     setSaveStatus('saved', 'Saved');
   } catch (err) {
     setSaveStatus('offline', 'Offline');

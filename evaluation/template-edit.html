@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evaluation Form — Approach International Student Center</title>
+<link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+
+<div id="navbarContainer"></div>
+
+<div class="auth-loading" id="authLoading">
+  <div class="spinner"></div>
+  <p style="font-family:var(--serif);font-style:italic;">Loading…</p>
+</div>
+
+<div class="error-screen" id="errorScreen" style="display:none;">
+  <h2 style="font-size:1.8rem;color:var(--red);margin-bottom:0.5rem;" id="errorTitle">—</h2>
+  <p style="font-family:var(--serif);font-style:italic;color:var(--navy-l);" id="errorMessage">—</p>
+  <a href="../admin-dashboard.html" class="btn btn--secondary" style="margin-top:1.5rem;">Back to Administration</a>
+</div>
+
+<div id="content" style="display:none;">
+  <main class="page">
+    <div class="breadcrumb">
+      <a href="../admin-dashboard.html">Administration</a> <span>›</span> <span>Evaluation forms</span> <span>›</span> <span id="bcTitle">New form</span>
+    </div>
+
+    <div class="page-header">
+      <div>
+        <div class="page-stamp">Evaluation Form</div>
+        <h1 id="pageTitle">New <em>evaluation form</em></h1>
+        <p class="page-sub" id="pageSub">Build the form teachers fill in. Each item is scored on the scale below.</p>
+      </div>
+    </div>
+
+    <div class="alert info" id="inUseNotice"><div><b>This form is in use</b><span id="inUseText">—</span></div></div>
+
+    <div class="layout">
+      <div class="eval-main">
+        <section class="panel">
+          <div class="panel-title">Basics</div>
+          <div class="form-grid">
+            <div class="field full"><label for="tplName">Form name <span class="required">*</span></label><input type="text" id="tplName" placeholder="e.g. Co-Teaching Observation – Teaching Internship"></div>
+            <div class="field full"><label for="tplDescription">Description</label><textarea id="tplDescription" rows="2" placeholder="Who fills it in, and when"></textarea></div>
+            <div class="field"><label for="tplPassMark">Pass mark (out of 100)</label><input type="number" id="tplPassMark" min="0" max="100"></div>
+            <div class="field" style="justify-content:flex-end;">
+              <label class="check-row"><input type="checkbox" id="tplAllowNO"> Allow "Not observed" (left out of the grade)</label>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="eval-builder-head"><div class="panel-title">Rating scale</div><button type="button" class="row-btn" data-add="scale">+ Level</button></div>
+          <p class="field-help" style="margin-bottom:0.6rem;">The highest value is the points each item is worth.</p>
+          <div id="scaleList"></div>
+        </section>
+
+        <section class="panel">
+          <div class="eval-builder-head"><div class="panel-title">Grade bands</div><button type="button" class="row-btn" data-add="band">+ Band</button></div>
+          <p class="field-help" style="margin-bottom:0.6rem;">A grade gets the label of the highest band whose minimum it reaches.</p>
+          <div id="bandList"></div>
+        </section>
+
+        <section class="panel">
+          <div class="eval-builder-head"><div class="panel-title">Observation details</div><button type="button" class="row-btn" data-add="detail">+ Field</button></div>
+          <p class="field-help" style="margin-bottom:0.6rem;">Extra fields at the top of the form. Teacher, class and date are always included.</p>
+          <div id="detailList"></div>
+        </section>
+
+        <div class="eval-builder-head" style="margin:1.5rem 0 0.75rem;">
+          <h2 style="font-size:1.4rem;">Rated <em>sections</em></h2>
+          <button type="button" class="btn btn--secondary btn--sm" data-add="section">+ Section</button>
+        </div>
+        <div id="sectionList"></div>
+
+        <section class="panel" style="margin-top:1.25rem;">
+          <div class="eval-builder-head"><div class="panel-title">Comment boxes</div><button type="button" class="row-btn" data-add="comment">+ Comment box</button></div>
+          <p class="field-help" style="margin-bottom:0.6rem;">Free-text boxes at the end of the form. The teacher's own optional self-reflection is always included.</p>
+          <div id="commentList"></div>
+        </section>
+      </div>
+
+      <aside class="sidebar">
+        <div class="panel">
+          <div class="panel-title">Points</div>
+          <div class="eval-grade-big"><span id="totalPoints">0</span><small> pts</small></div>
+          <div class="progress-label" id="pointsHelp">—</div>
+        </div>
+        <div class="panel">
+          <div class="summary-row"><span class="label">Version</span><span class="value" id="tplVersion">New</span></div>
+          <div class="summary-row"><span class="label">Status</span><span class="value" id="tplStatus">—</span></div>
+          <button type="button" class="btn btn--primary w-100" id="saveBtn" style="margin-top:0.8rem;">Save form</button>
+          <button type="button" class="btn btn--secondary btn--sm w-100" id="toggleActiveBtn" style="margin-top:0.6rem;display:none;">Deactivate</button>
+          <p class="field-help" style="margin-top:0.6rem;">Saving never changes evaluations already started: each one keeps the version it was created with.</p>
+        </div>
+      </aside>
+    </div>
+  </main>
+</div>
+
+<div class="copyright">Copyright © 2026 Approach International Student Center, Inc. — All rights reserved.</div>
+
+<script type="module" src="../js/pages/evaluation-template-edit.js"></script>
+</body>
+</html>

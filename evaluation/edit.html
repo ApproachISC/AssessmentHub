@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evaluation — Approach International Student Center</title>
+<link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+
+<div id="navbarContainer"></div>
+
+<div class="auth-loading" id="authLoading">
+  <div class="spinner"></div>
+  <p style="font-family:var(--serif);font-style:italic;">Loading evaluation…</p>
+</div>
+
+<div class="error-screen" id="errorScreen" style="display:none;">
+  <h2 style="font-size:1.8rem;color:var(--red);margin-bottom:0.5rem;" id="errorTitle">—</h2>
+  <p style="font-family:var(--serif);font-style:italic;color:var(--navy-l);" id="errorMessage">—</p>
+  <a href="dashboard.html" class="btn btn--secondary" style="margin-top:1.5rem;">Back to Evaluations</a>
+</div>
+
+<div id="content" style="display:none;">
+  <main class="page">
+    <div class="breadcrumb">
+      <a href="dashboard.html">Evaluations</a> <span>›</span> <span id="bcTitle">—</span>
+    </div>
+
+    <div class="page-header">
+      <div>
+        <div class="page-stamp" id="templateName">—</div>
+        <h1 id="pageTitle">—</h1>
+        <p class="page-sub" id="pageSub">Draft · scores save automatically</p>
+      </div>
+    </div>
+
+    <div class="alert warning" id="reopenedNotice"><div><b>Reopened by Academic</b>This evaluation was reopened, so both signatures were cleared. Review it, then sign and finalize again.</div></div>
+
+    <div class="layout">
+      <div class="eval-main">
+        <!-- DETAILS -->
+        <section class="panel">
+          <div class="panel-title">Observation details</div>
+          <div class="form-grid">
+            <div class="field full"><label for="detEvaluatee">Teacher being evaluated</label><select id="detEvaluatee"></select></div>
+            <div class="field"><label for="detClass">Class</label><select id="detClass"></select></div>
+            <div class="field"><label for="detDate">Class date</label><input type="date" id="detDate"></div>
+          </div>
+          <div class="form-grid" id="detailFields"></div>
+        </section>
+
+        <!-- SCALE -->
+        <section class="panel eval-scale-panel">
+          <div class="panel-title">How to score</div>
+          <div class="eval-scale" id="scaleLegend"></div>
+          <p class="field-help" id="scaleHelp"></p>
+        </section>
+
+        <div id="sectionsRoot"></div>
+        <div id="commentsRoot"></div>
+      </div>
+
+      <aside class="sidebar">
+        <div class="panel eval-grade-panel">
+          <div class="panel-title">Grade</div>
+          <div class="eval-grade-big"><span id="gradeValue">—</span><small>/100</small></div>
+          <div id="gradeBand" class="eval-grade-band">—</div>
+          <div class="progress-track" style="margin-top:0.9rem;"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+          <div class="progress-label" id="progressLabel">—</div>
+          <div id="sectionSummary" style="margin-top:0.8rem;"></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">Shared with the teacher</div>
+          <p class="field-help" id="shareSummary">Nothing is shared yet. They'll only see their final grade.</p>
+        </div>
+
+        <div class="panel">
+          <div class="eval-save-status" id="saveStatus">All changes saved</div>
+          <button type="button" class="btn btn--primary w-100" id="finalizeBtn">Sign &amp; Finalize</button>
+          <p class="field-help" style="margin-top:0.6rem;">Finalizing locks the evaluation and makes it visible to the teacher. Only the Academic team can reopen it.</p>
+          <button type="button" class="btn btn--ghost btn--sm w-100" id="deleteBtn" style="margin-top:0.6rem;color:var(--red);">Delete draft</button>
+        </div>
+      </aside>
+    </div>
+  </main>
+</div>
+
+<!-- FINALIZE MODAL -->
+<div class="modal-overlay" id="finalizeModal">
+  <div class="modal-box">
+    <div class="page-stamp">Sign &amp; Finalize</div>
+    <h2>Finalize this <em>evaluation</em>?</h2>
+    <p class="modal-sub" id="finalizeSub">—</p>
+    <div class="modal-notice" id="finalizeShare">—</div>
+    <label class="acknowledge-row"><input type="checkbox" id="finalizeAgree"> I confirm this evaluation is complete. Clicking "Sign" records my signature with today's date and time.</label>
+    <div class="modal-actions">
+      <button class="btn btn--secondary" id="finalizeCancelBtn">Keep editing</button>
+      <button class="btn btn--primary" id="finalizeConfirmBtn" disabled>Sign &amp; Finalize</button>
+    </div>
+  </div>
+</div>
+
+<div class="copyright">Copyright © 2026 Approach International Student Center, Inc. — All rights reserved.</div>
+
+<script type="module" src="../js/pages/evaluation-edit.js"></script>
+</body>
+</html>

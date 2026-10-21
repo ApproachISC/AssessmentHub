@@ -20,13 +20,14 @@
     <div>
       <div class="page-stamp">Administration</div>
       <h1>Academic <em>Dashboard</em></h1>
-      <p class="page-sub">Manage exams, assessments, classes, levels, and user accounts</p>
+      <p class="page-sub">Manage exams, assessments, evaluation forms, classes, levels, and user accounts</p>
     </div>
   </div>
 
   <div class="tabs" id="tabs">
     <button class="tab active" data-panel="panel-exams">Exams <span class="tab-count" id="countExams">—</span></button>
     <button class="tab" data-panel="panel-assessments">Assessments <span class="tab-count" id="countAssessments">—</span></button>
+    <button class="tab" data-panel="panel-eval-templates">Evaluation Forms <span class="tab-count" id="countEvalTemplates">—</span></button>
     <button class="tab" data-panel="panel-classes">Classes <span class="tab-count" id="countClasses">—</span></button>
     <button class="tab" data-panel="panel-levels">Levels <span class="tab-count" id="countLevels">—</span></button>
     <button class="tab" data-panel="panel-users">Teachers &amp; Staff <span class="tab-count" id="countUsers">—</span></button>
@@ -57,6 +58,38 @@
     </div>
     <div class="modal-notice">
       Detailed assessment management is on the dedicated assessments dashboard. Click <strong>Manage Assessments</strong> above to view, filter, edit, archive, or create new assessments.
+    </div>
+  </div>
+
+  <!-- ===== EVALUATION FORMS TAB ===== -->
+  <div class="tab-panel" id="panel-eval-templates">
+    <div class="section-header-row" style="margin-bottom:1.5rem;">
+      <div>
+        <h2>Evaluation Forms</h2>
+        <p class="section-instructions">The forms teachers use for evaluations. Only the Academic team can create or change them.</p>
+      </div>
+      <div class="header-actions">
+        <a href="evaluation/dashboard.html" class="btn btn--secondary">All Evaluations</a>
+        <a href="evaluation/template-edit.html" class="btn btn--primary">+ New Form</a>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Items</th>
+            <th>Version</th>
+            <th>Status</th>
+            <th>Updated</th>
+            <th style="text-align: right;">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="evalTemplatesBody">
+          <tr><td colspan="6"><div class="empty-state"><p>Loading…</p></div></td></tr>
+        </tbody>
+      </table>
     </div>
   </div>
 

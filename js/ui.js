@@ -1,9 +1,10 @@
 import { signOut } from './auth.js';
 import { basePath } from './config.js';
+import { db } from './supabase-client.js';
 
 // ============================================================
 // NAVBAR — renders the shared top nav into a container element.
-// `active` is one of: 'assessments' | 'exams' | 'admin' | null
+// `active` is one of: 'assessments' | 'exams' | 'evaluations' | 'admin' | null
 // ============================================================
 export function renderNavbar(container, { profile, active = null } = {}) {
   const initials = (profile?.full_name || profile?.email || '?')
@@ -21,6 +22,7 @@ export function renderNavbar(container, { profile, active = null } = {}) {
         <nav class="navbar-links">
           <a href="${base}assessment/dashboard.html" class="navbar-link${active === 'assessments' ? ' active' : ''}">Assessments</a>
           <a href="${base}exam/dashboard.html" class="navbar-link${active === 'exams' ? ' active' : ''}">Exams</a>
+          <a href="${base}evaluation/dashboard.html" class="navbar-link${active === 'evaluations' ? ' active' : ''}">Evaluations<span class="navbar-badge" data-eval-badge hidden></span></a>
           ${isAcademic ? `<a href="${base}admin-dashboard.html" class="navbar-link${active === 'admin' ? ' active' : ''}">Administration</a>` : ''}
         </nav>
 
@@ -47,6 +49,7 @@ export function renderNavbar(container, { profile, active = null } = {}) {
       <div class="navbar-mobile-panel">
         <a href="${base}assessment/dashboard.html"${active === 'assessments' ? ' class="active"' : ''}>Assessments</a>
         <a href="${base}exam/dashboard.html"${active === 'exams' ? ' class="active"' : ''}>Exams</a>
+        <a href="${base}evaluation/dashboard.html"${active === 'evaluations' ? ' class="active"' : ''}>Evaluations<span class="navbar-badge" data-eval-badge hidden></span></a>
         ${isAcademic ? `<a href="${base}admin-dashboard.html"${active === 'admin' ? ' class="active"' : ''}>Administration</a>` : ''}
         <a href="${base}profile.html">Profile</a>
       </div>
@@ -67,6 +70,21 @@ export function renderNavbar(container, { profile, active = null } = {}) {
   });
   burgerBtn.addEventListener('click', () => navbar.classList.toggle('menu-open'));
   signOutBtn.addEventListener('click', () => signOut());
+
+  refreshEvaluationBadge(container);
+}
+
+// "New" badge on the Evaluations link: finalized evaluations about the signed-in
+// user still waiting for their sign-off. Best-effort — the nav never waits on it.
+export async function refreshEvaluationBadge(container = document) {
+  try {
+    const { data, error } = await db.rpc('count_pending_evaluation_signatures');
+    if (error) return;
+    container.querySelectorAll('[data-eval-badge]').forEach(el => {
+      el.textContent = data > 0 ? String(data) : '';
+      el.hidden = !(data > 0);
+    });
+  } catch { /* migration not applied yet, offline, etc. */ }
 }
 
 // ============================================================
