@@ -250,6 +250,7 @@ function renderUsers() {
         actions += `<button class="row-btn" data-resend="${u.id}">Resend</button>`;
         actions += `<button class="row-btn danger" data-delete-pending="${u.id}">Delete</button>`;
       } else if (u.is_active) {
+        actions += `<button class="row-btn" data-resend="${u.id}" title="Email a link to set a new password">Resend</button>`;
         actions += `<button class="row-btn danger" data-toggle-user="${u.id}" data-active="false">Deactivate</button>`;
       } else {
         actions += `<button class="row-btn success" data-toggle-user="${u.id}" data-active="true">Reactivate</button>`;
@@ -305,7 +306,12 @@ document.getElementById('inviteBtn').addEventListener('click', async () => {
 });
 
 async function resendInvite(userId, email) {
-  if (!confirm(`Resend the invitation email to ${email}?`)) return;
+  const u = allUsers.find(x => x.id === userId);
+  const isActiveUser = !!u?.first_login_at;
+  const prompt = isActiveUser
+    ? `Send ${email} a link to set a new password?\n\nTheir current password will keep working until they choose a new one.`
+    : `Resend the invitation email to ${email}?`;
+  if (!confirm(prompt)) return;
   try {
     const { data: { session } } = await db.auth.getSession();
     const res = await fetch(`${SUPABASE_URL}/functions/v1/manage-user`, {
@@ -318,7 +324,7 @@ async function resendInvite(userId, email) {
     });
     const result = await res.json();
     if (!res.ok) throw new Error(result.error || 'Resend failed');
-    showToast(`Invitation resent to ${email}`, 'success');
+    showToast(result.reset ? `Password reset link sent to ${email}` : `Invitation resent to ${email}`, 'success');
     await loadUsers();
   } catch (err) {
     showToast(err.message, 'error');

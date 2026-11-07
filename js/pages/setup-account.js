@@ -10,6 +10,28 @@ const passwordEl = document.getElementById('password');
 const confirmEl = document.getElementById('confirmPassword');
 const fullNameEl = document.getElementById('fullName');
 
+// Captured synchronously, before supabase-js consumes and clears the URL fragment.
+const urlSaysRecovery = /(^|[#&?])type=recovery(&|$)/.test(window.location.hash + window.location.search);
+let isReset = false;
+
+// Fallback: the access token's `amr` claim records how the session was created.
+function sessionIsRecovery(session) {
+  try {
+    const payload = JSON.parse(atob(session.access_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+    return (payload.amr || []).some(a => a.method === 'recovery');
+  } catch {
+    return false;
+  }
+}
+
+function applyResetMode(profile) {
+  isReset = true;
+  setupForm.querySelector('h1').innerHTML = 'Reset Your <em>Password</em>';
+  setupForm.querySelector('.subtitle').textContent = 'Choose a new password for your account';
+  submitBtn.textContent = 'Save New Password';
+  if (profile?.full_name) fullNameEl.value = profile.full_name;
+}
+
 function showSetupError(msg) {
   errorAlert.textContent = msg;
   errorAlert.classList.add('show');
@@ -50,6 +72,8 @@ fullNameEl.addEventListener('input', updateSubmitState);
     return;
   }
 
+  const recovery = urlSaysRecovery || sessionIsRecovery(session);
+
   try {
     const { data: profile } = await db.from('profiles')
       .select('role, full_name, first_login_at, is_active').eq('id', session.user.id).single();
@@ -59,7 +83,9 @@ fullNameEl.addEventListener('input', updateSubmitState);
       await db.auth.signOut();
       return;
     }
-    if (profile && profile.full_name && profile.first_login_at) {
+    if (recovery) {
+      applyResetMode(profile);
+    } else if (profile && profile.full_name && profile.first_login_at) {
       window.location.href = profile.role === 'academic' ? 'admin-dashboard.html' : 'exam/dashboard.html';
       return;
     }
@@ -68,6 +94,7 @@ fullNameEl.addEventListener('input', updateSubmitState);
   }
 
   document.getElementById('email').value = session.user.email;
+  updateSubmitState();
   loadingState.style.display = 'none';
   setupForm.style.display = 'block';
 })();
@@ -85,9 +112,11 @@ document.getElementById('form').addEventListener('submit', async (e) => {
     if (pwdErr) throw pwdErr;
 
     const { data: { user } } = await db.auth.getUser();
-    const { error: profErr } = await db.from('profiles')
-      .update({ full_name: fullNameEl.value.trim(), first_login_at: new Date().toISOString() })
-      .eq('id', user.id);
+    const updates = { full_name: fullNameEl.value.trim() };
+    // Keep the original first-login timestamp when an existing user resets their password.
+    const { data: current } = await db.from('profiles').select('first_login_at').eq('id', user.id).single();
+    if (!current?.first_login_at) updates.first_login_at = new Date().toISOString();
+    const { error: profErr } = await db.from('profiles').update(updates).eq('id', user.id);
     if (profErr) throw profErr;
 
     const { data: profile } = await db.from('profiles').select('role').eq('id', user.id).single();
@@ -95,6 +124,6 @@ document.getElementById('form').addEventListener('submit', async (e) => {
   } catch (err) {
     showSetupError(err.message || 'Setup failed. Please try again.');
     submitBtn.disabled = false;
-    submitBtn.textContent = 'Complete Setup';
+    submitBtn.textContent = isReset ? 'Save New Password' : 'Complete Setup';
   }
 });
