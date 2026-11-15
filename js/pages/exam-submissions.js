@@ -4,7 +4,7 @@ import { renderNavbar, showToast, esc, openModal, closeModal } from '../ui.js';
 
 let currentProfile = null;
 let allSubmissions = [], allExams = [], allClasses = [];
-let sortBy = 'submitted_at', sortDir = 'desc', currentPage = 1;
+let sortBy = 'student_name', sortDir = 'asc', currentPage = 1;
 const ROWS_PER_PAGE = 20;
 
 const submissionsBody = document.getElementById('submissionsBody');
