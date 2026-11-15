@@ -1,10 +1,11 @@
 import { db } from '../supabase-client.js';
 import { requireAuth } from '../auth.js';
 import { renderNavbar, showToast, esc } from '../ui.js';
-import { scoreDefinitionWithManual, renderDefinitionResults, rerenderQuestionChip, gradeQuestion } from '../question-engine.js';
+import { scoreDefinitionWithManual, renderDefinitionResults, rerenderQuestionChip, bindOverrideControls } from '../question-engine.js';
 
 let submission = null, exam = null, examDef = null, className = '—';
 let manualGrades = {}; // { questionId: score } or, for pool_writing, { 'qid__1': score }
+let gradeOverrides = {}; // { questionId: points } — teacher overrides on auto-graded questions
 
 function formatDate(iso) {
   if (!iso) return '—';
@@ -43,6 +44,7 @@ async function loadSubmission() {
     className = classRes.data?.name || '—';
 
     manualGrades = submission.manual_grades || {};
+    gradeOverrides = submission.grade_overrides || {};
 
     const backUrl = `submissions.html?id=${encodeURIComponent(submission.exam_id)}`;
     document.getElementById('bcSubmissionsLink').href = backUrl;
@@ -109,13 +111,22 @@ function renderSections() {
     container.innerHTML = '<p style="color:var(--navy-l);font-style:italic;">This submission has no exam definition. The exam may have been deleted.</p>';
     return;
   }
-  renderDefinitionResults(container, examDef, submission.answers || {}, manualGrades);
+  renderDefinitionResults(container, examDef, submission.answers || {}, manualGrades, gradeOverrides);
+  bindOverrideControls(container, examDef, gradeOverrides, (q) => {
+    rerenderQuestionChip(container, q, submission.answers || {}, manualGrades, gradeOverrides);
+    updateScoreSummary();
+  });
+}
+
+function formatAdjustment(n) {
+  return n > 0 ? `+${n}` : String(n);
 }
 
 function updateScoreSummary() {
-  const { auto, manual, max, total } = scoreDefinitionWithManual(examDef, submission.answers || {}, manualGrades);
+  const { auto, manual, adjustment, max, total } = scoreDefinitionWithManual(examDef, submission.answers || {}, manualGrades, gradeOverrides);
   document.getElementById('sumAuto').textContent = auto;
   document.getElementById('sumManual').textContent = manual;
+  document.getElementById('sumAdjusted').textContent = formatAdjustment(adjustment);
   document.getElementById('sumMax').textContent = max;
   document.getElementById('sumTotal').textContent = `${total} / ${max}`;
 }
@@ -130,7 +141,7 @@ document.addEventListener('input', (e) => {
 
   const qid = key.split('__')[0];
   const q = (examDef?.sections || []).flatMap(s => s.questions || []).find(q => q.id === qid);
-  if (q) rerenderQuestionChip(document.getElementById('sectionsContainer'), q, submission.answers || {}, manualGrades);
+  if (q) rerenderQuestionChip(document.getElementById('sectionsContainer'), q, submission.answers || {}, manualGrades, gradeOverrides);
   updateScoreSummary();
 });
 
@@ -140,13 +151,14 @@ document.getElementById('saveBtn').addEventListener('click', async () => {
   btn.disabled = true;
   btn.textContent = 'Saving…';
 
-  const { auto, manual, max, total } = scoreDefinitionWithManual(examDef, submission.answers || {}, manualGrades);
+  const { auto, manual, max, total } = scoreDefinitionWithManual(examDef, submission.answers || {}, manualGrades, gradeOverrides);
   const reviewed = document.getElementById('reviewedCheckbox').checked;
   const reviewerNotes = document.getElementById('reviewerNotes').value.trim() || null;
 
   try {
     const { error } = await db.from('submissions').update({
       manual_grades: manualGrades,
+      grade_overrides: gradeOverrides,
       auto_score: auto,
       manual_score: manual,
       total_score: total,

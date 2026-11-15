@@ -41,19 +41,38 @@ function gradePoolWriting(q, manualGrades) {
 // (writing_prompt, pool_writing, sentence_order, short_answer, or any type
 // with `grading: "manual"` set) — pass the submission's `manualGrades` map
 // (keyed by question id, or `<qid>__<n>` for pool_writing) for those.
-// Returns {earned, max, allCorrect, allBlank[, manual, ungraded]}
+//
+// Auto-graded questions can carry a teacher override (e.g. a correct answer
+// with a typo): pass the submission's `overrides` map ({ questionId: points })
+// and the override replaces the auto result. The auto result is kept on the
+// returned object as `autoEarned` so the UI can show what the system gave.
+//
+// Returns {earned, max, allCorrect, allBlank[, manual, ungraded][, overridden, autoEarned]}
 // ============================================================
-export function gradeQuestion(q, answers, manualGrades = {}) {
+export function gradeQuestion(q, answers, manualGrades = {}, overrides = {}) {
+  if (q.grading === 'manual') {
+    if (q.type === 'pool_writing') return gradePoolWriting(q, manualGrades);
+    return gradeManual(q, manualGrades);
+  }
+  const auto = gradeAuto(q, answers);
+  const ov = overrides?.[q.id];
+  if (ov == null || ov === '' || !Number.isFinite(Number(ov))) return auto;
+  const earned = Math.min(auto.max, Math.max(0, Math.round(Number(ov) * 100) / 100));
+  return {
+    earned, max: auto.max,
+    allCorrect: auto.max > 0 && earned >= auto.max,
+    allBlank: false,
+    overridden: true,
+    autoEarned: auto.earned,
+  };
+}
+
+function gradeAuto(q, answers) {
   const max = Number(q.points) || 0;
   const blank = () => ({ earned: 0, max, allCorrect: false, allBlank: true });
   const full = () => ({ earned: max, max, allCorrect: true, allBlank: false });
   const partial = (earned) => ({ earned, max, allCorrect: false, allBlank: false });
   const wrong = () => ({ earned: 0, max, allCorrect: false, allBlank: false });
-
-  if (q.grading === 'manual') {
-    if (q.type === 'pool_writing') return gradePoolWriting(q, manualGrades);
-    return gradeManual(q, manualGrades);
-  }
 
   switch (q.type) {
     case 'multiple_choice': {
@@ -166,29 +185,39 @@ export function gradeQuestion(q, answers, manualGrades = {}) {
   }
 }
 
-export function scoreDefinition(definition, answers) {
-  let autoScore = 0, maxScore = 0;
+const round2 = (n) => Math.round(n * 100) / 100;
+
+// `autoScore` is always the pure auto-grader result; `adjustment` is the net
+// change from teacher overrides (can be negative), and `totalScore` includes it.
+export function scoreDefinition(definition, answers, overrides = {}) {
+  let autoScore = 0, adjustment = 0, maxScore = 0;
   (definition?.sections || []).forEach(s => (s.questions || []).forEach(q => {
-    const r = gradeQuestion(q, answers);
-    autoScore += r.earned;
+    const r = gradeQuestion(q, answers, {}, overrides);
+    if (r.overridden) { autoScore += r.autoEarned; adjustment += r.earned - r.autoEarned; }
+    else autoScore += r.earned;
     maxScore += r.max;
   }));
-  return { autoScore: Math.round(autoScore * 100) / 100, maxScore };
+  autoScore = round2(autoScore);
+  adjustment = round2(adjustment);
+  return { autoScore, adjustment, maxScore, totalScore: round2(autoScore + adjustment) };
 }
 
 // Exam-side variant: some questions are manually graded, so auto/manual are
 // tracked separately (manual score only counts once a grade has been entered).
-export function scoreDefinitionWithManual(definition, answers, manualGrades = {}) {
-  let auto = 0, manual = 0, max = 0;
+// Teacher overrides on auto-graded questions are reported as `adjustment`.
+export function scoreDefinitionWithManual(definition, answers, manualGrades = {}, overrides = {}) {
+  let auto = 0, manual = 0, adjustment = 0, max = 0;
   (definition?.sections || []).forEach(s => (s.questions || []).forEach(q => {
-    const r = gradeQuestion(q, answers, manualGrades);
+    const r = gradeQuestion(q, answers, manualGrades, overrides);
     max += r.max;
     if (q.grading === 'manual') { if (!r.ungraded) manual += r.earned; }
+    else if (r.overridden) { auto += r.autoEarned; adjustment += r.earned - r.autoEarned; }
     else auto += r.earned;
   }));
-  auto = Math.round(auto * 100) / 100;
-  manual = Math.round(manual * 100) / 100;
-  return { auto, manual, max, total: Math.round((auto + manual) * 100) / 100 };
+  auto = round2(auto);
+  manual = round2(manual);
+  adjustment = round2(adjustment);
+  return { auto, manual, adjustment, max, total: round2(auto + manual + adjustment) };
 }
 
 // ============================================================
@@ -439,50 +468,95 @@ export function renderQuestionResultBody(container, q, answers, result, manualGr
   }
 }
 
-export function renderQuestionResult(q, answers, displayNumber, manualGrades = {}) {
-  const result = gradeQuestion(q, answers, manualGrades);
+// Chip + block colour + points badge for a graded question.
+function resultHeaderState(q, result) {
+  if (q.grading === 'manual') {
+    return {
+      cls: 'manual',
+      chip: result.ungraded ? '<span class="q-grade-chip manual">Awaiting Grade</span>' : '<span class="q-grade-chip manual">Manual</span>',
+      earned: result.ungraded ? `— / ${result.max}` : `${result.earned} / ${result.max}`,
+    };
+  }
+  const earned = `${result.earned} / ${result.max}`;
+  if (result.overridden) {
+    const cls = result.allCorrect ? 'correct' : result.earned > 0 ? 'partial' : 'incorrect';
+    const label = result.allCorrect ? 'Accepted' : 'Adjusted';
+    return { cls, earned, chip: `<span class="q-grade-chip accepted" title="Teacher override — auto-graded ${result.autoEarned} / ${result.max}">${label}</span>` };
+  }
+  if (result.allBlank) return { cls: '', earned, chip: '<span class="q-grade-chip blank">Blank</span>' };
+  if (result.allCorrect) return { cls: 'correct', earned, chip: '<span class="q-grade-chip correct">Correct</span>' };
+  if (result.earned > 0) return { cls: 'partial', earned, chip: '<span class="q-grade-chip partial">Partial</span>' };
+  return { cls: 'incorrect', earned, chip: '<span class="q-grade-chip incorrect">Incorrect</span>' };
+}
+
+const RESULT_BLOCK_CLASSES = ['manual', 'correct', 'partial', 'incorrect'];
+
+// Teacher override control for auto-graded questions (review pages only).
+// The page hosting this must listen for clicks on `[data-override-action]`
+// and `input` on `[data-override-key]`, write into its own `overrides` state,
+// then call rerenderQuestionChip() (see js/pages/*-submission-detail.js).
+function overrideControlHtml(q, result) {
+  if (q.grading === 'manual' || !(result.max > 0)) return '';
+  // Nothing to fix on a question the auto-grader already gave full marks.
+  if (!result.overridden && result.allCorrect) return '';
+  const autoEarned = result.overridden ? result.autoEarned : result.earned;
+  return `<div class="grade-override" data-override-qid="${esc(q.id)}">
+    <button type="button" class="btn btn--secondary btn--sm" data-override-action="accept" ${result.overridden && result.allCorrect ? 'hidden' : ''}>✓ Accept as correct</button>
+    <label>Score</label>
+    <input type="number" min="0" max="${result.max}" step="0.5" value="${result.overridden ? result.earned : ''}" placeholder="${autoEarned}" data-override-key="${esc(q.id)}">
+    <span class="max-points">/ ${result.max}</span>
+    <button type="button" class="grade-override-undo" data-override-action="undo" ${result.overridden ? '' : 'hidden'}>Undo — restore auto grade</button>
+    <span class="grade-override-note" ${result.overridden ? '' : 'hidden'}>Auto-graded: ${autoEarned} / ${result.max}</span>
+  </div>`;
+}
+
+// `overrides` (a { questionId: points } map) also turns on the override
+// controls — only the teacher review pages pass it; student-facing results
+// and previews leave it null.
+export function renderQuestionResult(q, answers, displayNumber, manualGrades = {}, overrides = null) {
+  const result = gradeQuestion(q, answers, manualGrades, overrides || {});
+  const { cls, chip, earned } = resultHeaderState(q, result);
   const qEl = document.createElement('div');
   qEl.className = 'question-block';
-  let chip;
-  if (q.grading === 'manual') {
-    chip = result.ungraded ? '<span class="q-grade-chip manual">Awaiting Grade</span>' : '<span class="q-grade-chip manual">Manual</span>';
-    qEl.classList.add('manual');
-  } else if (result.allBlank) {
-    chip = '<span class="q-grade-chip blank">Blank</span>';
-  } else if (result.allCorrect) { chip = '<span class="q-grade-chip correct">Correct</span>'; qEl.classList.add('correct'); }
-  else if (result.earned > 0) { chip = '<span class="q-grade-chip partial">Partial</span>'; qEl.classList.add('partial'); }
-  else { chip = '<span class="q-grade-chip incorrect">Incorrect</span>'; qEl.classList.add('incorrect'); }
-
-  const earnedDisplay = q.grading === 'manual' && result.ungraded ? `— / ${result.max}` : `${result.earned} / ${result.max}`;
+  if (cls) qEl.classList.add(cls);
 
   qEl.innerHTML = `
     <div class="q-header">
       <span class="q-id">${esc(String(displayNumber))}</span>
       <div class="q-prompt">${esc(q.prompt || '')}</div>
       <div class="q-meta">
-        <span class="q-points-badge">${earnedDisplay}</span>
+        <span class="q-points-badge">${earned}</span>
         ${chip}
       </div>
     </div>
     <div class="q-body" data-qid="${esc(q.id)}"></div>`;
-  renderQuestionResultBody(qEl.querySelector('.q-body'), q, answers, result, manualGrades);
+  const body = qEl.querySelector('.q-body');
+  renderQuestionResultBody(body, q, answers, result, manualGrades);
+  if (overrides) body.insertAdjacentHTML('beforeend', overrideControlHtml(q, result));
   return qEl;
 }
 
-// Re-renders just one question's grade chip + points badge after a manual
-// score input changes, without re-rendering the whole (potentially large)
-// response body. `container` is the page's sectionsContainer.
-export function rerenderQuestionChip(container, q, answers, manualGrades) {
-  const result = gradeQuestion(q, answers, manualGrades);
+// Re-renders just one question's grade chip + points badge (and override
+// control state) after a manual score or override changes, without
+// re-rendering the whole (potentially large) response body.
+// `container` is the page's sectionsContainer.
+export function rerenderQuestionChip(container, q, answers, manualGrades = {}, overrides = {}) {
+  const result = gradeQuestion(q, answers, manualGrades, overrides);
   const block = container.querySelector(`.q-body[data-qid="${CSS.escape(q.id)}"]`)?.parentElement;
   if (!block) return;
   const meta = block.querySelector('.q-meta');
   if (!meta) return;
-  const chip = q.grading === 'manual'
-    ? (result.ungraded ? '<span class="q-grade-chip manual">Awaiting Grade</span>' : '<span class="q-grade-chip manual">Manual</span>')
-    : '';
-  const earnedDisplay = q.grading === 'manual' && result.ungraded ? `— / ${result.max}` : `${result.earned} / ${result.max}`;
-  meta.innerHTML = `<span class="q-points-badge">${earnedDisplay}</span>${chip}`;
+  const { cls, chip, earned } = resultHeaderState(q, result);
+  meta.innerHTML = `<span class="q-points-badge">${earned}</span>${chip}`;
+  block.classList.remove(...RESULT_BLOCK_CLASSES);
+  if (cls) block.classList.add(cls);
+
+  const ctl = block.querySelector(`.grade-override[data-override-qid="${CSS.escape(q.id)}"]`);
+  if (ctl) {
+    ctl.querySelector('[data-override-action="accept"]').hidden = !!(result.overridden && result.allCorrect);
+    ctl.querySelector('[data-override-action="undo"]').hidden = !result.overridden;
+    ctl.querySelector('.grade-override-note').hidden = !result.overridden;
+  }
 }
 
 // ============================================================
@@ -686,7 +760,42 @@ export function validateAuthoredQuestion(q) {
   return { errors, warnings };
 }
 
-export function renderDefinitionResults(container, definition, answers, manualGrades = {}) {
+// Wires the override controls rendered by renderDefinitionResults(…, overrides)
+// to the page's `overrides` state (mutated in place). `onChange(q)` runs after
+// every change so the page can refresh the chip + score summary.
+export function bindOverrideControls(container, definition, overrides, onChange) {
+  const findQ = (qid) => (definition?.sections || []).flatMap(s => s.questions || []).find(q => q.id === qid);
+  const clamp = (q, v) => Math.min(Number(q.points) || 0, Math.max(0, Number(v)));
+
+  container.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-override-action]');
+    if (!btn || !container.contains(btn)) return;
+    const ctl = btn.closest('.grade-override');
+    const q = ctl && findQ(ctl.dataset.overrideQid);
+    if (!q) return;
+    const input = ctl.querySelector('input[data-override-key]');
+    if (btn.dataset.overrideAction === 'accept') {
+      overrides[q.id] = Number(q.points) || 0;
+      input.value = overrides[q.id];
+    } else {
+      delete overrides[q.id];
+      input.value = '';
+    }
+    onChange(q);
+  });
+
+  container.addEventListener('input', (e) => {
+    if (!e.target.matches('input[data-override-key]')) return;
+    const q = findQ(e.target.dataset.overrideKey);
+    if (!q) return;
+    const v = e.target.value;
+    if (v === '' || !Number.isFinite(Number(v))) delete overrides[q.id];
+    else overrides[q.id] = clamp(q, v);
+    onChange(q);
+  });
+}
+
+export function renderDefinitionResults(container, definition, answers, manualGrades = {}, overrides = null) {
   if (!definition || !definition.sections) {
     container.innerHTML = '<p style="color:var(--navy-l);font-style:italic;">No question definition found.</p>';
     return;
@@ -714,7 +823,7 @@ export function renderDefinitionResults(container, definition, answers, manualGr
     const qContainer = sectionEl.querySelector('.section-questions');
     (section.questions || []).forEach(q => {
       displayCounter++;
-      qContainer.appendChild(renderQuestionResult(q, answers, displayCounter, manualGrades));
+      qContainer.appendChild(renderQuestionResult(q, answers, displayCounter, manualGrades, overrides));
     });
   });
 }

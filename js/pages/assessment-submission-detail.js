@@ -1,9 +1,10 @@
 import { db } from '../supabase-client.js';
 import { requireAuth } from '../auth.js';
 import { renderNavbar, showToast } from '../ui.js';
-import { scoreDefinition, renderDefinitionResults } from '../question-engine.js';
+import { scoreDefinition, renderDefinitionResults, rerenderQuestionChip, bindOverrideControls } from '../question-engine.js';
 
 let submission = null, assessment = null, examDef = null;
+let gradeOverrides = {}; // { questionId: points } — teacher overrides on auto-graded questions
 
 function formatDate(iso) {
   if (!iso) return '—';
@@ -65,7 +66,13 @@ async function loadData() {
     document.getElementById('reviewedCheckbox').checked = submission.reviewed || false;
     document.getElementById('reviewerNotes').value = submission.reviewer_notes || '';
 
-    renderDefinitionResults(document.getElementById('sectionsContainer'), examDef, submission.answers || {});
+    gradeOverrides = submission.grade_overrides || {};
+    const container = document.getElementById('sectionsContainer');
+    renderDefinitionResults(container, examDef, submission.answers || {}, {}, gradeOverrides);
+    bindOverrideControls(container, examDef, gradeOverrides, (q) => {
+      rerenderQuestionChip(container, q, submission.answers || {}, {}, gradeOverrides);
+      updateScoreSummary();
+    });
     updateScoreSummary();
 
     document.getElementById('authLoading').style.display = 'none';
@@ -77,10 +84,11 @@ async function loadData() {
 
 function updateScoreSummary() {
   if (!examDef) return;
-  const { autoScore, maxScore } = scoreDefinition(examDef, submission.answers || {});
+  const { autoScore, adjustment, maxScore, totalScore } = scoreDefinition(examDef, submission.answers || {}, gradeOverrides);
   document.getElementById('sumAuto').textContent = `${autoScore}`;
+  document.getElementById('sumAdjusted').textContent = adjustment > 0 ? `+${adjustment}` : String(adjustment);
   document.getElementById('sumMax').textContent = maxScore;
-  document.getElementById('sumTotal').textContent = `${autoScore} / ${maxScore}`;
+  document.getElementById('sumTotal').textContent = `${totalScore} / ${maxScore}`;
 }
 
 document.getElementById('saveGradeBtn').addEventListener('click', async () => {
@@ -89,15 +97,16 @@ document.getElementById('saveGradeBtn').addEventListener('click', async () => {
   btn.textContent = 'Saving…';
   const reviewed = document.getElementById('reviewedCheckbox').checked;
   const notes = document.getElementById('reviewerNotes').value.trim() || null;
-  const { autoScore, maxScore } = scoreDefinition(examDef, submission.answers || {});
+  const { autoScore, maxScore, totalScore } = scoreDefinition(examDef, submission.answers || {}, gradeOverrides);
 
   try {
     const { error } = await db.from('assessment_submissions').update({
       reviewed,
       reviewer_notes: notes,
       reviewed_at: reviewed ? new Date().toISOString() : null,
+      grade_overrides: gradeOverrides,
       auto_score: autoScore,
-      total_score: autoScore,
+      total_score: totalScore,
       max_score: maxScore,
     }).eq('id', submission.id);
     if (error) throw error;

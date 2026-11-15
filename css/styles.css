@@ -995,6 +995,19 @@ th.no-sort { cursor: default; }
 .q-grade-chip.manual { background: var(--lt-gold); color: var(--gold-b); }
 .question-block.manual { border-left-color: var(--gold-b); }
 
+/* Teacher override of an auto-graded question (submission review pages). */
+.q-grade-chip.accepted { background: var(--green-s); color: var(--green); outline: 1px dashed var(--green); outline-offset: -1px; cursor: help; }
+.grade-override { display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px dashed var(--line); }
+.grade-override [hidden] { display: none !important; }
+.grade-override label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--navy); margin-left: 0.25rem; }
+.grade-override input { width: 80px; font-size: 0.9rem; padding: 0.4rem 0.6rem; border: 1.5px solid var(--line); border-radius: 4px; }
+.grade-override input:focus { outline: none; border-color: var(--gold-b); }
+.grade-override .max-points { font-size: 0.82rem; color: var(--muted); }
+.grade-override-undo { background: none; border: none; padding: 0; font: inherit; font-size: 0.78rem; color: var(--navy-l); text-decoration: underline; cursor: pointer; }
+.grade-override-undo:hover { color: var(--navy); }
+.grade-override-note { font-size: 0.78rem; font-style: italic; color: var(--muted); }
+@media print { .grade-override button, .grade-override label, .grade-override input, .grade-override .max-points { display: none !important; } }
+
 /* ============================================================
    30. EXAM QUESTION EDITORS (exam/edit.html) — image-based and
    manually-graded type editors not needed by the Assessment system.
