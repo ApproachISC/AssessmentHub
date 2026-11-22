@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Placement Results — Approach International Student Center</title>
+<link rel="stylesheet" href="../css/styles.css">
+<link rel="stylesheet" href="../css/placement-admin.css">
+</head>
+<body>
+
+<div id="navbarContainer"></div>
+
+<div class="auth-loading" id="authLoading">
+  <div class="spinner"></div>
+  <p style="font-family:var(--serif);font-style:italic;">Loading results…</p>
+</div>
+
+<main class="page" id="page" style="display:none;">
+  <div class="breadcrumb"><a href="../admin-dashboard.html">Administration</a> <span>›</span> <a href="dashboard.html">Placement Tests</a> <span>›</span> <span>Results</span></div>
+  <div class="page-header">
+    <div>
+      <div class="page-stamp">Results</div>
+      <h1 id="testTitle">—</h1>
+      <p class="page-sub">Scores and suggested levels are calculated when a student submits. Open a student to review and set the final level.</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn--secondary" id="csvBtn">Download CSV</button>
+      <a class="btn btn--secondary" id="codesLink" href="#">Access codes</a>
+      <a class="btn btn--secondary" id="editLink" href="#">Edit test</a>
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card submitted"><div class="stat-label">Submitted</div><div class="stat-value" id="statSubmitted">—</div></div>
+    <div class="stat-card in-progress"><div class="stat-label">Taking now</div><div class="stat-value" id="statProgress">—</div></div>
+    <div class="stat-card reviewed"><div class="stat-label">Final level set</div><div class="stat-value" id="statReviewed">—</div></div>
+    <div class="stat-card total"><div class="stat-label">Average score</div><div class="stat-value" id="statAvg">—</div></div>
+  </div>
+
+  <div class="filters pl-rfilters">
+    <div class="filter-field"><label for="search">Search</label><input type="text" id="search" placeholder="Name, email or code…"></div>
+    <div class="filter-field"><label for="fStatus">Status</label>
+      <select id="fStatus"><option value="">All</option><option value="submitted">Submitted</option><option value="in_progress">Taking now</option></select></div>
+    <div class="filter-field"><label for="fReview">Review</label>
+      <select id="fReview"><option value="">All</option><option value="todo">Final level not set</option><option value="done">Final level set</option></select></div>
+    <div class="filter-field"><label for="fLevel">Suggested level</label><select id="fLevel"><option value="">All levels</option></select></div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th>Student</th><th>Code</th><th>Status</th><th>Date</th><th>Time</th><th>Score</th><th>Suggested</th><th>Final</th><th>Flags</th><th style="text-align:right;">Actions</th>
+      </tr></thead>
+      <tbody id="rows"><tr><td colspan="10"><div class="empty-state"><p>Loading…</p></div></td></tr></tbody>
+    </table>
+  </div>
+  <div class="field-help" id="countInfo" style="margin-top:0.6rem;"></div>
+</main>
+
+<div class="copyright">Copyright © 2026 Approach International Student Center, Inc. — All rights reserved.</div>
+
+<script type="module" src="../js/pages/placement-results.js"></script>
+</body>
+</html>

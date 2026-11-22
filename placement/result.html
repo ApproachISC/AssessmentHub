@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Placement Review — Approach International Student Center</title>
+<link rel="stylesheet" href="../css/styles.css">
+<link rel="stylesheet" href="../css/placement-admin.css">
+</head>
+<body>
+
+<div id="navbarContainer"></div>
+
+<div class="auth-loading" id="authLoading">
+  <div class="spinner"></div>
+  <p style="font-family:var(--serif);font-style:italic;">Loading…</p>
+</div>
+
+<main class="page" id="page" style="display:none;">
+  <div class="breadcrumb"><a href="../admin-dashboard.html">Administration</a> <span>›</span> <a href="dashboard.html">Placement Tests</a> <span>›</span> <a id="resultsCrumb" href="#">Results</a> <span>›</span> <span>Student</span></div>
+
+  <div class="meta-bar">
+    <div style="flex:1;">
+      <div class="page-stamp" id="testName">Placement test</div>
+      <h1 id="studentName">—</h1>
+      <div class="meta-info" style="margin-top:0.75rem;">
+        <div class="meta-block"><span class="meta-label">Email</span><span class="meta-value" id="mEmail">—</span></div>
+        <div class="meta-block"><span class="meta-label">Code</span><span class="meta-value code" id="mCode">—</span></div>
+        <div class="meta-block"><span class="meta-label">Status</span><span class="meta-value" id="mStatus">—</span></div>
+        <div class="meta-block"><span class="meta-label">Started</span><span class="meta-value" id="mStarted">—</span></div>
+        <div class="meta-block"><span class="meta-label">Submitted</span><span class="meta-value" id="mSubmitted">—</span></div>
+        <div class="meta-block"><span class="meta-label">Time used</span><span class="meta-value" id="mTime">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert info" id="progressAlert"></div>
+
+  <div class="layout">
+    <div class="main-col" id="answers"></div>
+
+    <aside class="sidebar">
+      <div class="panel">
+        <div class="panel-title">Placement</div>
+        <div class="pl-score"><b id="pScore">—</b><span id="pTotal"></span></div>
+        <div class="summary-row"><span class="label">Suggested level</span><span class="value" id="pSuggested">—</span></div>
+        <div id="pSections"></div>
+        <div class="field" style="margin:1rem 0 0.75rem;">
+          <label for="finalLevel">Final level</label>
+          <select id="finalLevel"></select>
+          <div class="field-help">Starts with the suggested level. Change it if needed.</div>
+        </div>
+        <div class="field" style="margin-bottom:0.75rem;">
+          <label for="notes">Notes</label>
+          <textarea id="notes" class="reviewer-notes-input" rows="3" placeholder="Optional notes for the team"></textarea>
+        </div>
+        <button class="btn btn--primary w-100" id="saveBtn">Save review</button>
+        <div class="panel-hint" id="reviewedInfo"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">Proctoring</div>
+        <div class="summary-row"><span class="label">Tab switches</span><span class="value" id="prTab">0</span></div>
+        <div class="summary-row"><span class="label">Window blurs</span><span class="value" id="prBlur">0</span></div>
+        <div class="summary-row"><span class="label">Fullscreen exits</span><span class="value" id="prFs">0</span></div>
+        <div class="summary-row"><span class="label">Paste / copy blocked</span><span class="value" id="prPaste">0</span></div>
+        <details class="pl-log"><summary>Event log</summary><ol id="prLog"></ol></details>
+      </div>
+
+      <div class="panel" id="forcePanel" hidden>
+        <div class="panel-title">Attempt in progress</div>
+        <p class="panel-hint" style="margin-top:0;">If the student left and will not come back, submit the attempt to score what they answered. The code cannot be used again.</p>
+        <button class="btn btn--danger w-100" id="forceBtn" style="margin-top:0.75rem;">Force submit</button>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<div class="copyright">Copyright © 2026 Approach International Student Center, Inc. — All rights reserved.</div>
+
+<script type="module" src="../js/pages/placement-result.js"></script>
+</body>
+</html>

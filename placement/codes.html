@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Access Codes — Approach International Student Center</title>
+<link rel="stylesheet" href="../css/styles.css">
+<link rel="stylesheet" href="../css/placement-admin.css">
+</head>
+<body>
+
+<div id="navbarContainer" class="noprint"></div>
+
+<div class="auth-loading noprint" id="authLoading">
+  <div class="spinner"></div>
+  <p style="font-family:var(--serif);font-style:italic;">Loading…</p>
+</div>
+
+<main class="page" id="page" style="display:none;">
+  <div class="noprint">
+    <div class="breadcrumb"><a href="../admin-dashboard.html">Administration</a> <span>›</span> <a href="dashboard.html">Placement Tests</a> <span>›</span> <span>Access codes</span></div>
+    <div class="page-header">
+      <div>
+        <div class="page-stamp">Access codes</div>
+        <h1 id="testTitle">—</h1>
+        <p class="page-sub">Each code works for one student, one time. Print the slips, cut along the dashed lines and hand one to each student.</p>
+      </div>
+      <div class="header-actions"><a class="btn btn--secondary" id="resultsLink" href="#">Results</a><a class="btn btn--secondary" id="editLink" href="#">Edit test</a></div>
+    </div>
+
+    <div class="alert warning" id="statusAlert"></div>
+
+    <div class="pl-codes-top">
+      <section class="card">
+        <div class="card-title" style="margin-bottom:1rem;">New batch</div>
+        <div class="pl-grid3">
+          <div class="field"><label for="qty">How many codes</label><input type="number" id="qty" min="1" max="500" value="20"></div>
+          <div class="field"><label for="batch">Batch name (optional)</label><input type="text" id="batch" maxlength="60" placeholder="e.g. Orientation · Room 4"></div>
+          <div class="field"><label>&nbsp;</label><button class="btn btn--gold" id="gen">Generate codes</button></div>
+        </div>
+      </section>
+      <section class="card">
+        <div class="card-title" style="margin-bottom:1rem;">Print</div>
+        <div class="pl-grid3">
+          <div class="field"><label for="layout">Slips per page</label>
+            <select id="layout"><option value="4">8 (larger)</option><option value="5">10 (smaller)</option></select></div>
+          <div class="field"><label>&nbsp;</label><button class="btn btn--primary" id="printBtn" disabled>Print slips</button></div>
+          <div class="field"><label>&nbsp;</label><button class="btn btn--secondary" id="csvBtn">Download CSV</button></div>
+        </div>
+        <div class="field-help" id="printHelp">Prints the unused codes shown in the list below. Use the filters to choose a batch.</div>
+      </section>
+    </div>
+
+    <div class="filters pl-filters">
+      <div class="filter-field"><label for="search">Search</label><input type="text" id="search" placeholder="Code, name or email…"></div>
+      <div class="filter-field"><label for="fBatch">Batch</label><select id="fBatch"><option value="">All batches</option></select></div>
+      <div class="filter-field"><label for="fStatus">Status</label>
+        <select id="fStatus"><option value="">All</option><option value="unused">Not used</option><option value="in_progress">Taking now</option><option value="submitted">Submitted</option></select></div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Code</th><th>Batch</th><th>Created</th><th>Status</th><th>Student</th><th style="text-align:right;">Actions</th></tr></thead>
+        <tbody id="rows"><tr><td colspan="6"><div class="empty-state"><p>Loading…</p></div></td></tr></tbody>
+      </table>
+    </div>
+    <div class="field-help" id="countInfo" style="margin-top:0.6rem;"></div>
+  </div>
+
+  <div class="pl-sheets" id="sheets"></div>
+</main>
+
+<div class="copyright noprint">Copyright © 2026 Approach International Student Center, Inc. — All rights reserved.</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script type="module" src="../js/pages/placement-codes.js"></script>
+</body>
+</html>

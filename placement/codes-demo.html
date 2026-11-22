@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Access Code Handouts · Approach</title>
+<!--
+  PLACEMENT TEST — access code handout generator (static demo).
+  Staff generate a batch of one-use codes for a test, print them as slips (QR + code), cut and hand them out.
+  The QR opens take.html?code=XXX-XXX so the code is pre-filled and read-only.
+  Demo stores codes in localStorage ("placementDemo.codes"); production: placement_codes table + RPC that
+  generates codes server-side and guarantees uniqueness.
+-->
+<style>
+:root{
+  --navy:#0f2340; --navy-2:#1a3358; --gold:#c9a24b; --gold-d:#9c7b2f; --cream:#faf6ee; --paper:#ffffff;
+  --ink:#1a1a1a; --ink-s:#3d3d3d; --muted:#6f6f6f; --line:#e6dfcf; --ok:#26890c; --bad:#c0392b;
+  --serif:Cambria, "Caladea", Georgia, "Times New Roman", serif;
+  --sans:Calibri, "Carlito", "Segoe UI", Arial, sans-serif;
+  --mono:Consolas, "Courier New", monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--cream); color:var(--ink); font-family:var(--sans); font-size:17px; line-height:1.45}
+button{font:inherit; cursor:pointer}
+:focus-visible{outline:3px solid var(--gold); outline-offset:2px}
+.hidden{display:none !important}
+
+.mast{background:var(--navy); color:var(--cream); padding:12px 24px; display:flex; align-items:center; gap:16px}
+.mast img{height:34px}
+.mast .sep{width:1px; height:30px; background:rgba(201,162,75,.45)}
+.mast .t{font-weight:bold; letter-spacing:.12em; font-size:12px; color:var(--gold)}
+.mast .s{font-size:12px; letter-spacing:.08em; opacity:.85}
+main{max-width:1100px; margin:0 auto; padding:24px 20px 60px}
+h1{font-family:var(--serif); font-weight:normal; font-size:clamp(34px,5vw,48px); color:var(--navy); margin:0 0 6px}
+h1 em{color:var(--gold-d)}
+.lede{font-family:var(--serif); font-style:italic; color:var(--ink-s); margin:0 0 22px}
+.card{background:var(--paper); border:1px solid var(--line); padding:24px 28px; margin-bottom:18px}
+.lbl{font-weight:bold; letter-spacing:.1em; font-size:12px; color:var(--gold-d); margin:0 0 12px; text-transform:uppercase}
+.form{display:grid; grid-template-columns:2fr 1fr 1fr; gap:16px}
+.form .wide{grid-column:1 / -1}
+label{display:block; font-weight:bold; color:var(--navy); margin-bottom:6px; font-size:15px}
+input,select{width:100%; font:inherit; padding:10px 12px; border:1.5px solid #cfc6b2; background:#fff; color:var(--ink)}
+input:focus,select:focus{border-color:var(--gold); outline:none}
+.fieldnote{font-size:13px; color:var(--muted); margin-top:4px}
+.row{display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-top:18px}
+.btn{border:1.5px solid transparent; padding:11px 20px; font-weight:bold; background:var(--navy); color:var(--cream)}
+.btn:hover:not(:disabled){background:var(--navy-2)}
+.btn.gold{background:var(--gold); color:var(--navy)}
+.btn.ghost{background:transparent; color:var(--navy); border-color:var(--navy)}
+.btn:disabled{opacity:.35; cursor:not-allowed}
+.msg{font-size:15px; color:var(--ok); font-weight:bold}
+
+/* codes table */
+.tablewrap{overflow-x:auto}
+table{width:100%; border-collapse:collapse; font-size:15px}
+th{text-align:left; font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); border-bottom:2px solid var(--line); padding:8px 10px}
+td{border-bottom:1px solid var(--line); padding:8px 10px}
+td.code{font-family:var(--mono); font-weight:bold; color:var(--navy); letter-spacing:.08em}
+.pill{display:inline-block; padding:2px 10px; font-size:13px; font-weight:bold; border:1.5px solid}
+.pill.unused{color:var(--muted); border-color:#cfc6b2}
+.pill.progress{color:var(--gold-d); border-color:var(--gold)}
+.pill.used{color:var(--ok); border-color:var(--ok)}
+.empty{color:var(--muted); font-style:italic}
+
+/* printable sheets */
+.sheets{overflow-x:auto; padding:6px 0}
+.sheet{width:8.5in; height:11in; padding:.4in; background:#fff; margin:0 auto 24px; box-shadow:0 6px 24px rgba(15,35,64,.12);
+  display:grid; grid-template-columns:1fr 1fr; grid-template-rows:repeat(var(--rows),1fr)}
+.slip{border:1px dashed #9a9a9a; margin:-.5px; padding:.18in .2in; display:grid; grid-template-columns:auto 1fr; grid-template-rows:auto 1fr; column-gap:.18in; position:relative; overflow:hidden; color:#111}
+.slip .top{grid-column:1 / -1; display:flex; justify-content:space-between; align-items:center; border-bottom:1.5px solid var(--gold); padding-bottom:.07in; margin-bottom:.1in}
+.slip .top img{height:.3in}
+.slip .top span{font-size:9pt; font-weight:bold; letter-spacing:.12em; color:var(--navy)}
+.slip .qr{width:1.15in; height:1.15in; align-self:center}
+.slip .qr img,.slip .qr canvas{width:100% !important; height:100% !important; display:block}
+.slip .body{display:flex; flex-direction:column; justify-content:center; min-width:0}
+.slip .tn{font-family:var(--serif); font-size:11pt; color:var(--navy); margin-bottom:.04in; line-height:1.2}
+.slip .cl{font-size:8pt; letter-spacing:.12em; color:#555; font-weight:bold}
+.slip .cd{font-family:var(--mono); font-size:22pt; font-weight:bold; letter-spacing:.12em; color:var(--navy); line-height:1.1; margin-bottom:.06in}
+.slip ol{margin:0; padding-left:.17in; font-size:8pt; line-height:1.35; color:#333}
+.slip .url{word-break:break-all; font-family:var(--mono); font-size:7pt}
+.slip.r5 .qr{width:.95in; height:.95in} .slip.r5 .cd{font-size:19pt}
+
+@page{size:letter; margin:0}
+@media print{
+  body{background:#fff}
+  .noprint{display:none !important}
+  main{max-width:none; padding:0; margin:0}
+  .sheets{overflow:visible; padding:0}
+  .sheet{margin:0; box-shadow:none; page-break-after:always; break-after:page}
+  .sheet:last-child{page-break-after:auto; break-after:auto}
+  *{-webkit-print-color-adjust:exact; print-color-adjust:exact}
+}
+@media (max-width:700px){ .form{grid-template-columns:1fr} main{padding:16px 12px 40px} .card{padding:20px 16px} }
+</style>
+</head>
+<body>
+<header class="mast noprint">
+  <img src="../images/gold-logo.png" alt="Approach International Student Center">
+  <div class="sep"></div>
+  <div><div class="t">PLACEMENT TEST</div><div class="s">Access codes</div></div>
+</header>
+
+<main>
+  <div class="noprint">
+    <h1>Access code <em>handouts</em></h1>
+    <p class="lede">Each code works for one student, one time. Print the slips, cut along the dashed lines and hand one to each student.</p>
+
+    <section class="card">
+      <div class="lbl">New batch</div>
+      <div class="form">
+        <div><label for="test">Test</label>
+          <select id="test"><option value="placement-demo">English Placement Test</option></select></div>
+        <div><label for="qty">How many codes</label><input type="number" id="qty" min="1" max="200" value="16"></div>
+        <div><label for="layout">Slips per page</label>
+          <select id="layout"><option value="4">8 (larger)</option><option value="5">10 (smaller)</option></select></div>
+        <div class="wide"><label for="batch">Batch name (optional)</label><input type="text" id="batch" maxlength="60" placeholder="e.g. Orientation · Nov 20 · Room 4"></div>
+        <div class="wide"><label for="base">Test link</label><input type="text" id="base">
+          <div class="fieldnote">The QR code opens this link with the code included, so students only type their name and email.</div></div>
+      </div>
+      <div class="row">
+        <button class="btn gold" id="gen">Generate codes</button>
+        <button class="btn" id="print" disabled>Print slips</button>
+        <button class="btn ghost" id="csv">Download all codes (CSV)</button>
+        <span class="msg" id="msg" aria-live="polite"></span>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="lbl">All codes for this test</div>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Code</th><th>Batch</th><th>Created</th><th>Status</th><th>Student</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table></div>
+    </section>
+
+    <div class="lbl" id="previewLbl" style="margin-top:26px">Print preview</div>
+  </div>
+
+  <div class="sheets" id="sheets"></div>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+const Store = {
+  get(k, d){ try { const v = JSON.parse(localStorage.getItem(k)); return v ?? d; } catch { return d; } },
+  set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
+};
+const K_CODES = "placementDemo.codes", K_SESS = "placementDemo.sessions";
+const ALPHABET = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";   // no 0/O/1/I/L
+
+// Production: done by an RPC with a unique index on code, retrying on collision.
+function newCodes(n, taken){
+  const out = [];
+  while (out.length < n){
+    const r = crypto.getRandomValues(new Uint32Array(6));
+    const s = [...r].map(x => ALPHABET[x % ALPHABET.length]).join("");
+    const code = s.slice(0, 3) + "-" + s.slice(3);
+    if (!taken.has(code)){ taken.add(code); out.push(code); }
+  }
+  return out;
+}
+
+$("base").value = new URL("take-demo.html", location.href).href;
+let lastBatch = [];
+
+function linkFor(code){
+  const u = new URL($("base").value.trim() || "take-demo.html", location.href);
+  u.searchParams.set("code", code);
+  return u.href;
+}
+
+function renderSheets(codes){
+  const rows = +$("layout").value, per = rows * 2, testName = $("test").selectedOptions[0].textContent;
+  $("sheets").innerHTML = "";
+  $("previewLbl").classList.toggle("hidden", !codes.length);
+  for (let p = 0; p < codes.length; p += per){
+    const sheet = document.createElement("div");
+    sheet.className = "sheet"; sheet.style.setProperty("--rows", rows);
+    codes.slice(p, p + per).forEach(code => {
+      const url = linkFor(code), slip = document.createElement("div");
+      slip.className = "slip" + (rows === 5 ? " r5" : "");
+      slip.innerHTML =
+        '<div class="top"><img src="../images/black-logo.png" alt="Approach"><span>PLACEMENT TEST</span></div>' +
+        '<div class="qr"></div>' +
+        '<div class="body"><div class="tn">' + esc(testName) + '</div>' +
+          '<div class="cl">YOUR ACCESS CODE</div><div class="cd">' + code + '</div>' +
+          '<ol><li>Scan the QR code' + (rows === 4 ? ' or open:<br><span class="url">' + esc(url) + '</span>' : '.') + '</li>' +
+          '<li>Type your full name and email.</li><li>Keep this paper. You need it to continue later.</li></ol></div>';
+      new QRCode(slip.querySelector(".qr"), { text: url, width: 256, height: 256, colorDark: "#0f2340", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.M });
+      sheet.appendChild(slip);
+    });
+    $("sheets").appendChild(sheet);
+  }
+  $("print").disabled = !codes.length;
+}
+
+function statusOf(code){
+  const s = Store.get(K_SESS, {})[code];
+  if (!s) return { cls: "unused", txt: "Not used", who: "" };
+  if (s.status === "submitted") return { cls: "used", txt: "Submitted", who: s.fullName + " · " + s.email };
+  return { cls: "progress", txt: "In progress", who: s.fullName + " · " + s.email };
+}
+
+function renderTable(){
+  const all = Store.get(K_CODES, []).filter(c => c.testId === $("test").value);
+  $("rows").innerHTML = all.length ? all.slice().reverse().map(c => {
+    const st = statusOf(c.code);
+    return '<tr><td class="code">' + c.code + '</td><td>' + esc(c.batch || "—") + '</td><td>' + new Date(c.createdAt).toLocaleString() +
+      '</td><td><span class="pill ' + st.cls + '">' + st.txt + '</span></td><td>' + esc(st.who) + '</td></tr>';
+  }).join("") : '<tr><td colspan="5" class="empty">No codes yet. Generate a batch above.</td></tr>';
+}
+
+$("gen").onclick = () => {
+  const n = Math.max(1, Math.min(200, Math.floor(+$("qty").value) || 0));
+  $("qty").value = n;
+  const all = Store.get(K_CODES, []), taken = new Set(all.map(c => c.code));
+  const now = new Date().toISOString(), batch = $("batch").value.trim();
+  lastBatch = newCodes(n, taken);
+  Store.set(K_CODES, all.concat(lastBatch.map(code => ({ code, testId: $("test").value, batch, createdAt: now }))));
+  renderSheets(lastBatch); renderTable();
+  $("msg").textContent = n + " new codes created. Print them now or later from the list.";
+};
+$("layout").onchange = () => renderSheets(lastBatch);
+$("base").onchange = () => renderSheets(lastBatch);
+$("print").onclick = () => window.print();
+$("csv").onclick = () => {
+  const all = Store.get(K_CODES, []).filter(c => c.testId === $("test").value);
+  const lines = [["code", "batch", "created_at", "status", "student", "link"]].concat(
+    all.map(c => { const st = statusOf(c.code); return [c.code, c.batch, c.createdAt, st.txt, st.who, linkFor(c.code)]; }));
+  const csv = lines.map(r => r.map(v => '"' + String(v ?? "").replace(/"/g, '""') + '"').join(",")).join("\r\n");
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
+  a.download = "placement-codes.csv"; a.click(); URL.revokeObjectURL(a.href);
+};
+window.addEventListener("focus", renderTable);   // refresh statuses after testing in the other tab
+renderTable();
+renderSheets([]);
+</script>
+</body>
+</html>

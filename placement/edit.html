@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edit Placement Test — Approach International Student Center</title>
+<link rel="stylesheet" href="../css/styles.css">
+<link rel="stylesheet" href="../css/placement-admin.css">
+</head>
+<body>
+
+<div id="navbarContainer"></div>
+
+<div class="auth-loading" id="authLoading">
+  <div class="spinner"></div>
+  <p style="font-family:var(--serif);font-style:italic;">Loading test…</p>
+</div>
+
+<main class="page" id="page" style="display:none;">
+  <div class="breadcrumb"><a href="../admin-dashboard.html">Administration</a> <span>›</span> <a href="dashboard.html">Placement Tests</a> <span>›</span> <span>Edit</span></div>
+
+  <div class="pl-head">
+    <div class="pl-head-main">
+      <div class="page-stamp">Placement test</div>
+      <input type="text" class="pl-title-input" id="title" data-path="title" maxlength="100" aria-label="Test name">
+      <div class="pl-save" id="saveState" aria-live="polite">All changes saved</div>
+    </div>
+    <div class="header-actions">
+      <a class="btn btn--secondary" id="previewBtn" href="#" target="_blank" rel="noopener">Preview ↗</a>
+      <a class="btn btn--secondary" id="codesBtn" href="#">Access codes</a>
+      <a class="btn btn--secondary" id="resultsBtn" href="#">Results</a>
+    </div>
+  </div>
+
+  <div class="alert warning" id="lockedAlert">
+    <div><b>Students have already taken this test, so its questions are locked.</b>
+      You can still change the name, settings and placement scale. To change questions, duplicate the test and edit the copy.
+      <div style="margin-top:0.6rem;"><button class="btn btn--primary btn--sm" id="dupBtn">Duplicate this test</button></div></div>
+  </div>
+
+  <div class="layout">
+    <div class="main-col">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Sections and questions</div>
+            <div class="card-subtitle">Students take the sections in this order. Use ___ (three underscores) in a question to show a blank.</div>
+          </div>
+          <div class="pl-btnrow">
+            <button class="btn btn--secondary btn--sm" id="jsonDown">Download JSON</button>
+            <label class="btn btn--secondary btn--sm" id="jsonUpLabel"><input type="file" id="jsonUp" accept=".json,application/json" hidden>Upload JSON</label>
+          </div>
+        </div>
+        <div id="content"></div>
+        <div class="pl-addsec" id="addSection">
+          <span>Add section:</span>
+          <button class="btn btn--secondary btn--sm" data-act="add-section" data-type="listening">+ Listening</button>
+          <button class="btn btn--secondary btn--sm" data-act="add-section" data-type="reading">+ Reading</button>
+          <button class="btn btn--secondary btn--sm" data-act="add-section" data-type="language_use">+ Language Use</button>
+          <button class="btn btn--secondary btn--sm" data-act="add-section" data-type="writing">+ Writing</button>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:1.5rem;">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Placement scale</div>
+            <div class="card-subtitle">Number of correct answers (multiple choice and true/false) → level. Writing is not included. Students never see this.</div>
+          </div>
+          <div class="pl-btnrow">
+            <button class="btn btn--secondary btn--sm" id="scaleReset">Reset to default</button>
+            <button class="btn btn--secondary btn--sm" id="recalcBtn" hidden>Recalculate placements</button>
+          </div>
+        </div>
+        <div class="alert warning" id="scaleAlert"></div>
+        <div class="table-wrap">
+          <table class="pl-scale">
+            <thead><tr><th>From</th><th>To</th><th>Grouping level</th><th>Level</th><th></th></tr></thead>
+            <tbody id="scaleBody"></tbody>
+          </table>
+        </div>
+        <button class="btn btn--ghost btn--sm" id="scaleAdd" style="margin-top:0.6rem;">+ Add row</button>
+      </div>
+    </div>
+
+    <aside class="sidebar">
+      <div class="panel">
+        <div class="panel-title">Status</div>
+        <div class="field" style="margin-bottom:0.5rem;">
+          <select id="status" aria-label="Status">
+            <option value="draft">Draft — not open to students</option>
+            <option value="active">Active — codes work</option>
+            <option value="archived">Archived — closed</option>
+          </select>
+        </div>
+        <div class="panel-hint" style="margin-top:0;">A test can only be activated when the validation below has no errors.</div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">Summary</div>
+        <div class="summary-row"><span class="label">Sections</span><span class="value" id="sumSections">—</span></div>
+        <div class="summary-row"><span class="label">Scored questions</span><span class="value" id="sumScored">—</span></div>
+        <div class="summary-row"><span class="label">Writing tasks</span><span class="value" id="sumWriting">—</span></div>
+        <div class="summary-row"><span class="label">Scale goes up to</span><span class="value" id="sumScale">—</span></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">Validation</div>
+        <ul class="validation-list" id="validation"></ul>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">Settings</div>
+        <div class="switch-row">
+          <div><div class="switch-row-label">Timed test</div><div class="switch-row-hint">One time limit for the whole test</div></div>
+          <label class="switch"><input type="checkbox" data-path="settings.timed" data-kind="bool"><span class="track"></span></label>
+        </div>
+        <div class="switch-row" id="minutesRow">
+          <div><div class="switch-row-label">Time limit</div><div class="switch-row-hint">Minutes. Time away from the page is not counted.</div></div>
+          <input type="number" class="pl-mini" min="1" max="300" data-path="settings.time_limit_minutes" data-kind="int" aria-label="Time limit in minutes">
+        </div>
+        <div class="switch-row">
+          <div><div class="switch-row-label">Allow skipping questions</div><div class="switch-row-hint">Students can continue without answering</div></div>
+          <label class="switch"><input type="checkbox" data-path="settings.allow_skip" data-kind="bool"><span class="track"></span></label>
+        </div>
+        <div class="switch-row">
+          <div><div class="switch-row-label">Shuffle answer options</div><div class="switch-row-hint">Random order per student. Single questions can keep a fixed order.</div></div>
+          <label class="switch"><input type="checkbox" data-path="settings.shuffle_options" data-kind="bool"><span class="track"></span></label>
+        </div>
+        <div class="switch-row">
+          <div><div class="switch-row-label">Show estimated level at the end</div><div class="switch-row-hint">Students see their level (not the score) and can save a certificate. Writing is not included.</div></div>
+          <label class="switch"><input type="checkbox" data-path="settings.show_result" data-kind="bool"><span class="track"></span></label>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">Proctoring</div>
+        <div class="switch-row">
+          <div><div class="switch-row-label">Fullscreen lock</div><div class="switch-row-hint">Leaving fullscreen pauses the test</div></div>
+          <label class="switch"><input type="checkbox" data-path="settings.proctoring.fullscreen_lock" data-kind="bool"><span class="track"></span></label>
+        </div>
+        <div class="switch-row">
+          <div><div class="switch-row-label">Tab-switch tracking</div><div class="switch-row-hint">Log when the student leaves the tab</div></div>
+          <label class="switch"><input type="checkbox" data-path="settings.proctoring.tab_switch_tracking" data-kind="bool"><span class="track"></span></label>
+        </div>
+        <div class="switch-row">
+          <div><div class="switch-row-label">Window-blur tracking</div><div class="switch-row-hint">Log when the window loses focus</div></div>
+          <label class="switch"><input type="checkbox" data-path="settings.proctoring.window_blur_tracking" data-kind="bool"><span class="track"></span></label>
+        </div>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<div class="copyright">Copyright © 2026 Approach International Student Center, Inc. — All rights reserved.</div>
+
+<script type="module" src="../js/pages/placement-edit.js"></script>
+</body>
+</html>

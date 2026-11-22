@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" translate="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="google" content="notranslate">
+<title>Placement Test · Approach</title>
+<link rel="stylesheet" href="../css/placement.css">
+</head>
+<body>
+<!--
+  Placement Test — student page.
+    take.html?code=ABC-123   code pre-filled and locked (link / QR from the handout)
+    take.html                student types the code
+    take.html?preview=<id>   academics only: try a test (also drafts) without saving anything
+  Logic: js/pages/placement-take.js · Server: db/017_placement.sql, db/018_placement_scale_lock.sql,
+         db/020_placement_student_result.sql (estimated level + certificate)
+-->
+<div class="preview-bar hidden" id="previewBar">PREVIEW · Nothing is saved · Proctoring is off</div>
+
+<header class="mast">
+  <img src="../images/gold-logo.png" alt="Approach International Student Center">
+  <div class="sep"></div>
+  <div class="tt"><div class="t">PLACEMENT TEST</div><div class="s" id="testName"></div></div>
+  <div class="right">
+    <div class="who" id="who"></div>
+    <div class="save hidden" id="save" aria-live="polite">Saved</div>
+    <div class="timer hidden" id="timer" role="timer" aria-label="Time left">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9.5 2.5h5"/></svg>
+      <span id="timerText">--:--</span>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <!-- START -->
+  <section class="card brackets" id="start">
+    <div class="lbl">English Language Program</div>
+    <h1>Placement <em>Test</em></h1>
+    <p class="lede">Answer every question as well as you can. There is no pass or fail.</p>
+
+    <div class="loading hidden" id="infoLoading"><div class="spin"></div><span>Loading your test…</span></div>
+    <div class="notice bad hidden" id="infoError" role="alert"></div>
+
+    <div class="facts hidden" id="facts">
+      <div class="fact"><b id="fSections">—</b><span>sections</span></div>
+      <div class="fact"><b id="fQs">—</b><span>questions</span></div>
+      <div class="fact"><b id="fTime">—</b><span id="fTimeL">minutes</span></div>
+    </div>
+    <ul class="checklist" id="rules"></ul>
+    <div class="notice hidden" id="appleNotice">Fullscreen is not available on iPhone and iPad. The test works normally, but leaving the test page is still recorded.</div>
+
+    <form class="fields" id="startForm" novalidate>
+      <div><label for="fullName">Full name</label><input type="text" id="fullName" maxlength="80" autocomplete="name" spellcheck="false"></div>
+      <div><label for="email">Email</label><input type="email" id="email" maxlength="120" autocomplete="email" spellcheck="false" autocapitalize="none"></div>
+      <div class="full">
+        <label for="code">Access code</label>
+        <div class="codewrap">
+          <input type="text" id="code" maxlength="7" autocomplete="off" spellcheck="false" placeholder="ABC-123" aria-describedby="codeNote">
+          <svg id="codeLock" class="hidden" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="1"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+        </div>
+        <div class="fieldnote" id="codeNote">The code is on the paper you received.</div>
+      </div>
+    </form>
+    <label class="ack hidden" id="ackRow"><input type="checkbox" id="ack">
+      <span>I understand that leaving the test page or fullscreen is recorded and reported.</span></label>
+    <div class="err" id="err" aria-live="polite"></div>
+    <div class="row"><button class="btn gold" id="go">Start the test</button></div>
+  </section>
+
+  <!-- TEST -->
+  <div id="test" class="hidden">
+    <ol class="tabs" id="tabs"></ol>
+    <div class="stage" id="stage">
+      <section class="card" id="stim" aria-label="Section material"></section>
+      <section class="card" id="qcard" aria-live="polite"></section>
+    </div>
+  </div>
+
+  <!-- DONE -->
+  <section class="card brackets hidden" id="done">
+    <div class="lbl" id="doneLbl">Test submitted</div>
+    <h1>Thank you, <em id="doneName"></em>.</h1>
+    <p class="lede" id="doneLede"></p>
+
+    <!-- Estimated level (only when the test's settings.show_result is on) -->
+    <div class="result hidden" id="result">
+      <div id="medalBox"></div>
+      <div class="rinfo">
+        <div class="lbl">Your estimated level</div>
+        <p class="rlevel" id="rLevel"></p>
+        <div class="ladder" id="ladder" aria-hidden="true"></div>
+        <p class="note" id="rNote"></p>
+        <div class="row">
+          <button class="btn gold" id="certBtn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Download certificate (PDF)</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="sumrows" id="sumrows"></div>
+    <p class="note" id="doneNote">You can close this page now.</p>
+  </section>
+</main>
+
+<!-- Fullscreen lock (proctoring) -->
+<div class="overlay hidden" id="lockout" role="alertdialog" aria-labelledby="lockTitle">
+  <div class="card brackets">
+    <h2 id="lockTitle">Test paused</h2>
+    <p>You left fullscreen mode. This has been recorded. Return to fullscreen to continue the test.</p>
+    <button class="btn gold" id="resumeFs">Return to the test</button>
+  </div>
+</div>
+
+<!-- Stops the test (another device took over, server problem) -->
+<div class="overlay hidden" id="halt" role="alertdialog" aria-labelledby="haltTitle">
+  <div class="card brackets">
+    <h2 id="haltTitle"></h2>
+    <p id="haltMsg"></p>
+    <button class="btn" id="haltBtn">Reload the page</button>
+  </div>
+</div>
+
+<div class="toast hidden" id="toast" role="status"></div>
+
+<!-- Certificate: hidden on screen, the only thing printed after "Download certificate" -->
+<section class="cert" id="cert" aria-hidden="true">
+  <div class="c-frame">
+    <div class="c-body">
+      <div>
+        <div class="c-head">
+          <span class="c-logo"><img src="../images/gold-logo.png" alt=""></span>
+          <span class="c-kicker">English Language Program</span>
+        </div>
+        <h2 class="c-title">Placement Test <em>Result</em></h2>
+        <p class="c-pre">This is to certify that</p>
+        <p class="c-name" id="cName"></p>
+        <p class="c-text">completed the <b id="cTest"></b> on <span id="cDate"></span> and reached the estimated level shown here.</p>
+      </div>
+      <div class="c-side">
+        <div id="cMedal"></div>
+        <p class="c-group" id="cGroup"></p>
+      </div>
+    </div>
+    <div class="c-foot">
+      <p id="cNote"></p>
+      <div class="c-ref">Reference <b id="cCode"></b><br>Approach International Student Center</div>
+    </div>
+  </div>
+</section>
+
+<script type="module" src="../js/pages/placement-take.js"></script>
+</body>
+</html>
