@@ -431,6 +431,71 @@ async function loadEvalTemplates() {
 }
 
 // ===========================================================
+// EMAILS (email_log, written by the edge functions; Brevo free plan = 300/day)
+// ===========================================================
+const EMAIL_KIND = { placement_code: 'Placement code', invite: 'Invitation', password_reset: 'Password reset' };
+const DAILY_LIMIT = 300;
+const localDay = iso => { const d = new Date(iso); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
+
+async function loadEmails() {
+  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
+  const [daily, recent] = await Promise.all([
+    db.rpc('email_log_daily', { p_tz: tz, p_days: 30 }),
+    db.from('email_log').select('sent_at, kind, recipient, ref, status, error').order('sent_at', { ascending: false }).limit(50),
+  ]);
+  const error = daily.error || recent.error;
+  if (error) {
+    const msg = `<tr><td colspan="5"><div class="empty-state"><h3>Could not load</h3><p>${esc(error.message)}</p></div></td></tr>`;
+    document.getElementById('emailDaysBody').innerHTML = msg;
+    document.getElementById('emailRecentBody').innerHTML = msg;
+    return;
+  }
+  const rows = recent.data || [], today = localDay(new Date());
+  const days = Object.fromEntries((daily.data || []).map(d => [d.day, d]));
+  const t = days[today] || { sent: 0, failed: 0 };
+  document.getElementById('emSentToday').textContent = `${t.sent} / ${DAILY_LIMIT}`;
+  document.getElementById('emFailedToday').textContent = t.failed;
+  document.getElementById('emSent30').textContent = (daily.data || []).reduce((n, d) => n + d.sent, 0);
+  document.getElementById('countEmailsToday').textContent = t.sent;
+
+  const dayKeys = Object.keys(days).sort().reverse();
+  document.getElementById('emailDaysBody').innerHTML = dayKeys.length ? dayKeys.map(k => {
+    const d = days[k], [y, m, dd] = k.split('-').map(Number);
+    const label = new Date(y, m - 1, dd).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+    return `<tr><td>${label}${k === today ? ' <span class="chip active">Today</span>' : ''}</td>
+      <td>${d.placement}</td><td>${d.other}</td>
+      <td>${d.failed ? `<span style="color:var(--red);font-weight:700;">${d.failed}</span>` : 0}</td>
+      <td><b>${d.sent}</b>${d.sent >= DAILY_LIMIT ? ' <span class="chip deactivated">Limit reached</span>' : ''}</td></tr>`;
+  }).join('') : '<tr><td colspan="5"><div class="empty-state"><p>No emails in the last 30 days.</p></div></td></tr>';
+
+  document.getElementById('emailRecentBody').innerHTML = rows.length ? rows.slice(0, 50).map(r => {
+    const d = new Date(r.sent_at);
+    return `<tr><td>${d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}, ${d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</td>
+      <td>${EMAIL_KIND[r.kind] || esc(r.kind)}</td><td>${esc(r.recipient)}</td>
+      <td style="font-family:var(--mono);">${esc(r.ref || '—')}</td>
+      <td>${r.status === 'sent' ? '<span class="chip active">Sent</span>'
+        : `<span class="chip deactivated" title="${esc(r.error || '')}">Failed</span><div style="font-size:0.75rem;color:var(--red);max-width:320px;">${esc((r.error || '').slice(0, 160))}</div>`}</td></tr>`;
+  }).join('') : '<tr><td colspan="5"><div class="empty-state"><p>No emails yet.</p></div></td></tr>';
+}
+
+// Brevo's own count of what is left today (its day may reset at a different hour than ours).
+async function loadEmailQuota() {
+  const el = document.getElementById('emLeft');
+  try {
+    const { data: { session } } = await db.auth.getSession();
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/placement-email`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${session.access_token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'quota' }),
+    });
+    const out = await res.json();
+    el.textContent = res.ok && out.left != null ? out.left : '—';
+  } catch { el.textContent = '—'; }
+}
+
+document.getElementById('emailsRefresh').addEventListener('click', () => { loadEmails(); loadEmailQuota(); });
+
+// ===========================================================
 // GENERIC EDIT MODAL
 // ===========================================================
 function openEditModal({ title, sub, fields, onSave }) {
@@ -494,6 +559,8 @@ document.getElementById('editModal').addEventListener('click', (e) => {
     loadUsers(),
     loadExamsCount(),
     loadAssessmentsCount(),
-    loadEvalTemplates()
+    loadEvalTemplates(),
+    loadEmails(),
+    loadEmailQuota()
   ]);
 })();

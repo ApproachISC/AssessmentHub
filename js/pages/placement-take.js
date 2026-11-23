@@ -25,6 +25,7 @@ const ERRORS = {
   test_unavailable: 'This test is not open right now. Ask a staff member.',
   code_used: 'This code has already been used. Ask a staff member for a new code.',
   email_mismatch: 'This code is already being used with a different email. Type the email you used before.',
+  email_not_assigned: 'This code was sent to a different email address. Use the email where you received the code.',
   time_up: 'The time for this test has ended, and your answers were submitted.',
 };
 const SPLIT_KINDS = { passage: true, prompt: true };
@@ -834,6 +835,7 @@ async function fetchInfo(code) {
     if (error) throw error;
     if (normCode($('code').value) !== code) return;   // the student kept typing
     paintInfo(data || null);
+    if (data?.student_email) prefillAssigned(data);
     if (!data) { $('infoError').textContent = 'We could not find an open test for this code. Check the code or ask a staff member.'; show($('infoError')); }
   } catch (err) {
     console.warn('Test info failed:', err);
@@ -850,6 +852,16 @@ function prefillFromBackup(code) {
   $('go').textContent = 'Continue the test';
 }
 
+// Emailed codes belong to one student: fill in their name and lock the email.
+// The name stays editable so a student can fix a spelling mistake.
+function prefillAssigned(i) {
+  const n = $('fullName'), m = $('email');
+  if (!n.value) n.value = i.student_name || '';
+  m.value = i.student_email; m.readOnly = true; m.setAttribute('aria-readonly', 'true');
+  $('codeNote').textContent = 'Your name, email and code came with your link. Check your name, then start.';
+  $('go').focus();
+}
+
 let infoTimer;
 $('code').addEventListener('input', e => {
   if (e.target.readOnly) return;
@@ -857,7 +869,10 @@ $('code').addEventListener('input', e => {
   clearTimeout(infoTimer);
   const code = e.target.value;
   if (CODE_RE.test(code)) { infoTimer = setTimeout(() => fetchInfo(code), 300); prefillFromBackup(code); }
-  else { paintInfo(null); show($('infoError'), false); $('go').textContent = 'Start the test'; }
+  else {
+    paintInfo(null); show($('infoError'), false); $('go').textContent = 'Start the test';
+    if ($('email').readOnly) { $('email').readOnly = false; $('email').removeAttribute('aria-readonly'); $('email').value = ''; }
+  }
 });
 
 async function startLive() {

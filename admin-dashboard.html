@@ -32,6 +32,7 @@
     <button class="tab" data-panel="panel-classes">Classes <span class="tab-count" id="countClasses">—</span></button>
     <button class="tab" data-panel="panel-levels">Levels <span class="tab-count" id="countLevels">—</span></button>
     <button class="tab" data-panel="panel-users">Teachers &amp; Staff <span class="tab-count" id="countUsers">—</span></button>
+    <button class="tab" data-panel="panel-emails">Emails <span class="tab-count" id="countEmailsToday">—</span></button>
   </div>
 
   <!-- ===== EXAMS TAB ===== -->
@@ -229,6 +230,40 @@
         <tbody id="usersBody">
           <tr><td colspan="6"><div class="empty-state"><p>Loading…</p></div></td></tr>
         </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ===== EMAILS TAB ===== -->
+  <div class="tab-panel" id="panel-emails">
+    <div class="section-header-row" style="margin-bottom:1.5rem;">
+      <div>
+        <h2>Emails</h2>
+        <p class="section-instructions">Emails sent through Brevo: placement test codes, invitations and password resets. The free plan allows 300 a day.</p>
+      </div>
+      <button class="btn btn--secondary" id="emailsRefresh">Refresh</button>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-label">Sent today</div><div class="stat-value" id="emSentToday">—</div></div>
+      <div class="stat-card"><div class="stat-label">Left today (Brevo)</div><div class="stat-value" id="emLeft">—</div></div>
+      <div class="stat-card"><div class="stat-label">Failed today</div><div class="stat-value" id="emFailedToday">—</div></div>
+      <div class="stat-card"><div class="stat-label">Sent, last 30 days</div><div class="stat-value" id="emSent30">—</div></div>
+    </div>
+
+    <h3 style="margin-bottom:0.6rem;">Daily log</h3>
+    <div class="table-wrap" style="margin-bottom:2rem;">
+      <table>
+        <thead><tr><th>Day</th><th>Placement codes</th><th>Invites &amp; resets</th><th>Failed</th><th>Total sent</th></tr></thead>
+        <tbody id="emailDaysBody"><tr><td colspan="5"><div class="empty-state"><p>Loading…</p></div></td></tr></tbody>
+      </table>
+    </div>
+
+    <h3 style="margin-bottom:0.6rem;">Latest emails</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Time</th><th>Type</th><th>To</th><th>Code</th><th>Status</th></tr></thead>
+        <tbody id="emailRecentBody"><tr><td colspan="5"><div class="empty-state"><p>Loading…</p></div></td></tr></tbody>
       </table>
     </div>
   </div>

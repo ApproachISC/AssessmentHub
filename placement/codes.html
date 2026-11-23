@@ -23,7 +23,7 @@
       <div>
         <div class="page-stamp">Access codes</div>
         <h1 id="testTitle">—</h1>
-        <p class="page-sub">Each code works for one student, one time. Print the slips, cut along the dashed lines and hand one to each student.</p>
+        <p class="page-sub">Each code works for one student, one time. Print slips to hand out, or email each student their own code.</p>
       </div>
       <div class="header-actions"><a class="btn btn--secondary" id="resultsLink" href="#">Results</a><a class="btn btn--secondary" id="editLink" href="#">Edit test</a></div>
     </div>
@@ -47,9 +47,60 @@
           <div class="field"><label>&nbsp;</label><button class="btn btn--primary" id="printBtn" disabled>Print slips</button></div>
           <div class="field"><label>&nbsp;</label><button class="btn btn--secondary" id="csvBtn">Download CSV</button></div>
         </div>
-        <div class="field-help" id="printHelp">Prints the unused codes shown in the list below. Use the filters to choose a batch.</div>
+        <div class="field-help" id="printHelp">Prints the unused codes shown in the list below (not the emailed ones). Use the filters to choose a batch.</div>
       </section>
     </div>
+
+    <section class="card pl-email">
+      <div class="pl-email-head">
+        <div>
+          <div class="card-title">Email codes to students</div>
+          <div class="field-help">Each student gets their own code and a link that opens the test with their name and email already filled in.</div>
+        </div>
+        <div class="pl-quota" id="quota">Checking today’s email allowance…</div>
+      </div>
+
+      <div class="pl-email-modes" role="tablist">
+        <button class="pl-mode active" data-mode="one" role="tab" aria-selected="true">One student</button>
+        <button class="pl-mode" data-mode="csv" role="tab" aria-selected="false">Import a CSV</button>
+      </div>
+
+      <div id="modeOne">
+        <div class="pl-grid-one">
+          <div class="field"><label for="oneName">Full name</label><input type="text" id="oneName" maxlength="80" placeholder="First and last name"></div>
+          <div class="field"><label for="oneEmail">Email</label><input type="email" id="oneEmail" maxlength="120" placeholder="student@example.com" autocapitalize="none"></div>
+          <div class="field"><label>&nbsp;</label><button class="btn btn--gold" id="oneSend">Create code and send</button></div>
+        </div>
+      </div>
+
+      <div id="modeCsv" hidden>
+        <div class="pl-grid-one">
+          <div class="field"><label for="csvFile">CSV file</label><input type="file" id="csvFile" accept=".csv,text/csv,.txt"></div>
+          <div class="field"><label for="emailBatch">Batch name (optional)</label><input type="text" id="emailBatch" maxlength="60" placeholder="e.g. January intake"></div>
+          <div class="field"><label>&nbsp;</label><button class="btn btn--secondary" id="csvTemplate" type="button">Download template</button></div>
+        </div>
+        <div class="field-help">The file needs a <b>name</b> column (or <b>first name</b> + <b>last name</b>) and an <b>email</b> column. You can check and fix everything before sending.</div>
+
+        <div id="review" hidden>
+          <div class="pl-review-bar">
+            <div id="reviewSummary"></div>
+            <button class="btn btn--secondary" id="addRow" type="button">Add a row</button>
+          </div>
+          <div class="table-wrap pl-review-wrap">
+            <table class="pl-review">
+              <thead><tr><th style="width:2.5rem;">#</th><th>Full name</th><th>Email</th><th>Check</th><th></th></tr></thead>
+              <tbody id="reviewRows"></tbody>
+            </table>
+          </div>
+          <div class="pl-review-foot">
+            <button class="btn btn--secondary" id="reviewCancel" type="button">Clear list</button>
+            <button class="btn btn--gold" id="reviewSend" type="button" disabled>Send emails</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="sendResult" hidden></div>
+    </section>
 
     <div class="filters pl-filters">
       <div class="filter-field"><label for="search">Search</label><input type="text" id="search" placeholder="Code, name or email…"></div>

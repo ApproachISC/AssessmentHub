@@ -55,6 +55,7 @@ input:focus{border-color:var(--gold); outline:none}
 .codewrap{position:relative; max-width:260px}
 #code{font-family:Consolas, "Courier New", monospace; font-size:24px; letter-spacing:.18em; text-transform:uppercase; font-weight:bold; color:var(--navy)}
 #code[readonly]{background:#f5f1e6; border-color:var(--line); padding-right:44px; cursor:default}
+#email[readonly]{background:#f5f1e6; border-color:var(--line); cursor:default}
 .codewrap svg{position:absolute; right:14px; top:50%; transform:translateY(-50%); width:20px; height:20px; fill:none; stroke:var(--gold-d); stroke-width:2.2}
 .fieldnote{font-size:14px; color:var(--muted); margin-top:6px}
 .row{display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-top:18px}
