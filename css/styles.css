@@ -1375,6 +1375,8 @@ tbody tr.inactive { opacity: 0.55; }
 .filters.eval-filters { grid-template-columns: 2fr repeat(4, 1fr); }
 .eval-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 0.75rem; }
 .eval-row-note { font-size: 0.7rem; color: var(--amber); margin-top: 0.25rem; }
+/* evaluating someone without an account: nothing is shared online */
+.eval-external .eval-share, .eval-external .eval-share-panel { display: none; }
 
 /* fill-in form */
 .eval-main { display: flex; flex-direction: column; gap: 1.25rem; min-width: 0; }

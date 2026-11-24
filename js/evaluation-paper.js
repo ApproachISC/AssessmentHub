@@ -33,7 +33,10 @@ export function normalizeFullEvaluation(ev, { templateName, evaluateeName, evalu
     selfReflection: ev.self_reflection,
     evaluatorSignedAt: ev.evaluator_signed_at,
     evaluateeSignedAt: ev.evaluatee_signed_at,
-    showSharing: true,
+    // typed-in person without an account: no online sharing or sign-off
+    evaluateeExternal: !ev.evaluatee_id,
+    evaluateeEmail: ev.evaluatee_id ? null : ev.evaluatee_email,
+    showSharing: !!ev.evaluatee_id,
   };
 }
 
@@ -122,6 +125,7 @@ export function renderEvaluationPaper(root, e, { reflectionSlot = false } = {}) 
       <div class="eval-paper-brand">${esc(e.templateName || 'Evaluation')}</div>
       <h1>${esc(e.evaluateeName)}</h1>
       <div class="paper-meta">
+        ${e.evaluateeEmail ? `<span><strong>Email:</strong> ${esc(e.evaluateeEmail)}</span>` : ''}
         <span><strong>Class:</strong> ${esc(e.className)}</span>
         <span><strong>Class date:</strong> ${formatDay(e.classDate)}</span>
         <span><strong>Evaluator:</strong> ${esc(e.evaluatorName)}</span>
@@ -151,7 +155,9 @@ export function renderEvaluationPaper(root, e, { reflectionSlot = false } = {}) 
         <div class="eval-sig"><div class="eval-sig-role">Evaluator</div><div class="eval-sig-name">${esc(e.evaluatorName)}</div>
           <div class="eval-sig-stamp">${e.evaluatorSignedAt ? `Signed electronically · ${formatStamp(e.evaluatorSignedAt)}` : 'Not signed'}</div></div>
         <div class="eval-sig"><div class="eval-sig-role">Teacher evaluated</div><div class="eval-sig-name">${esc(e.evaluateeName)}</div>
-          <div class="eval-sig-stamp" id="evaluateeSigStamp">${e.evaluateeSignedAt ? `Read and signed electronically · ${formatStamp(e.evaluateeSignedAt)}` : 'Not signed yet'}</div></div>
+          <div class="eval-sig-stamp" id="evaluateeSigStamp">${e.evaluateeExternal
+            ? 'Not registered in the system — signature: ____________________'
+            : e.evaluateeSignedAt ? `Read and signed electronically · ${formatStamp(e.evaluateeSignedAt)}` : 'Not signed yet'}</div></div>
       </div>
     </div>`;
 }

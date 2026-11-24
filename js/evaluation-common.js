@@ -106,6 +106,39 @@ export function personName(people, id) {
   return people.find(p => p.id === id)?.full_name || '—';
 }
 
+// True when the evaluation is about someone typed in by name (no account)
+export function isExternalEvaluatee(ev) {
+  return !ev.evaluatee_id;
+}
+
+export function evaluateeName(people, ev) {
+  return ev.evaluatee_id ? personName(people, ev.evaluatee_id) : (ev.evaluatee_name || '—');
+}
+
+export function isValidEmail(s) {
+  return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(s);
+}
+
+// <option>s for the "Teacher being evaluated" picker: active users (minus me).
+// People who aren't registered are typed in instead (the "Not registered" checkbox).
+export function evaluateeOptions(people, { selfId, selectedId = '' }) {
+  return '<option value="">— select a teacher —</option>' +
+    people.filter(p => p.id !== selfId && (p.is_active || p.id === selectedId))
+      .map(p => `<option value="${p.id}" ${p.id === selectedId ? 'selected' : ''}>${esc(p.full_name)}</option>`).join('');
+}
+
+// Past typed-in people (name → email) for autocomplete
+export function knownExternalPeople(evals) {
+  const map = new Map();
+  evals.filter(e => !e.evaluatee_id && e.evaluatee_name).forEach(e => {
+    const key = e.evaluatee_name.toLowerCase();
+    if (!map.has(key) || (!map.get(key).email && e.evaluatee_email)) {
+      map.set(key, { name: e.evaluatee_name, email: e.evaluatee_email || '' });
+    }
+  });
+  return [...map.values()].sort((a, b) => a.name.localeCompare(b.name));
+}
+
 export function downloadCsv(filename, rows) {
   const cell = v => {
     const s = v == null ? '' : String(v);

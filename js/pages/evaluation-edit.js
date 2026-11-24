@@ -3,7 +3,8 @@ import { requireAuth } from '../auth.js';
 import { renderNavbar, showToast, esc, openModal, closeModal } from '../ui.js';
 import {
   NOT_OBSERVED, formatDay, maxPoints, passMark, computeGrade, sectionTotals,
-  gradeBand, formatGrade, loadPeople, personName, sectionLetter,
+  gradeBand, formatGrade, loadPeople, sectionLetter,
+  evaluateeName, evaluateeOptions, isValidEmail,
 } from '../evaluation-common.js';
 
 const SAVE_DELAY_MS = 900;
@@ -11,6 +12,8 @@ const SAVE_DELAY_MS = 900;
 let currentProfile = null;
 let ev = null, def = null, people = [], classes = [];
 let saveTimer = null, saving = false, dirty = false;
+// "Not registered" checkbox: the person is typed in (evaluatee_name / evaluatee_email)
+let externalMode = false;
 
 function showError(title, message) {
   document.getElementById('authLoading').style.display = 'none';
@@ -23,17 +26,32 @@ function showError(title, message) {
 // RENDER
 // ============================================================
 function renderHeader() {
-  const name = personName(people, ev.evaluatee_id);
+  const name = externalMode || ev.evaluatee_id ? evaluateeName(people, ev) : '—';
   const cls = classes.find(c => c.id === ev.class_id)?.name || '—';
   document.getElementById('pageTitle').innerHTML = `${esc(name)} <em>· ${esc(cls)}</em>`;
   document.getElementById('bcTitle').textContent = `${name} — ${formatDay(ev.class_date)}`;
   document.title = `Evaluation: ${name} — Approach International Student Center`;
 }
 
+function renderEvaluatee() {
+  externalMode = !ev.evaluatee_id;
+  document.getElementById('detEvaluatee').innerHTML =
+    evaluateeOptions(people, { selfId: currentProfile.id, selectedId: ev.evaluatee_id || '' });
+  document.getElementById('detExternal').checked = externalMode;
+  document.getElementById('detExtName').value = ev.evaluatee_name || '';
+  document.getElementById('detExtEmail').value = ev.evaluatee_email || '';
+  showExternalMode();
+}
+
+// Checked: the teacher list is locked and the name / email fields appear
+function showExternalMode() {
+  document.getElementById('detEvaluatee').disabled = externalMode;
+  document.querySelectorAll('.external-only').forEach(el => { el.style.display = externalMode ? '' : 'none'; });
+  document.getElementById('content').classList.toggle('eval-external', externalMode);
+}
+
 function renderDetails() {
-  document.getElementById('detEvaluatee').innerHTML = people
-    .filter(p => p.id !== currentProfile.id && (p.is_active || p.id === ev.evaluatee_id))
-    .map(p => `<option value="${p.id}" ${p.id === ev.evaluatee_id ? 'selected' : ''}>${esc(p.full_name)}</option>`).join('');
+  renderEvaluatee();
   document.getElementById('detClass').innerHTML = classes
     .filter(c => c.is_active || c.id === ev.class_id)
     .map(c => `<option value="${c.id}" ${c.id === ev.class_id ? 'selected' : ''}>${esc(c.name)}</option>`).join('');
@@ -196,15 +214,35 @@ async function save() {
   dirty = false;
   setSaveStatus('Saving…', 'pending');
   try {
+    // hold the save (status line only, no toast) until the person fields are valid
+    const invalid = !externalMode
+      ? (!ev.evaluatee_id ? 'select the teacher being evaluated' : null)
+      : !ev.evaluatee_name?.trim() ? 'enter the name of the person being evaluated'
+      : ev.evaluatee_email?.trim() && !isValidEmail(ev.evaluatee_email.trim()) ? 'check the email address'
+      : null;
+    if (invalid) {
+      dirty = true;
+      setSaveStatus('Not saved — ' + invalid, 'error');
+      return false;
+    }
     const { data, error } = await db.from('evaluations').update({
-      evaluatee_id: ev.evaluatee_id,
+      evaluatee_id: externalMode ? null : ev.evaluatee_id,
+      evaluatee_name: externalMode ? ev.evaluatee_name : null,
+      evaluatee_email: externalMode ? (ev.evaluatee_email || null) : null,
       class_id: ev.class_id,
       class_date: ev.class_date,
       responses: ev.responses,
       shared_sections: ev.shared_sections,
-    }).eq('id', ev.id).select('id, grade, updated_at');
+    }).eq('id', ev.id).select('id, grade, updated_at, evaluatee_id, evaluatee_name, evaluatee_email');
     if (error) throw error;
     if (!data?.length) throw new Error('This evaluation is no longer editable (it may have been finalized).');
+    // the database links a typed email that belongs to a registered user
+    if (externalMode && data[0].evaluatee_id) {
+      Object.assign(ev, { evaluatee_id: data[0].evaluatee_id, evaluatee_name: null, evaluatee_email: null });
+      renderEvaluatee();
+      renderHeader();
+      showToast(`That email belongs to ${evaluateeName(people, ev)}, who is registered — linked to their account.`, 'success', 5000);
+    }
     setSaveStatus(`Saved ${new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}`, 'ok');
     return true;
   } catch (err) {
@@ -242,12 +280,22 @@ function startFinalize() {
   }
   if (g.possible === 0) return showToast('At least one item must be scored', 'error');
 
-  const name = personName(people, ev.evaluatee_id);
+  if (externalMode && !ev.evaluatee_name?.trim()) {
+    document.getElementById('detExtName').focus();
+    return showToast('Enter the name of the person being evaluated', 'error');
+  }
+  if (!externalMode && !ev.evaluatee_id) {
+    document.getElementById('detEvaluatee').focus();
+    return showToast('Select the teacher being evaluated', 'error');
+  }
+  const name = evaluateeName(people, ev);
   const band = gradeBand(def, g.grade);
   document.getElementById('finalizeSub').textContent =
     `${name} · ${formatDay(ev.class_date)} · Grade ${formatGrade(g.grade)}/100${band ? ` (${band})` : ''}`;
   const shared = sharedSectionLabels();
-  document.getElementById('finalizeShare').innerHTML = shared.length
+  document.getElementById('finalizeShare').innerHTML = !ev.evaluatee_id
+    ? `${esc(name)} isn't registered in the system, so they won't see this online. After finalizing, use <strong>Print / Save as PDF</strong> to give them a copy.`
+    : shared.length
     ? `${esc(name)} will see the final grade and: <strong>${shared.map(esc).join(', ')}</strong>. Everything else stays private.`
     : `${esc(name)} will see <strong>only the final grade</strong>. No sections are shared.`;
   document.getElementById('finalizeAgree').checked = false;
@@ -284,7 +332,24 @@ async function deleteDraft() {
 // EVENT WIRING
 // ============================================================
 function wireEvents() {
-  document.getElementById('detEvaluatee').addEventListener('change', e => { ev.evaluatee_id = e.target.value; renderHeader(); scheduleSave(); });
+  document.getElementById('detEvaluatee').addEventListener('change', e => {
+    ev.evaluatee_id = e.target.value || null;
+    renderHeader();
+    scheduleSave();
+  });
+  document.getElementById('detExternal').addEventListener('change', e => {
+    externalMode = e.target.checked;
+    // the teacher list keeps its selection, so unticking goes back to it
+    ev.evaluatee_id = externalMode ? null : (document.getElementById('detEvaluatee').value || null);
+    ev.evaluatee_name = document.getElementById('detExtName').value;
+    ev.evaluatee_email = document.getElementById('detExtEmail').value;
+    showExternalMode();
+    if (externalMode) document.getElementById('detExtName').focus();
+    renderHeader();
+    scheduleSave();
+  });
+  document.getElementById('detExtName').addEventListener('input', e => { ev.evaluatee_name = e.target.value; renderHeader(); scheduleSave(); });
+  document.getElementById('detExtEmail').addEventListener('input', e => { ev.evaluatee_email = e.target.value; scheduleSave(); });
   document.getElementById('detClass').addEventListener('change', e => { ev.class_id = e.target.value; renderHeader(); scheduleSave(); });
   document.getElementById('detDate').addEventListener('change', e => {
     if (!e.target.value) { e.target.value = ev.class_date; return; }
@@ -385,6 +450,7 @@ function wireEvents() {
     def = ev.template_snapshot || {};
     ev.responses = { details: {}, scores: {}, notes: {}, comments: {}, ...(ev.responses || {}) };
     ev.shared_sections = ev.shared_sections || [];
+    externalMode = !ev.evaluatee_id;
 
     const { data: tpl } = await db.from('evaluation_templates').select('name').eq('id', ev.template_id).maybeSingle();
     document.getElementById('templateName').textContent = tpl?.name || 'Evaluation';

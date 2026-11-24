@@ -44,6 +44,10 @@
           <div class="panel-title">Observation details</div>
           <div class="form-grid">
             <div class="field full"><label for="detEvaluatee">Teacher being evaluated</label><select id="detEvaluatee"></select></div>
+            <label class="acknowledge-row" style="grid-column:1/-1;margin-top:-0.4rem;"><input type="checkbox" id="detExternal"> Not registered in the system — type their name instead</label>
+            <div class="field external-only" style="display:none;"><label for="detExtName">Full name <span class="required">*</span></label><input type="text" id="detExtName" autocomplete="off" maxlength="120"></div>
+            <div class="field external-only" style="display:none;"><label for="detExtEmail">Email <span class="field-help">(optional)</span></label><input type="email" id="detExtEmail" autocomplete="off" maxlength="200"></div>
+            <p class="field-help external-only" style="display:none;grid-column:1/-1;margin:-0.4rem 0 0.8rem;">Not registered in the system — they won't see or sign this online. Print it or save it as PDF to share it.</p>
             <div class="field"><label for="detClass">Class</label><select id="detClass"></select></div>
             <div class="field"><label for="detDate">Class date</label><input type="date" id="detDate"></div>
           </div>
@@ -71,7 +75,7 @@
           <div id="sectionSummary" style="margin-top:0.8rem;"></div>
         </div>
 
-        <div class="panel">
+        <div class="panel eval-share-panel">
           <div class="panel-title">Shared with the teacher</div>
           <p class="field-help" id="shareSummary">Nothing is shared yet. They'll only see their final grade.</p>
         </div>

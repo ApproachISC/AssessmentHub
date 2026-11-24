@@ -1,7 +1,7 @@
 import { db } from '../supabase-client.js';
 import { requireAuth } from '../auth.js';
 import { renderNavbar, showToast } from '../ui.js';
-import { loadPeople, personName, formatDay } from '../evaluation-common.js';
+import { loadPeople, personName, evaluateeName as nameOfEvaluatee, formatDay } from '../evaluation-common.js';
 import { normalizeFullEvaluation, renderEvaluationPaper } from '../evaluation-paper.js';
 
 function showError(title, message) {
@@ -38,7 +38,7 @@ function showError(title, message) {
       db.from('classes').select('name').eq('id', ev.class_id).maybeSingle(),
       db.from('evaluation_templates').select('name').eq('id', ev.template_id).maybeSingle(),
     ]);
-    const evaluateeName = personName(people, ev.evaluatee_id);
+    const evaluateeName = nameOfEvaluatee(people, ev);
     const data = normalizeFullEvaluation(ev, {
       templateName: tRes.data?.name,
       evaluateeName,
@@ -61,7 +61,7 @@ function showError(title, message) {
     document.getElementById('printBtn').addEventListener('click', () => window.print());
 
     document.getElementById('reopenBtn').addEventListener('click', async () => {
-      if (!confirm(`Reopen this evaluation of ${evaluateeName}?\n\nIt goes back to draft so ${personName(people, ev.evaluator_id)} can edit it. Both signatures are cleared, and the teacher won't see it until it's finalized again.`)) return;
+      if (!confirm(`Reopen this evaluation of ${evaluateeName}?\n\nIt goes back to draft so ${personName(people, ev.evaluator_id)} can edit it. Both signatures are cleared${ev.evaluatee_id ? ', and the teacher won\'t see it until it\'s finalized again' : ''}.`)) return;
       const { error: rErr } = await db.rpc('reopen_evaluation', { p_id: ev.id });
       if (rErr) return showToast('Failed: ' + rErr.message, 'error');
       showToast('Evaluation reopened', 'success');

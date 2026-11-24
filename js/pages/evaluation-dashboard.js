@@ -4,6 +4,7 @@ import { renderNavbar, showToast, esc, openModal, closeModal, initTabs } from '.
 import {
   formatDay, todayISO, passMark, gradeChip, formatGrade, gradeBand,
   loadPeople, personName, downloadCsv,
+  evaluateeName, evaluateeOptions, knownExternalPeople, isValidEmail,
 } from '../evaluation-common.js';
 
 const PAGE_SIZE = 20;
@@ -19,7 +20,7 @@ async function loadData() {
   try {
     const [eRes, tRes, cRes, people] = await Promise.all([
       db.from('evaluations')
-        .select('id, template_id, template_snapshot, evaluator_id, evaluatee_id, class_id, class_date, status, grade, points_earned, points_possible, finalized_at, evaluatee_signed_at, created_at')
+        .select('id, template_id, template_snapshot, evaluator_id, evaluatee_id, evaluatee_name, evaluatee_email, class_id, class_date, status, grade, points_earned, points_possible, finalized_at, evaluatee_signed_at, created_at')
         .order('class_date', { ascending: false }),
       db.from('evaluation_templates').select('id, name, is_active, definition').order('name'),
       db.from('classes').select('id, name, is_active').order('name'),
@@ -34,7 +35,7 @@ async function loadData() {
     // RLS returns everything to academic staff and only their own evaluations to everyone else
     allEvals = (eRes.data || []).map(e => ({
       ...e,
-      _evaluatee_name: personName(allPeople, e.evaluatee_id),
+      _evaluatee_name: evaluateeName(allPeople, e),
       _evaluator_name: personName(allPeople, e.evaluator_id),
       _class_name: allClasses.find(c => c.id === e.class_id)?.name || '—',
       _template_name: allTemplates.find(t => t.id === e.template_id)?.name || '—',
@@ -141,11 +142,11 @@ function renderTable() {
       const canEdit = isOwn && e.status === 'draft';
       const canDelete = (isOwn && e.status === 'draft') || isAcademic;
       const statusChip = e.status === 'finalized'
-        ? `<span class="chip submitted">Finalized</span>${e.evaluatee_signed_at ? '' : '<div class="eval-row-note">Awaiting teacher\'s signature</div>'}`
+        ? `<span class="chip submitted">Finalized</span>${e.evaluatee_signed_at || !e.evaluatee_id ? '' : '<div class="eval-row-note">Awaiting teacher\'s signature</div>'}`
         : '<span class="chip draft">Draft</span>';
       return `<tr>
         <td style="font-weight:600;color:var(--navy);white-space:nowrap;">${formatDay(e.class_date)}</td>
-        <td>${esc(e._evaluatee_name)}<div style="font-size:0.75rem;color:var(--muted);">${esc(e._template_name)}</div></td>
+        <td>${esc(e._evaluatee_name)}<div style="font-size:0.75rem;color:var(--muted);">${esc(e._template_name)}${e.evaluatee_id ? '' : ' · Not registered'}</div></td>
         <td>${esc(e._class_name)}</td>
         ${isAcademic ? `<td>${esc(e._evaluator_name)}</td>` : ''}
         <td>${statusChip}</td>
@@ -191,11 +192,11 @@ async function deleteEvaluation(id) {
 function exportCsv() {
   const rows = getFiltered();
   if (!rows.length) return showToast('Nothing to export with the current filters', 'error');
-  const header = ['Class date', 'Teacher evaluated', 'Class', 'Evaluator', 'Form', 'Status', 'Grade (/100)', 'Rating', 'Pass', 'Points earned', 'Points possible', 'Finalized at', 'Teacher signed at'];
+  const header = ['Class date', 'Teacher evaluated', 'Teacher email (not registered)', 'Class', 'Evaluator', 'Form', 'Status', 'Grade (/100)', 'Rating', 'Pass', 'Points earned', 'Points possible', 'Finalized at', 'Teacher signed at'];
   const data = rows.map(e => {
     const finalized = e.status === 'finalized';
     return [
-      e.class_date, e._evaluatee_name, e._class_name, e._evaluator_name, e._template_name,
+      e.class_date, e._evaluatee_name, e.evaluatee_email || '', e._class_name, e._evaluator_name, e._template_name,
       finalized ? 'Finalized' : 'Draft',
       finalized ? formatGrade(e.grade) : '',
       finalized ? (gradeBand(e.template_snapshot, Number(e.grade)) || '') : '',
@@ -215,9 +216,13 @@ function openNewModal() {
   const active = allTemplates.filter(t => t.is_active);
   if (!active.length) return showToast('No evaluation forms are available yet. Ask the Academic team to create one.', 'error');
   document.getElementById('newTemplate').innerHTML = active.map(t => `<option value="${t.id}">${esc(t.name)}</option>`).join('');
-  document.getElementById('newEvaluatee').innerHTML = '<option value="">— select a teacher —</option>' +
-    allPeople.filter(p => p.is_active && p.id !== currentProfile.id)
-      .map(p => `<option value="${p.id}">${esc(p.full_name)}</option>`).join('');
+  document.getElementById('newEvaluatee').innerHTML = evaluateeOptions(allPeople, { selfId: currentProfile.id });
+  document.getElementById('newExternal').checked = false;
+  document.getElementById('newExtName').value = '';
+  document.getElementById('newExtEmail').value = '';
+  document.getElementById('extPeopleList').innerHTML = knownExternalPeople(allEvals)
+    .map(p => `<option value="${esc(p.name)}"></option>`).join('');
+  toggleExternalFields();
   document.getElementById('newClass').innerHTML = '<option value="">— class —</option>' +
     allClasses.filter(c => c.is_active).map(c => `<option value="${c.id}">${esc(c.name)}</option>`).join('');
   document.getElementById('newDate').value = todayISO();
@@ -225,27 +230,62 @@ function openNewModal() {
   openModal('newModal');
 }
 
+function isExternalChoice() {
+  return document.getElementById('newExternal').checked;
+}
+
+// Checked: the teacher list is locked and the name / email fields appear
+function toggleExternalFields() {
+  const on = isExternalChoice();
+  document.getElementById('newEvaluatee').disabled = on;
+  document.querySelectorAll('#newModal .external-only').forEach(el => { el.style.display = on ? '' : 'none'; });
+}
+
+// Picking a previously typed name fills in the email used last time
+function fillKnownEmail() {
+  const name = document.getElementById('newExtName').value.trim().toLowerCase();
+  const known = knownExternalPeople(allEvals).find(p => p.name.toLowerCase() === name);
+  const emailEl = document.getElementById('newExtEmail');
+  if (known?.email && !emailEl.value.trim()) emailEl.value = known.email;
+}
+
 function checkDuplicate() {
+  const external = isExternalChoice();
   const evaluatee = document.getElementById('newEvaluatee').value;
+  const extName = document.getElementById('newExtName').value.trim().toLowerCase();
   const cls = document.getElementById('newClass').value;
   const date = document.getElementById('newDate').value;
-  const dup = evaluatee && cls && date && allEvals.some(e =>
-    e.evaluator_id === currentProfile.id && e.evaluatee_id === evaluatee && e.class_id === cls && e.class_date === date);
+  const samePerson = e => external
+    ? !e.evaluatee_id && (e.evaluatee_name || '').toLowerCase() === extName
+    : e.evaluatee_id === evaluatee;
+  const dup = (external ? extName : evaluatee) && cls && date && allEvals.some(e =>
+    e.evaluator_id === currentProfile.id && samePerson(e) && e.class_id === cls && e.class_date === date);
   document.getElementById('dupWarning').classList.toggle('show', !!dup);
 }
 
 async function createEvaluation() {
   const template_id = document.getElementById('newTemplate').value;
-  const evaluatee_id = document.getElementById('newEvaluatee').value;
   const class_id = document.getElementById('newClass').value;
   const class_date = document.getElementById('newDate').value;
-  if (!template_id || !evaluatee_id || !class_id || !class_date) return showToast('Please fill in all fields', 'error');
+  let who;
+  if (isExternalChoice()) {
+    const name = document.getElementById('newExtName').value.trim();
+    const email = document.getElementById('newExtEmail').value.trim();
+    if (!name) return showToast('Enter the name of the person you\'re evaluating', 'error');
+    if (email && !isValidEmail(email)) return showToast('That email doesn\'t look valid', 'error');
+    who = { evaluatee_id: null, evaluatee_name: name, evaluatee_email: email || null };
+  } else {
+    const evaluatee_id = document.getElementById('newEvaluatee').value;
+    if (!evaluatee_id) return showToast('Select the teacher you\'re evaluating', 'error');
+    who = { evaluatee_id };
+  }
+  if (!template_id || !class_id || !class_date) return showToast('Please fill in all fields', 'error');
   const btn = document.getElementById('newSubmitBtn');
   btn.disabled = true;
   btn.textContent = 'Creating…';
   try {
     const { data, error } = await db.from('evaluations')
-      .insert({ template_id, evaluatee_id, class_id, class_date, responses: { details: {}, scores: {}, notes: {}, comments: {} } })
+      .insert({ template_id, ...who, class_id, class_date, responses: { details: {}, scores: {}, notes: {}, comments: {} } })
       .select('id').single();
     if (error) throw error;
     window.location.href = `edit.html?id=${data.id}`;
@@ -296,6 +336,13 @@ document.getElementById('newCancelBtn').addEventListener('click', () => closeMod
 document.getElementById('newModal').addEventListener('click', e => { if (e.target.id === 'newModal') closeModal('newModal'); });
 document.getElementById('newSubmitBtn').addEventListener('click', createEvaluation);
 ['newEvaluatee', 'newClass', 'newDate'].forEach(id => document.getElementById(id).addEventListener('change', checkDuplicate));
+document.getElementById('newExternal').addEventListener('change', () => {
+  toggleExternalFields();
+  checkDuplicate();
+  if (isExternalChoice()) document.getElementById('newExtName').focus();
+});
+document.getElementById('newExtName').addEventListener('input', checkDuplicate);
+document.getElementById('newExtName').addEventListener('change', fillKnownEmail);
 
 // ============================================================
 // INIT
